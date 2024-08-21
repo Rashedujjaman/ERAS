@@ -1,0 +1,31 @@
+<div class="login-area">
+  <div class="login-box">
+    <form (ngSubmit)="login()" #loginForm="ngForm">
+      <div class="login-head">
+        <div class="row">
+          <div class="col-12">
+            <img src="assets/images/logo_unisem.gif" alt="Logo" class="brand-image" style="opacity: 0.8">
+          </div>
+          <div class="col-12">
+            <h5>Remote Equipment Management System</h5>
+          </div>
+        </div>
+      </div>
+
+      <div class="login-form-body">
+        <div class="col-12 form-gp">
+          <input type="text" id="UserName" class="form-control" placeholder="UserName" required [(ngModel)]="UserName" name="UserName">
+        </div>
+        <div class="col-12 form-gp">
+          <input type="password" id="Password" class="form-control" placeholder="Password" required [(ngModel)]="Password" name="password">
+        </div>
+        <div class="col-12 submit-btn-area">
+          <button id="form_submit" type="submit" class="btn btn-primary">
+            <span>Login</span>
+            <span *ngif="loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

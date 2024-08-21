@@ -1,0 +1,21 @@
+# Logs
+logs
+*.log
+
+# Dependency directories
+node_modules/
+bower_components/
+
+# Build directories
+bin/
+obj/
+
+# Environment variables
+.env
+
+# VS Code settings
+.vscode/
+.vs/
+
+# macOS files
+.DS_Store

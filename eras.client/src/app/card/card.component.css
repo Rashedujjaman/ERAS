@@ -1,0 +1,10 @@
+.card-img-top {
+  height: 100px;
+  object-fit: cover; 
+  width: 100%; 
+}
+.btn-full-width {
+  width: 100%;
+  display: block;
+}
+

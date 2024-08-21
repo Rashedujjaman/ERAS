@@ -1,0 +1,6 @@
+@ERAS.Server_HostAddress = http://localhost:5272
+
+GET {{ERAS.Server_HostAddress}}/eras/
+Accept: application/json
+
+###
