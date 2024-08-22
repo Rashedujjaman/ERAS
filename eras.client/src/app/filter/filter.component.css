@@ -15,5 +15,7 @@
   }
     .container .buttons button {
       height: 20px;
+      background-color: #f5f5f5;
+      color: #495057;
     }
 

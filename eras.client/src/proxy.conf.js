@@ -13,5 +13,4 @@ const PROXY_CONFIG = [
     secure: false
   }
 ]
-
 module.exports = PROXY_CONFIG;

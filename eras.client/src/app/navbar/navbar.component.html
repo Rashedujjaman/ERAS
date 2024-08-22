@@ -1,38 +1,39 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#"><img src="assets/images/logo_unisem.png" alt="Unisem Logo" style="height: 50px; width: auto;"/></a>
+  <a class="navbar-brand" href="/dashboard"><img src="assets/images/logo_unisem.png" alt="Unisem Logo" style="height: 50px; width: auto;" /></a>
   <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
 
+
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav me-auto">
       <li class="nav-item active">
-        <a class="nav-link" href="#">DashBoard <span class="sr-only">(current)</span></a>
+        <a class="nav-link"  href="/dashboard"  > DashBoard </a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Create User</a>
+      <li class="nav-item" *ngIf="UserRole === 'Admin'">
+        <a class="nav-link" href="/registration" > Create User </a>
       </li>
       <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <a class="nav-link dropdown-toggle" *ngIf="UserRole === 'Admin' || UserRole === 'Engineer'" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
           Setup
         </a>
         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <li><a class="dropdown-item" href="#">Equipment Management</a></li>
-          <li><a class="dropdown-item" href="#">Equipment Model</a></li>
-          <li><a class="dropdown-item" href="#">Area Management</a></li>
+          <li><a class="dropdown-item" > Equipment Management </a></li>
+          <li><a class="dropdown-item" *ngIf="UserRole === 'Admin'">Equipment Model</a></li>
+          <li><a class="dropdown-item" *ngIf="UserRole === 'Admin'">Area Management</a></li>
         </ul>
       </li>
       <li class="nav-item">
-        <a class="nav-link disabled" href="#">Help</a>
+        <a class="nav-link" >Help</a>
       </li>
     </ul>
     <form class="d-flex my-2 my-lg-0 me-auto">
       <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-success" type="submit">Search</button>
+      <button class="btn btn-outline-success me-2" type="submit">Search</button>
     </form>
     <ul class="navbar-nav ms-auto">
       <li class="nav-item">
-        <a class="nav-link">
+        <a class="nav-link" href="/profile">
           <img class="profile-icon rounded-circle" src="assets/images/profile.jpg" alt="Profile" style="width: 40px; height: 40px;" />
         </a>
       </li>

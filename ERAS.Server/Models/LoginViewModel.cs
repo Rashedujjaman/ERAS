@@ -9,6 +9,7 @@ namespace ERAS.Server.Models
         public string UserName { get; set; }
         [Required]
         [DataType(DataType.Password)]
-        public string PasswordHash { get; set; }
+        public string Password { get; set; }
     }
 }
+

@@ -1,14 +1,14 @@
+//DashboardComponent
 import { Component } from '@angular/core';
 import { CardComponent } from '../card/card.component';
-import { NavbarComponent } from '../navbar/navbar.component';
+
 import { CommonModule } from '@angular/common';
 import { FilterComponent } from '../filter/filter.component';
-//import { MatToolbarModule } from '@angular/material/toolbar';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CardComponent, NavbarComponent, CommonModule, FilterComponent],
+  imports: [CardComponent, CommonModule, FilterComponent],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'] 
 })
@@ -51,12 +51,6 @@ export class DashboardComponent {
       "imageUrl": "assets/images/eq_2.jpeg",
       "ipAddress": "192.168.10.7",
       "zone": 6
-    },
-    {
-      "name": "EQP-07-08-35",
-      "imageUrl": "assets/images/eq_3.jpeg",
-      "ipAddress": "192.168.10.8",
-      "zone": 7
     }
   ];
 }

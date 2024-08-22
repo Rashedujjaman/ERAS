@@ -1,11 +1,19 @@
-import { Component} from '@angular/core'; 
+import { Component } from '@angular/core';
+import { NavbarComponent } from './navbar/navbar.component';
+import { Router, RouterOutlet } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
-  standalone: false,
+  standalone: true,
+  imports: [NavbarComponent, RouterOutlet, CommonModule],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+  constructor(private router: Router) { }
+  get isLoginRoute(): boolean {
+    return this.router.url === '/';
+  }
   title = 'Equipment Remote Access System';
 }
