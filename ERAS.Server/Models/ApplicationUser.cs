@@ -3,19 +3,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ERAS.Server.Models
 {
-public class ApplicationUser : IdentityUser
-{
-    //[Required]
-    //public string Name { get; set; } = string.Empty;
-    //public string? Alias { get; set; }
-    //[Required]
-    //[EmailAddress]
-    //public override string Email { get; set; } = string.Empty;
-    //[Required]
-    //public int UserRoleId { get; set; }
-    //public string? ImageUrl { get; set; }
-    //public UserRole? UserRole { get; set; }
-}
+    public class ApplicationUser : IdentityUser
+    {
+        public required string Name { get; set; }
+        public required string Alias { get; set; }
+        public required int UserRoleId { get; set; }
+        public required string ImageUrl { get; set; }
+
+    }
 }
 
 

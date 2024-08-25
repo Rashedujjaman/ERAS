@@ -8,21 +8,15 @@ namespace ERAS.Server.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AuthenticationController : ControllerBase
+    public class AuthenticationController(
+        UserManager<ApplicationUser> userManager,
+        SignInManager<ApplicationUser> signInManager,
+        ILogger<AuthenticationController> logger) : ControllerBase
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly ILogger<AuthenticationController> _logger;
 
-        public AuthenticationController(
-            UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager,
-            ILogger<AuthenticationController> logger)
-        {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _logger = logger;
-        }
+        private readonly UserManager<ApplicationUser> _userManager = userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
+        private readonly ILogger<AuthenticationController> _logger = logger;
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginViewModel model)
@@ -49,7 +43,7 @@ namespace ERAS.Server.Controllers
                 //_logger.LogInformation("Hashed Password : {hashedPassword} ", hashedPassword);
                 _logger.LogInformation("User found: {UserName}. Verifying password...", model.UserName);
 
-                var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
+                var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, lockoutOnFailure:true);
 
                 if (result.Succeeded)
                 {

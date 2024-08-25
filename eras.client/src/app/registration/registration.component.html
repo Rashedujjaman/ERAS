@@ -1,44 +1,68 @@
-<div class="container">
-  <div class="row justify-content-center">
-    <div class="col-md-6">
-      <div class="card card-container">
-        <div class="row justify-content-center text-md-center">
-          Register User
+<div class="register-area">
+  <div class="register-box">
+    <form [formGroup]="registrationForm" (ngSubmit)="register()" #registrationFormDirective="ngForm">
+      <div class="register-head">
+        <div class="row">
+          <!--<div class="col-12">
+            <img src="assets/images/logo_unisem.gif" alt="Logo" class="brand-image" style="opacity: 0.8">
+          </div>-->
+          <div class="col-12">
+            <h3>User Registration</h3>
+            <h5>Remote Equipment Management System</h5>
+          </div>
         </div>
-        <form>
-          <div class="form-group">
-            <label for="username">Username</label>
-            <input type="text" class="form-control" name="username" required minlength="3" maxlength="20" />
-          </div>
-
-          <div class="form-group">
-            <label for="username">Full Name</label>
-            <input type="text" class="form-control" name="username" required minlength="3" maxlength="20" />
-          </div>
-
-          <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" class="form-control" name="email" required email />
-          </div>
-
-          <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" class="form-control" name="password" required minlength="6" />
-          </div>
-
-          <div class="form-group">
-            <label for="role">Role</label>
-            <select class="form-control" id="role" name="role">
-              <option value="Engineer">Engineer</option>
-              <option value="Viewer">Viewer</option>
-            </select>
-          </div>
-          <div></div>
-          <div class="form-group text-center mt-md-3">
-            <button type="submit" class="btn btn-primary">Submit</button>
-          </div>
-        </form>
       </div>
-    </div>
+      <div class="register-form-body">
+        <div class="col-12 form-gp">
+          <input type="text" id="UserName" class="form-control" placeholder="UserName" formControlName="UserName">
+          <div *ngIf="f['UserName'].touched && f['UserName'].invalid" class="text-danger">
+            User Name is required.
+          </div>
+        </div>
+        <div class="col-12 form-gp">
+          <input type="text" id="Name" class="form-control" placeholder="Name" formControlName="Name">
+          <div *ngIf="f['Name'].touched && f['Name'].invalid" class="text-danger">
+            Name is required.
+          </div>
+        </div>
+        <div class="col-12 form-gp">
+          <input type="text" id="Alias" class="form-control" placeholder="Alias" formControlName="Alias">
+          <div *ngIf="f['Alias'].touched && f['Alias'].invalid" class="text-danger">
+            Alias is required.
+          </div>
+        </div>
+        <div class="col-12 form-gp">
+          <input type="text" id="Email" class="form-control" placeholder="Email" formControlName="Email">
+          <div *ngIf="f['Email'].touched && f['Email'].invalid" class="text-danger">
+            <div *ngIf="f['Email'].errors?.['required']">Email is required.</div>
+            <div *ngIf="f['Email'].errors?.['email']">Invalid email format.</div>
+          </div>
+        </div>
+        <div class="col-12 form-gp">
+          <input type="password" id="Password" class="form-control" placeholder="Password" formControlName="Password">
+          <div *ngIf="f['Password'].touched && f['Password'].invalid" class="text-danger">
+            <div *ngIf="f['Password'].errors?.['required']">Password is required.</div>
+            <div *ngIf="f['Password'].errors?.['passwordStrength']">Password must be at least 6 characters long and include at least one lowercase letter, one uppercase letter, one number, and one special character.</div>
+          </div>
+        </div>
+        <div class="col-12 form-gp">
+          <label>User Role : </label>
+          <mat-radio-group formControlName="UserRoleId">
+            <mat-radio-button value="1">Admin</mat-radio-button>
+            <mat-radio-button value="2">Engineer</mat-radio-button>
+            <mat-radio-button value="3">Viewer</mat-radio-button>
+          </mat-radio-group>
+          <div *ngIf="f['UserRoleId'].touched && f['UserRoleId'].invalid" class="text-danger">
+            User Role is required.
+          </div>
+        </div>
+        <div class="col-12 submit-btn-area">
+          <button id="form_submit" type="submit" class="btn btn-primary" [disabled]="loading">
+            <span *ngIf="!loading">Submit</span>
+            <span *ngIf="loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          </button>
+        </div>
+      </div>
+    </form>
   </div>
 </div>

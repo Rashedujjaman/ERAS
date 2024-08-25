@@ -12,9 +12,11 @@
         <p>Role: {{userRole}}</p>
       </div>
     </mat-card-content>
-    
-    <mat-card-actions>
-      <button mat-stroked-button color="white" (click)="logout()">Sign Out</button>
+
+    <mat-card-actions class="buttons d-flex justify-content-end">
+      <button mat-flat-button (click)="logout()">Sign Out</button>
     </mat-card-actions>
+    
+
   </mat-card>
 </div>
