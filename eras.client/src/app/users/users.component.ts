@@ -5,46 +5,84 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { ResetPasswordDialogComponent } from '../resetpassworddialog/resetpassworddialog.component';
 
 
 @Component({
   selector: 'app-user',
   standalone: true,
-  imports: [MatTableModule, MatSlideToggleModule, MatIconModule, MatButtonModule, CommonModule],
+  imports: [MatTableModule, MatDialogModule, MatSlideToggleModule, MatIconModule, MatButtonModule, CommonModule, MatProgressSpinnerModule],
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.css']
 })
 export class UsersComponent implements OnInit {
-  displayedColumns: string[] = ['userName', 'email', 'role', 'status', 'actions'];
-  users: any[] = []; // Replace 'any' with your actual user data type
-  userRole: string | null = null;
+  displayedColumns: string[] = ['id', 'name', 'userName', 'email', 'role', 'status', 'actions'];
+  users: any[] = [];
+  isLoading: boolean = false;
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
+  ) { }
 
   ngOnInit() {
-    this.userRole = localStorage.getItem('userRole');
     this.loadUsers();
   }
 
   loadUsers() {
-    
-    //this.userService.getUsers().subscribe((users) => {
-    //  this.users = users;
-    //});
+    this.isLoading = true;
+
+    this.http.get<any[]>(`/api/users/users`)
+      .subscribe(users => {
+        this.users = users;
+    }
+    );
+    this.isLoading = false;
   }
 
   toggleUserStatus(user: any) {
-    //// Call your UserService or API to enable/disable the user's account
-    //this.userService.toggleUserStatus(user.id, !user.isEnabled).subscribe(() => {
-    //  // Update the user's status in the local data
-    //  user.isEnabled = !user.isEnabled;
-    //});
+    user.IsActive = !user.IsActive;
+
+    this.http.put(`api/users/${user.id}/toggle`, {})
+      .subscribe({
+        next: (response: any) => {
+          console.log('User status updated:', response);
+          this.snackBar.open(`${response.message} ${user.name}`, "",{
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom',
+            panelClass: ['success-snackbar']
+          })
+        },
+        error: (error: HttpErrorResponse) => {
+          console.error('Failed to update user status:', error);
+          user.IsActive = !user.IsActive;
+          this.snackBar.open(error.error.message, 'Close', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+            panelClass: ['error-snackbar']
+          })
+        }
+      });
   }
 
   resetPassword(user: any) {
-    //// Call your UserService or API to initiate the password reset process
-    //this.userService.resetPassword(user.id).subscribe(() => {
-    //  // You might want to display a success message or notification here
-    //});
+    const dialogRef = this.dialog.open(ResetPasswordDialogComponent, {
+      width: '400px',
+      data: { userId: user.id, userName: user.userName }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        console.log('Password reset dialog was closed');
+      }
+      console.log('Error occured during password reset.')
+    });
   }
+
 }

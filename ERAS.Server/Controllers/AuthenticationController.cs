@@ -32,24 +32,28 @@ namespace ERAS.Server.Controllers
                     return BadRequest(new { message = "Invalid login attempt." });
                 }
 
-                var user = await _userManager.FindByNameAsync(model.UserName);
-
                 _logger.LogInformation("User found: {UserName}. Verifying password...", model.UserName);
+
+                var user = await _userManager.FindByNameAsync(model.UserName);
 
                 if (user != null)
                 {
+                    if (user.IsActive == false)
+                    {
+                        _logger.LogWarning("Account is Disabled by Admin");
+                        return Unauthorized(new { message = "Your account is restricted. Please contact the admin panel !!!" });
+                    }
 
                     var result = await _signInManager.PasswordSignInAsync(user, model.Password, false, lockoutOnFailure: false);
                     if (result.Succeeded)
                     {
                         var roles = await _userManager.GetRolesAsync(user);
 
-
                         var claims = new List<Claim>
-                    {
-                        new Claim(ClaimTypes.Name, user.UserName),
-                        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
-                    };
+                        {
+                            new Claim(ClaimTypes.Name, user.UserName),
+                            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
+                        };
 
                         foreach (var role in roles)
                         {
@@ -72,6 +76,7 @@ namespace ERAS.Server.Controllers
                         _logger.LogWarning("User account locked out: {UserName}", model.UserName);
                         return BadRequest(new { message = "User account locked out." });
                     }
+
                     else
                     {
                         _logger.LogWarning("Incorrect Password for user: {UserName}", model.UserName);
@@ -92,6 +97,7 @@ namespace ERAS.Server.Controllers
             }
         }
 
+
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {
@@ -100,73 +106,25 @@ namespace ERAS.Server.Controllers
             HttpContext.Session.Remove("UserRole");
             return Ok(new { message = "Logout successful" });
         }
+
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordModel model)
+        {
+            var user = await _userManager.FindByIdAsync(model.UserId.ToString());
+            if (user == null)
+            {
+                return NotFound(new { message = "User not found." });
+            }
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var result = await _userManager.ResetPasswordAsync(user, token, model.NewPassword);
+
+            if (result.Succeeded)
+            {
+                return Ok(new { message = "Password reset successful." });
+            }
+            return BadRequest(new { message = "Failed to reset password.", errors = result.Errors });
+        }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//[HttpPost("login")]
-//public async Task<IActionResult> Login([FromBody] LoginViewModel model)
-//{
-//    try
-//    {
-//        if (!ModelState.IsValid)
-//        {
-//            _logger.LogError("Model state is invalid");
-//            return BadRequest(new { message = "Invalid model state" });
-//        }
-
-//        _logger.LogInformation("Attempting login for user: {UserName}", model.UserName);
-
-//        var user = await _userManager.FindByNameAsync(model.UserName);
-//        if (user == null)
-//        {
-//            _logger.LogWarning("User not found: {UserName}", model.UserName);
-//            return Unauthorized(new { message = "Incorrect user" });
-//        }
-
-//        _logger.LogInformation("User found: {UserName}. Verifying password...", model.UserName);
-
-//        var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, lockoutOnFailure:true);
-
-//        if (result.Succeeded)
-//        {
-//            _logger.LogInformation("User {UserName} successfully logged in", model.UserName);
-
-//            var userRole = await _userManager.GetRolesAsync(user);
-//            var userId = int.Parse(await _userManager.GetUserIdAsync(user));
-//            HttpContext.Session.SetInt32("UserId", userId);
-//            HttpContext.Session.SetString("UserRole", userRole.FirstOrDefault());
-
-//            return Ok(new
-//            {
-//                message = "Login successful",
-//                userRole = userRole.FirstOrDefault()
-//            });
-//        }
-//        _logger.LogWarning("Invalid password for user: {UserName}", model.UserName);
-//        return Unauthorized(new { message = "Incorrect username or password" });
-
-//    }
-//    catch (Exception ex)
-//    {
-//        _logger.LogError(ex, "An error occurred while attempting to log in user: {UserName}", model.UserName);
-//        return StatusCode(500, new { message = "Internal server error" });
-//    }
-//}

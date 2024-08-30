@@ -42,7 +42,10 @@
           <input type="password" id="Password" class="form-control" placeholder="Password" formControlName="Password">
           <div *ngIf="f['Password'].touched && f['Password'].invalid" class="text-danger">
             <div *ngIf="f['Password'].errors?.['required']">Password is required.</div>
-            <div *ngIf="f['Password'].errors?.['passwordStrength']">Password must be at least 6 characters long and include at least one lowercase letter, one uppercase letter, one number, and one special character.</div>
+            <div *ngIf="f['Password'].errors?.['passwordStrength']">
+            Password must be at least 6 characters long & include at least 1 lowercase,
+              1 uppercase letter, 1 number, & 1 special character.
+            </div>
           </div>
         </div>
         <div class="col-12 form-gp">

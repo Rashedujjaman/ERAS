@@ -41,7 +41,8 @@ namespace ERAS.Server.Controllers
                     PhoneNumberConfirmed = false,
                     TwoFactorEnabled = false,
                     LockoutEnabled = false,
-                    AccessFailedCount = 0
+                    AccessFailedCount = 0,
+                    IsActive = true
                 };
 
                 var existingUser = await _userManager.FindByNameAsync(user.UserName);
@@ -56,6 +57,23 @@ namespace ERAS.Server.Controllers
                 if(result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
+                    
+                    var role = await _roleManager.FindByIdAsync(model.UserRoleId.ToString());
+                    if (role != null)
+                    {
+                        var roleResult = await _userManager.AddToRoleAsync(user, role.Name);
+                        if (!roleResult.Succeeded)
+                        {
+                            _logger.LogWarning("Failed to assign role to user: {UserName}", model.UserName);
+                            return BadRequest(new { message = "Failed to assign role to user" });
+                        }
+                    }
+                    else
+                    {
+                        _logger.LogError("Role not found for ID: {UserRoleId}", model.UserRoleId);
+                        return BadRequest(new { message = "Role not found" });
+                    }
+
                     return Ok(new { message = $"User Created Successfully with UserName : {user.UserName}"});
                 }
                 else

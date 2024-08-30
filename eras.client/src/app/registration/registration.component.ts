@@ -30,7 +30,7 @@ export class RegistrationComponent implements OnInit {
       Name: new FormControl<string | null>(null, [Validators.required]),
       Alias: new FormControl<string | null>(null, [Validators.required]),
       Email: new FormControl<string | null>(null, [Validators.required, Validators.email]),
-      Password: new FormControl<string | null>(null, [Validators.required, this.passwordStrengthValidator]),
+      Password: new FormControl<string | null>(null, [Validators.required, Validators.minLength(6), this.passwordStrengthValidator]),
       UserRoleId: new FormControl<number | null>(null, [Validators.required])
     });
   }

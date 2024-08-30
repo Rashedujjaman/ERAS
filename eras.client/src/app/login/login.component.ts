@@ -50,16 +50,12 @@ export class LoginComponent{
 
        error: (error: HttpErrorResponse) => {
           console.error(error);
-          if (error.status === 401) {
             this.snackBar.open(error.error.message, 'Close', {
-              duration: 3000,
+              duration: 5000,
               horizontalPosition: 'center',
               verticalPosition: 'top',
               panelClass: ['error-snackbar']
             })
-          } else {
-            alert(`An error occurred: ${error.message}`);
-          }
           this.loading = false;
         }
         }
