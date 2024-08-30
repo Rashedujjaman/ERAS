@@ -5,13 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ERAS.Server.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser, UserRole, string>
+    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser, UserRole, int>(options)
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-
-            : base(options)
-        {
-        }
 
         //add DbSet property (table/collection in database) refers to model class of same name for columns
         //MUST sync to database after editing with:

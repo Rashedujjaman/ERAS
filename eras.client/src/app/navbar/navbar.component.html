@@ -6,19 +6,20 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav me-auto">
       <li class="nav-item active">
-        <a class="nav-link"  href="/dashboard"  > DashBoard </a>
+        <a class="nav-link"  routerLink="/dashboard">DashBoard</a>
       </li>
       <li class="nav-item" *ngIf="UserRole === 'Admin'">
-        <a class="nav-link" href="/registration" > Create User </a>
+        <a class="nav-link" routerLink="/registration">Create User</a>
       </li>
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" *ngIf="UserRole === 'Admin' || UserRole === 'Engineer'" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
           Setup
         </a>
         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <li><a class="dropdown-item" > Equipment Management </a></li>
-          <li><a class="dropdown-item" *ngIf="UserRole === 'Admin'">Equipment Model</a></li>
-          <li><a class="dropdown-item" *ngIf="UserRole === 'Admin'">Area Management</a></li>
+          <li><a class="dropdown-item">Manage Equipment</a></li>
+          <li><a class="dropdown-item" *ngIf="UserRole === 'Admin'" routerLink="/user">Manage Equipment Model</a></li>
+          <li><a class="dropdown-item" *ngIf="UserRole === 'Admin'" routerLink="/user">Manage Area</a></li>
+          <li><a class="dropdown-item" *ngIf="UserRole === 'Admin'" routerLink="/user">Manage User</a></li>
         </ul>
       </li>
       <li class="nav-item">
@@ -31,7 +32,7 @@
     </form>
     <ul class="navbar-nav ms-auto">
       <li class="nav-item">
-        <a class="nav-link" href="/profile">
+        <a class="nav-link" routerLink="/profile">
           <img class="profile-icon rounded-circle" src="assets/images/profile.jpg" alt="Profile" style="width: 40px; height: 40px;" />
         </a>
       </li>

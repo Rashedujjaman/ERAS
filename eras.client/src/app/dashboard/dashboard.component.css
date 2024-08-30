@@ -1,3 +1,32 @@
-.container{
-    padding-top:20px;
+.card-wrapper {
+  flex: 0 0 calc(100% / 8);
+  max-width: calc(100% / 8);
+}
+
+@media (max-width: px) {
+  .card-wrapper {
+    flex: 0 0 calc(100% / 7);
+    max-width: calc(100% / 7);
+  }
+}
+
+@media (max-width: 992px) {
+  .card-wrapper {
+    flex: 0 0 calc(100% / 5);
+    max-width: calc(100% / 5);
+  }
+}
+
+@media (max-width: 768px) {
+  .card-wrapper {
+    flex: 0 0 calc(100% / 4);
+    max-width: calc(100% / 4);
+  }
+}
+
+@media (max-width: 576px) {
+  .card-wrapper {
+    flex: 0 0 calc(100% / 3);
+    max-width: calc(100% / 3);
+  }
 }

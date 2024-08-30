@@ -1,20 +1,31 @@
-//Program
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ERAS.Server.Models;
 using ERAS.Server.Data;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Configure the database context with a connection string.
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddDistributedMemoryCache();
+
+// Session service to track user.
+builder.Services.AddSession(options =>
+    options.IdleTimeout = TimeSpan.FromMinutes(30));
+    
+
+// Configure Identity with custom user and role models, and EF storage.
 builder.Services.AddIdentity<ApplicationUser, UserRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddSignInManager<SignInManager<ApplicationUser>>()
     .AddDefaultTokenProviders();
 
+// Configure Identity options, including password and lockout settings.
 builder.Services.Configure<IdentityOptions>(options =>
 {
-    // Default Password settings.
+    // Password settings.
     options.Password.RequireDigit = true;
     options.Password.RequireLowercase = true;
     options.Password.RequireNonAlphanumeric = true;
@@ -26,34 +37,50 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
     options.Lockout.MaxFailedAccessAttempts = 5;
     options.Lockout.AllowedForNewUsers = true;
+
+    // User settings.
+    options.User.RequireUniqueEmail = true;
 });
 
+// Add authentication and authorization services.
 builder.Services.AddAuthentication();
-builder.Services.AddAuthorization(options => {});
+builder.Services.AddAuthorization(options => { });
+
+// Add controllers to the application.
 builder.Services.AddControllers();
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+// Configure Swagger/OpenAPI.
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+// Enable static files and set up the default file.
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
-// Configure the HTTP request pipeline.
+// Enable Swagger in development mode.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
+// Enable HTTPS redirection.
 app.UseHttpsRedirection();
 
+// Enable authentication and authorization middleware.
 app.UseAuthentication();
 app.UseAuthorization();
 
+// Session Service
+app.UseSession();
+
+// Map controllers.
 app.MapControllers();
 
+// Map fallback for client-side routing.
 app.MapFallbackToFile("/index.html");
 
+// Run the application.
 app.Run();

@@ -105,3 +105,7 @@ body {
     .submit-btn-area button:hover i {
       margin-left: 20px;
     }
+
+.error-snackbar {
+  background-color: red;
+}

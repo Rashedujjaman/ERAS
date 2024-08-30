@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http'; 
 
 @Component({
@@ -17,7 +18,11 @@ export class LoginComponent{
   Password: string = '';
   loading: boolean = false;
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private snackBar: MatSnackBar
+  ) { }
   login() {
     this.loading = true;
 
@@ -27,25 +32,36 @@ export class LoginComponent{
     };
 
     this.http.post('/api/authentication/login', loginData)
-      .subscribe(
-        (response: any) => {
-          console.log(response);
+      .subscribe({
+        next: (response: any) => {
+        console.log(response);
 
-          localStorage.setItem('userRole', response.userRole);
+        localStorage.setItem('userRole', response.userRole);
 
-          console.log(localStorage.getItem('userRole'));
-          this.loading = false;
-          this.router.navigate(['/dashboard']);
-        },
+        this.loading = false;
+        this.router.navigate(['/dashboard']);
+        this.snackBar.open(response.message, 'Close', {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom',
+          panelClass: ['mat-primary']
+        })
+      },
 
-        (error: HttpErrorResponse) => {
+       error: (error: HttpErrorResponse) => {
           console.error(error);
           if (error.status === 401) {
-            alert('Invalid username or password.');
+            this.snackBar.open(error.error.message, 'Close', {
+              duration: 3000,
+              horizontalPosition: 'center',
+              verticalPosition: 'top',
+              panelClass: ['error-snackbar']
+            })
           } else {
             alert(`An error occurred: ${error.message}`);
           }
           this.loading = false;
+        }
         }
       );
   }

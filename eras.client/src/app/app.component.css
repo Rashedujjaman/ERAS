@@ -7,6 +7,6 @@ body {
 /*  background: #f3f8fb;*/
 }
 .body-content {
-  flex: 1;
+  flex: 1 0 auto;
   overflow: auto;
 }

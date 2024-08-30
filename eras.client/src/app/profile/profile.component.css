@@ -1,26 +1,44 @@
-.profile-container {
-  margin-top: 40px;
-  min-height: 100%;
-
-}
-
 .profile-card {
-  height: 400px;
-  width: 500px;
+  height: 500px;
+  width: 550px;
   background-color: aliceblue;
-
 }
 
 .user-info {
   text-align: center;
-  margin-bottom: 20px;
 }
 
 .user-photo {
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
   object-fit: cover;
-  margin-bottom: 10px;
+  border: 1px solid orangered;
+}
+
+.user-info h3{
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+.user-info .row {
+  border: 1px solid orangered;
+  border-radius: 5px;
+}
+
+.user-info .row:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.buttons button:hover {
+  background: #ffbf00;
+  color: #fff;
+  transform: scale(1.1);
+}
+
+.success-snackbar {
+  background-color: green !important;
+  color: white;
 }
 

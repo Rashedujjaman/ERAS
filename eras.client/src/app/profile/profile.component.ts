@@ -1,36 +1,84 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [MatCardModule, MatButtonModule],
+  imports: [MatCardModule, MatButtonModule, CommonModule],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
-  userName: string = 'MrUser';
-  userEmail: string = 'user@gmail.com';
-  userMobile: string = '123456789';
+  userName: string = '';
+  Name: string = '';
+  Alias: string = '';
+  userEmail: string = '';
   userRole: string = '';
   userPhotoUrl: string = 'assets/images/profile.jpg';
+  loading: boolean = false;
+  errorMessage: string = '';
 
-  constructor(private router: Router) { }
+  constructor(private http: HttpClient, private router: Router, private snackBar: MatSnackBar) { }
 
   ngOnInit() {
-    // Fetch user details from local storage 
-    this.userRole = localStorage.getItem('userRole') || '';
-    //this.userName = localStorage.getItem('userName') || '';
-    //this.userEmail = localStorage.getItem('userEmail') || '';
-    //this.userMobile = localStorage.getItem('userMobile') || '';
-    //// If you're storing the user's photo URL in local storage, fetch it as well
-    //this.userPhotoUrl = localStorage.getItem('userPhotoUrl') || 'assets/images/profile.jpg';
+    this.profileDataFetch();
+  }
+
+  profileDataFetch(): void {
+    this.loading = true;
+    this.errorMessage = '';
+
+    this.http.get('/api/profile/profile')
+      .subscribe({
+        next: (response: any) => {
+          this.userName = response.profile.userName || '';
+          this.Name = response.profile.name || '';
+          this.Alias = response.profile.alias || '';
+          this.userEmail = response.profile.email || '';
+          this.userPhotoUrl = response.profile.photoUrl || this.userPhotoUrl;
+          this.userRole = response.profile.userRole || '';
+          this.loading = false;
+        },
+        error: (error: HttpErrorResponse) => {
+          console.error('Error fetching profile data:', error);
+          this.errorMessage = 'Failed to load profile data. Please try again later.';
+          this.loading = false;
+          if (error.error.sessionOut === true) {
+            this.router.navigate(['']);
+            this.snackBar.open(error.error.message, 'Close', {
+              horizontalPosition: 'center',
+              verticalPosition: 'top'
+            })
+          } else if (error.status === 404) {
+            this.errorMessage = 'Profile not found.';
+          } else if (error.status === 500) {
+            this.errorMessage = 'An error occurred on the server. Please try again later.';
+          }
+        }
+      });
   }
 
   logout() {
-    localStorage.removeItem('userRole');
-    this.router.navigate(['']);
+    this.http.post('/api/authentication/logout', {})
+      .subscribe({
+        next: (response: any) => {
+          localStorage.removeItem('userRole');
+          this.router.navigate(['']);
+          this.snackBar.open(response.message, 'Close', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+            panelClass: ['success-snackbar']
+          })
+        },
+        error: (error: any) => {
+          console.error('Error logging out:', error);
+        }
+      });
   }
 }

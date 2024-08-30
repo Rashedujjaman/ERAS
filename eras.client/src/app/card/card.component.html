@@ -1,9 +1,8 @@
-<div class="card" style="width: 10rem; background-color: #f6f6f6;" >
-  <img class="card-img-top" [src]="imageUrl" alt="Card image cap">
-  <div class="card-body">
-    <p class="card-title mb-0">{{name}}</p>
-    <p class="card-text mb-0">Ip: {{ipAddress}}</p>
-    <p class="card-text mb-1">Zone: {{zone}}</p>
-    <a href="#" class="btn btn-primary btn-full-width">View</a>
-  </div>
-</div>
+<mat-card class="equipment-card" appearance="outlined">
+  <img mat-card-image [src]="imageUrl" alt="Equipment Image">
+  <mat-card-content class="p-2">
+    <mat-card-subtitle>{{name}}</mat-card-subtitle>
+    <mat-card-subtitle class="font-weight-light">IP: {{ipAddress}}</mat-card-subtitle>
+    <mat-card-subtitle class="font-weight-light">Zone: {{zone}}</mat-card-subtitle>
+  </mat-card-content>
+</mat-card>

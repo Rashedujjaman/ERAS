@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ERAS.Server.Models
 {
-    public class ApplicationUser : IdentityUser
+    public class ApplicationUser : IdentityUser<int>
     {
         public required string Name { get; set; }
         public required string Alias { get; set; }

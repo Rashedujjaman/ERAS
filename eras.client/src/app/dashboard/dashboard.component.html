@@ -1,7 +1,7 @@
 <app-filter></app-filter>
 <div class="container">
-  <div class="row g-2">
-    <div class="col-6 col-sm-4 col-md-3 col-lg-2" *ngFor="let equipment of equipmentList">
+  <div class="row d-flex flex-wrap mt-3 g-3">
+    <div class="card-wrapper" *ngFor="let equipment of equipmentList">
       <equipment-card [equipment]="equipment"></equipment-card>
     </div>
   </div>

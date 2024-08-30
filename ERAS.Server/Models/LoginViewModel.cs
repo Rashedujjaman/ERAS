@@ -5,11 +5,9 @@ namespace ERAS.Server.Models
 {
     public class LoginViewModel
     {
-        [Required]
-        public string UserName { get; set; }
-        [Required]
+        public required string UserName { get; set; }
         [DataType(DataType.Password)]
-        public string Password { get; set; }
+        public required string Password { get; set; }
     }
 }
 

@@ -1,4 +1,5 @@
 ﻿using ERAS.Server.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,12 +9,15 @@ namespace ERAS.Server.Controllers
     [Route("api/[controller]")]
     public class RegistrationController(
         UserManager<ApplicationUser> userManager,
-        ILogger<AuthenticationController> logger) : ControllerBase   
+        ILogger<AuthenticationController> logger,
+        RoleManager<UserRole> roleManager) : ControllerBase   
     {
         private readonly UserManager<ApplicationUser> _userManager = userManager;
         private readonly ILogger<AuthenticationController> _logger = logger;
+        private readonly RoleManager<UserRole> _roleManager = roleManager;
 
         [HttpPost("register")]
+        [Authorize(Roles="Admin")]
         public async Task<IActionResult> Registration([FromBody] RegistrationViewModel model)
         {
             try
@@ -24,6 +28,7 @@ namespace ERAS.Server.Controllers
                     return BadRequest(new { message = "Invalid model state" });
                 }
                 _logger.LogInformation("Attempting registration for user: {UserName}", model.UserName);
+
                 var user = new ApplicationUser
                 {
                     UserName = model.UserName,
@@ -38,11 +43,20 @@ namespace ERAS.Server.Controllers
                     LockoutEnabled = false,
                     AccessFailedCount = 0
                 };
+
+                var existingUser = await _userManager.FindByNameAsync(user.UserName);
+                if(existingUser != null)
+                {
+                    _logger.LogError("Sign in failed because User Already Exist in the system");
+                    return BadRequest(new { message = $"Username {user.UserName} already taken. Please Try another Username !!!" });
+                }
+
+
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if(result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
-                    return Ok(new { message = "User Created Successfully"});
+                    return Ok(new { message = $"User Created Successfully with UserName : {user.UserName}"});
                 }
                 else
                 {

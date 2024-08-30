@@ -1,4 +1,6 @@
 import { Component, Input } from '@angular/core';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
 
 interface Equipment {
   name: string;
@@ -11,7 +13,8 @@ interface Equipment {
   selector: 'equipment-card',
   standalone: true,
   templateUrl: './card.component.html',
-  styleUrls: ['./card.component.css']
+  styleUrls: ['./card.component.css'],
+  imports: [MatCardModule],
 })
 
 

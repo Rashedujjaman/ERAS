@@ -1,10 +1,17 @@
-.card-img-top {
-  height: 100px;
-  object-fit: cover; 
-  width: 100%; 
-}
-.btn-full-width {
-  width: 100%;
-  display: block;
+.equipment-card {
+  width: 120px;
+  background-color: aliceblue;
 }
 
+.equipment-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 16px rgba(3, 165, 252, 0.3);
+}
+
+.equipment-card img {
+  height: 80px;
+}
+
+.font-weight-light{
+    font-size: 12px;
+}

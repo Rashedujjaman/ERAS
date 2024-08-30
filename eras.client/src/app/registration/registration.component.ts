@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRadioModule } from '@angular/material/radio';
-import { ReactiveFormsModule, FormControl, FormBuilder, FormGroup, Validators, FormsModule, AbstractControl } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ReactiveFormsModule, FormControl, FormBuilder, FormGroup, Validators, FormsModule } from '@angular/forms';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http'; 
 
 @Component({
@@ -15,11 +16,12 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 })
 export class RegistrationComponent implements OnInit {
   registrationForm!: FormGroup;
-  loading: boolean = false;
+  loading = false;
 
   constructor(
     private formBuilder: FormBuilder,
     private http: HttpClient,
+    private snackBar: MatSnackBar
   ) { }
 
   ngOnInit(): void {
@@ -54,23 +56,54 @@ export class RegistrationComponent implements OnInit {
 
     if (this.registrationForm.invalid) {
       this.loading = false;
+
       return;
     }
 
     const registrationData = this.registrationForm.value;
 
     this.http.post('/api/registration/register', registrationData)
-      .subscribe(
-        (response: any) => {
-          console.log(response);
-          alert('User Registered Successfully');
+      .subscribe({
+        next: (response: any) => {
+        this.snackBar.open(response.message, 'Close', {
+          duration: 4000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+          panelClass: ['success-snackbar']
+        })
           this.registrationForm.reset();
-        },
-        (error: HttpErrorResponse) => {
+        this.loading = false;
+      },
+        error: (error: HttpErrorResponse) => {
           console.error(error);
-          alert(`An error occurred: ${error.message}`);
+          if (error.status === 200) {
+
+            this.snackBar.open('You are not authorized to perform this action.', 'Close', {
+              duration: 5000,
+              horizontalPosition: 'center',
+              verticalPosition: 'top',
+              panelClass: ['error-snackbar']
+            })
+          } else if (error.status === 400) {
+            this.snackBar.open(error.error.message, 'Close', {
+              duration: 6000,
+              horizontalPosition: 'center',
+              verticalPosition: 'top',
+              panelClass: ['error-snackbar']
+            })
+          }
+          else {
+            this.snackBar.open(error.error.message, 'Close', {
+              duration: 8000,
+              horizontalPosition: 'center',
+              verticalPosition: 'top',
+              panelClass: ['error-snackbar']
+            })
+          }
+          this.loading = false;
+        }
         }
       );
-    this.loading = false;
+
   }
 }

@@ -1,22 +1,50 @@
-<div class="profile-container d-flex justify-content-center align-items-center">
+
+<div class="profile-container d-flex justify-content-center align-items-center mt-4">
   <mat-card class="profile-card">
-    <mat-card-header>
-      <mat-card-title>My Profile</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <div class="user-info">
-        <img [src]="userPhotoUrl" alt="User Photo" class="user-photo">
-        <h3>{{userName}}</h3>
-        <p>Email: {{userEmail}}</p>
-        <p>Mobile: {{userMobile}}</p>
-        <p>Role: {{userRole}}</p>
-      </div>
-    </mat-card-content>
+    <div>
+      <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+    </div>
+    <div *ngIf="!errorMessage">
+      <mat-card-header class="justify-content-center text-uppercase">
+        <mat-card-title>My Profile</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="user-info">
+          <img [src]="userPhotoUrl" alt="User Photo" class="user-photo mt-3">
+          <h3 *ngIf="!loading" class="m-3">{{Alias}}</h3>
+          <h3 *ngIf="loading" class="m-3">Loading...</h3>
 
-    <mat-card-actions class="buttons d-flex justify-content-end">
-      <button mat-flat-button (click)="logout()">Sign Out</button>
-    </mat-card-actions>
-    
+          <div class="row justify-content-around m-2 p-2 bg-white">
+            <div class="col-3 align-items-start text-start">
+              <p class="mb-2">UserName</p>
+              <p class="mb-2">Full Name</p>
+              <p class="mb-2">Email</p>
+              <p>Role</p>
+            </div>
+            <div class="col-sm-1 text-start">
+              <p class="mb-2">:</p>
+              <p class="mb-2">:</p>
+              <p class="mb-2">:</p>
+              <p>:</p>
+            </div>
+            <div class="col-7 text-start ">
+              <p class="mb-2" *ngIf="!loading">{{userName}}</p>
+              <p class="mb-2" *ngIf="!loading">{{Name}}</p>
+              <p class="mb-2" *ngIf="!loading">{{userEmail}}</p>
+              <p *ngIf="!loading">{{userRole}}</p>
 
+              <p class="mb-2" *ngIf="loading">Loading...</p>
+              <p class="mb-2" *ngIf="loading">Loading...</p>
+              <p class="mb-2" *ngIf="loading">Loading...</p>
+              <p *ngIf="loading">Loading...</p>
+            </div>
+          </div>
+
+        </div>
+      </mat-card-content>
+      <mat-card-actions class="buttons d-flex justify-content-end align-self-end mt-5">
+        <button mat-flat-button (click)="logout()" class="align-self-end ">Sign Out</button>
+      </mat-card-actions>
+    </div>
   </mat-card>
 </div>
