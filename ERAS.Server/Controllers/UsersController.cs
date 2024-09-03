@@ -16,6 +16,11 @@ namespace ERAS.Server.Controllers
         [HttpGet("users")]
         public async Task<IActionResult> GetUsers()
         {
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if(userId == null)
+            {
+                return Unauthorized(new { message = "Sorry your session is timed out !!!", sessionOut = true });
+            }
             var users = _userManager.Users.ToList();
             var userViewModels = new List<UsersViewModel>();
 

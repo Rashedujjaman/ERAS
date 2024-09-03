@@ -5,15 +5,18 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { ResetPasswordDialogComponent } from '../resetpassworddialog/resetpassworddialog.component';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [MatCardModule, MatButtonModule, CommonModule],
+  imports: [MatCardModule, MatButtonModule, CommonModule, MatDialogModule, ResetPasswordDialogComponent],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
+  userId: string = '';
   userName: string = '';
   Name: string = '';
   Alias: string = '';
@@ -23,7 +26,12 @@ export class ProfileComponent implements OnInit {
   loading: boolean = false;
   errorMessage: string = '';
 
-  constructor(private http: HttpClient, private router: Router, private snackBar: MatSnackBar) { }
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private snackBar: MatSnackBar,
+    private dialogBox: MatDialog
+  ) { }
 
   ngOnInit() {
     this.profileDataFetch();
@@ -36,6 +44,7 @@ export class ProfileComponent implements OnInit {
     this.http.get('/api/profile/profile')
       .subscribe({
         next: (response: any) => {
+          this.userId = response.profile.userId;
           this.userName = response.profile.userName || '';
           this.Name = response.profile.name || '';
           this.Alias = response.profile.alias || '';
@@ -61,6 +70,16 @@ export class ProfileComponent implements OnInit {
           }
         }
       });
+  }
+
+  resetPassword() {
+    this.dialogBox.open(ResetPasswordDialogComponent, {
+      width: '400px',
+      data: {
+        userId: this.userId,
+        userName: this.userName
+      }
+    });
   }
 
   logout() {

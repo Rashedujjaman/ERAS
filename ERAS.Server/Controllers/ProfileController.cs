@@ -29,6 +29,7 @@ namespace ERAS.Server.Controllers
 
                 var profile = new ProfileViewModel
                 {
+                    userId = userId.ToString(),
                     userName = user.UserName,
                     name = user.Name,
                     alias = user.Alias,

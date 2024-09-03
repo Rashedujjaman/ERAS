@@ -12,11 +12,16 @@ import { Router, RouterModule } from '@angular/router';
 })
 export class NavbarComponent implements OnInit {
   UserRole: string | null = '';
+  isDashboardRoute: boolean = false;
 
   constructor(private router: Router) { }
 
   ngOnInit() {
     this.UserRole = localStorage.getItem('userRole');
+
+    this.router.events.subscribe(() => {
+      this.isDashboardRoute = this.router.url === '/dashboard';
+    });
   }
   onProfileIconClick() {
     console.log('Profile Icon is Clicked');

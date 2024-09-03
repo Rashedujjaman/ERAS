@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ERAS.Server.Models;
 using ERAS.Server.Data;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,8 +14,13 @@ builder.Services.AddDistributedMemoryCache();
 
 // Session service to track user.
 builder.Services.AddSession(options =>
-    options.IdleTimeout = TimeSpan.FromMinutes(30));
-    
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+
 
 // Configure Identity with custom user and role models, and EF storage.
 builder.Services.AddIdentity<ApplicationUser, UserRole>()
@@ -43,7 +49,10 @@ builder.Services.Configure<IdentityOptions>(options =>
 });
 
 // Add authentication and authorization services.
-builder.Services.AddAuthentication();
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = IdentityConstants.ApplicationScheme;
+});
 builder.Services.AddAuthorization(options => { });
 
 // Add controllers to the application.

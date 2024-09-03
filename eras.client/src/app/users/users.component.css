@@ -13,3 +13,7 @@
   align-items: center;
   z-index: 1000;
 }
+
+.mat-column-id {
+  flex: 0 0 40px;
+}

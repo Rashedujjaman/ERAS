@@ -1,6 +1,6 @@
 
-<div class="profile-container d-flex justify-content-center align-items-center mt-4">
-  <mat-card class="profile-card">
+<div class="profile-container d-flex justify-content-center align-items-center">
+  <mat-card class="profile-card mt-4">
     <div>
       <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
     </div>
@@ -42,8 +42,9 @@
 
         </div>
       </mat-card-content>
-      <mat-card-actions class="buttons d-flex justify-content-end align-self-end mt-5">
-        <button mat-flat-button (click)="logout()" class="align-self-end ">Sign Out</button>
+      <mat-card-actions class="buttons d-flex justify-content-between mt-5 ms-3 me-3">
+        <button mat-flat-button (click)="resetPassword()" class="reset-password-button">Reset Password</button>
+        <button mat-flat-button (click)="logout()" class="sign-out-button">Sign Out</button>
       </mat-card-actions>
     </div>
   </mat-card>

@@ -1,0 +1,23 @@
+<div class="container">
+  <h2 mat-dialog-title>{{ data.isEditMode ? 'Edit Area' : 'Add Area' }}</h2>
+
+  <form [formGroup]="areaForm">
+    <mat-form-field class="full-width">
+      <mat-label>Name</mat-label>
+      <input matInput placeholder="Enter area name" formControlName="name" required />
+      <mat-error *ngIf="areaForm.get('name')?.hasError('required')">
+        Name is required
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="full-width">
+      <mat-label>Alias</mat-label>
+      <input matInput placeholder="Enter area alias" formControlName="alias" required />
+    </mat-form-field>
+
+    <mat-dialog-actions class="action-buttons" align="end">
+      <button mat-button (click)="onCancel()">Cancel</button>
+      <button mat-raised-button color="primary" [disabled]="areaForm.invalid" (click)="onSave()">Save</button>
+    </mat-dialog-actions>
+  </form>
+</div>

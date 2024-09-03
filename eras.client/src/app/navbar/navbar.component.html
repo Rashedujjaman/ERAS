@@ -16,9 +16,9 @@
           Setup
         </a>
         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <li><a class="dropdown-item">Manage Equipment</a></li>
-          <li><a class="dropdown-item" *ngIf="UserRole === 'Admin'" routerLink="/users">Manage Equipment Model</a></li>
-          <li><a class="dropdown-item" *ngIf="UserRole === 'Admin'" routerLink="/users">Manage Area</a></li>
+          <li><a class="dropdown-item" *ngIf="UserRole === 'Admin' || UserRole === 'Engineer'" routerLink="/equipment">Manage Equipment</a></li>
+          <li><a class="dropdown-item" *ngIf="UserRole === 'Admin'" routerLink="/equipment-model">Manage Equipment Model</a></li>
+          <li><a class="dropdown-item" *ngIf="UserRole === 'Admin'" routerLink="/area">Manage Area</a></li>
           <li><a class="dropdown-item" *ngIf="UserRole === 'Admin'" routerLink="/users">Manage Users</a></li>
         </ul>
       </li>
@@ -26,7 +26,7 @@
         <a class="nav-link" >Help</a>
       </li>
     </ul>
-    <form class="d-flex my-2 my-lg-0 me-auto">
+    <form class="d-flex my-2 my-lg-0 me-auto" *ngIf="isDashboardRoute">
       <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
       <button class="btn btn-outline-success me-2" type="submit">Search</button>
     </form>

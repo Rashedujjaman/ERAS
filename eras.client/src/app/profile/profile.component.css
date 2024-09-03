@@ -37,6 +37,14 @@
   transform: scale(1.1);
 }
 
+.buttons .reset-password-button{
+    border: 1px solid #ffbf00;
+}
+
+.buttons .sign-out-button {
+  border: 1px solid #008bff;
+}
+
 .success-snackbar {
   background-color: green !important;
   color: white;

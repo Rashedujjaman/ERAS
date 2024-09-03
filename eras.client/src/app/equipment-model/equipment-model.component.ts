@@ -1,0 +1,132 @@
+import { Component, OnInit } from '@angular/core';
+import { MatDialog, MatDialogModule, MatDialogConfig } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { AddEditEquipmentDialogComponent } from '../add-edit-equipment-dialog/add-edit-equipment-dialog.component';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { CommonModule } from '@angular/common';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
+
+
+@Component({
+  standalone: true,
+  selector: 'app-equipment-model-management',
+  templateUrl: './equipment-model.component.html',
+  styleUrls: ['./equipment-model.component.css'],
+  imports: [CommonModule,
+    MatTableModule,
+    MatIconModule,
+    MatButtonModule,
+    MatDialogModule,
+    MatProgressSpinnerModule]
+})
+export class EquipmentModelComponent implements OnInit {
+  displayedColumns: string[] = ['id', 'name', 'alias', 'userCreated', 'dateCreated', 'userModified', 'lastModified', 'actions'];
+  dataSource = new MatTableDataSource<any>();
+  isLoading: boolean = false;
+
+  constructor(
+    private http: HttpClient,
+    private dialog: MatDialog,
+    private router: Router,
+    private snackBar: MatSnackBar
+  ) { }
+
+  ngOnInit() {
+
+    this.loadEquipmentModels();
+
+  }
+
+  loadEquipmentModels() {
+    this.isLoading = true;
+    this.http.get<any[]>('/api/EquipmentModel')
+      .subscribe({
+        next: (response: any) => {
+          this.dataSource = response;
+          this.isLoading = false;
+        },
+        error: (error: HttpErrorResponse) => {
+          console.log(error);
+
+          if (error.status === 200) {
+            this.snackBar.open('You are not authorized to perform this action.', 'Close', {
+              duration: 8000,
+              horizontalPosition: 'center',
+              verticalPosition: 'top',
+              panelClass: ['error-snackBar']
+            });
+            this.router.navigate(['']);
+          } else if (error.error.sessionOut === true) {
+            this.snackBar.open(error.error.message, 'Close', {
+              horizontalPosition: 'center',
+              verticalPosition: 'top',
+              panelClass: ['error-snackBar']
+            });
+            this.router.navigate(['']);
+          } else {
+            this.snackBar.open('An error occurred while fetching user Equipment Model data', 'Close', {
+              duration: 3000,
+              horizontalPosition: 'center',
+              verticalPosition: 'top',
+              panelClass: ['error-snackBar']
+            });
+          }
+          this.isLoading = false;
+        }
+      });
+  }
+
+  openAddEquipmentDialog() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    //dialogConfig.height = '500px';
+    dialogConfig.width = '400px';
+    dialogConfig.data = { isEditingMode: false }
+
+    const dialogRef = this.dialog.open(AddEditEquipmentDialogComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loadEquipmentModels(); // Reload data after adding new equipment
+      }
+    });
+  }
+
+  editEquipment(equipment: any) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = '400px';
+    dialogConfig.data = { equipment: equipment, isEditMode: true }
+    const dialogRef = this.dialog.open(AddEditEquipmentDialogComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loadEquipmentModels();
+      }
+    });
+  }
+
+  deleteEquipment(id: number) {
+    const comingFrom = 'equipmentModel'
+    const dialogConfig = new MatDialogConfig;
+    dialogConfig.data = { comingFrom };
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.http.delete(`/api/equipmentmodel/${id}`)
+          .subscribe(() => {
+            this.loadEquipmentModels();
+          });
+      }
+    });
+  }
+}

@@ -1,5 +1,5 @@
 <div class="register-area">
-  <div class="register-box">
+  <div class="register-box mt-3">
     <form [formGroup]="registrationForm" (ngSubmit)="register()" #registrationFormDirective="ngForm">
       <div class="register-head">
         <div class="row">
@@ -60,7 +60,7 @@
           </div>
         </div>
         <div class="col-12 submit-btn-area">
-          <button id="form_submit" type="submit" class="btn btn-primary" [disabled]="loading">
+          <button id="form_submit" type="submit" class="btn btn-primary" [disabled]="loading || !(registrationForm.valid)">
             <span *ngIf="!loading">Submit</span>
             <span *ngIf="loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
           </button>

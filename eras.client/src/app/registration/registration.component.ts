@@ -77,13 +77,13 @@ export class RegistrationComponent implements OnInit {
         error: (error: HttpErrorResponse) => {
           console.error(error);
           if (error.status === 200) {
-
             this.snackBar.open('You are not authorized to perform this action.', 'Close', {
               duration: 5000,
               horizontalPosition: 'center',
               verticalPosition: 'top',
               panelClass: ['error-snackbar']
             })
+            this.loading = false;
           } else if (error.status === 400) {
             this.snackBar.open(error.error.message, 'Close', {
               duration: 6000,
@@ -91,6 +91,7 @@ export class RegistrationComponent implements OnInit {
               verticalPosition: 'top',
               panelClass: ['error-snackbar']
             })
+            this.loading = false;
           }
           else {
             this.snackBar.open(error.error.message, 'Close', {
@@ -99,8 +100,8 @@ export class RegistrationComponent implements OnInit {
               verticalPosition: 'top',
               panelClass: ['error-snackbar']
             })
+            this.loading = false;
           }
-          this.loading = false;
         }
         }
       );

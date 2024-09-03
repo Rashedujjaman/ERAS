@@ -6,6 +6,9 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { ProfileComponent } from './profile/profile.component';
 import { RegistrationComponent } from './registration/registration.component';
 import { UsersComponent } from './users/users.component';
+import { EquipmentModelComponent } from './equipment-model/equipment-model.component';
+import { AreaComponent } from './area/area.component';
+import { EquipmentComponent } from './equipment/equipment.component';
 
 const routes: Routes = [
   {
@@ -18,21 +21,37 @@ const routes: Routes = [
     component: DashboardComponent,
     title: 'Dashboard'
   },
-  {
-    path: 'profile',
-    component: ProfileComponent,
-    title: 'Profile'
-  },
+
   {
     path: 'registration',
     component: RegistrationComponent,
     title: 'Registration'
   },
   {
+    path: 'area',
+    component: AreaComponent,
+    title: 'Area Management'
+  },
+  {
+    path: 'equipment',
+    component: EquipmentComponent,
+    title: 'Equipment Management'
+  },
+  {
+    path: 'equipment-model',
+    component: EquipmentModelComponent,
+    title: 'EquipmentModel'
+  },
+  {
     path: 'users',
     component: UsersComponent,
     title: 'Manage User'
-  }
+  },
+  {
+    path: 'profile',
+    component: ProfileComponent,
+    title: 'Profile'
+  },
 ];
 
 @NgModule({

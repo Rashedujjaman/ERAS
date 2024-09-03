@@ -9,12 +9,19 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ResetPasswordDialogComponent } from '../resetpassworddialog/resetpassworddialog.component';
+import { Router } from '@angular/router';
 
 
 @Component({
   selector: 'app-user',
   standalone: true,
-  imports: [MatTableModule, MatDialogModule, MatSlideToggleModule, MatIconModule, MatButtonModule, CommonModule, MatProgressSpinnerModule],
+  imports: [MatTableModule,
+    MatDialogModule,
+    MatSlideToggleModule,
+    MatIconModule,
+    MatButtonModule,
+    CommonModule,
+    MatProgressSpinnerModule],
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.css']
 })
@@ -26,7 +33,8 @@ export class UsersComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private snackBar: MatSnackBar,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -37,12 +45,42 @@ export class UsersComponent implements OnInit {
     this.isLoading = true;
 
     this.http.get<any[]>(`/api/users/users`)
-      .subscribe(users => {
-        this.users = users;
-    }
-    );
-    this.isLoading = false;
+      .subscribe({
+        next: (response: any) => {
+          this.users = response;
+          this.isLoading = false;
+        },
+        error: (error: HttpErrorResponse) => {
+          console.log(error);
+
+          if (error.status === 200) {
+            this.snackBar.open('You are not authorized to perform this action.', 'Close', {
+              duration: 8000,
+              horizontalPosition: 'center',
+              verticalPosition: 'top',
+              panelClass: ['error-snackBar']
+            });
+          } else if (error.error.sessionOut === true) {
+            this.snackBar.open(error.error.message, 'Close', {
+              horizontalPosition: 'center',
+              verticalPosition: 'top',
+              panelClass: ['error-snackBar']
+            });
+            this.router.navigate(['']);
+          } else {
+            this.snackBar.open('An error occurred while fetching user data', 'Close', {
+              duration: 3000,
+              horizontalPosition: 'center',
+              verticalPosition: 'top',
+              panelClass: ['error-snackBar']
+            });
+          }
+
+          this.isLoading = false;
+        }
+      });
   }
+
 
   toggleUserStatus(user: any) {
     user.IsActive = !user.IsActive;
