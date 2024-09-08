@@ -5,6 +5,12 @@
     <div class="loading-overlay" *ngIf="isLoading">
       <mat-spinner> </mat-spinner>
     </div>
+
+    <mat-form-field>
+      <mat-label>Filter</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Zone5" #input>
+    </mat-form-field>
+
     <!-- Equipment Table -->
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" *ngIf="!isLoading">
 
@@ -66,6 +72,10 @@
       <!-- Header and Row Definitions -->
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+      </tr>
     </table>
 
     <!-- Add New Equipment Button -->

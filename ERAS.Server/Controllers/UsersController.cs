@@ -32,12 +32,12 @@ namespace ERAS.Server.Controllers
                 userViewModels.Add(new UsersViewModel
                 {
                     Id = user.Id,
-                    UserName = user.UserName,
+                    UserName = user.UserName ?? "",
                     Name = user.Name,
                     Alias = user.Alias,
-                    Email = user.Email,
+                    Email = user.Email ?? "",
                     PhotoUrl = user.ImageUrl,
-                    Role = roleName,
+                    Role = roleName ?? "",
                     IsActive = user.IsActive ?? true
                 });
             }

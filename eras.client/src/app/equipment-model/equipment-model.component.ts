@@ -5,6 +5,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { AddEditEquipmentDialogComponent } from '../add-edit-equipment-dialog/add-edit-equipment-dialog.component';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { MatTableModule } from '@angular/material/table';
+import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
@@ -23,6 +24,7 @@ import { Router } from '@angular/router';
     MatIconModule,
     MatButtonModule,
     MatDialogModule,
+    MatInputModule,
     MatProgressSpinnerModule]
 })
 export class EquipmentModelComponent implements OnInit {
@@ -82,6 +84,11 @@ export class EquipmentModelComponent implements OnInit {
       });
   }
 
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
   openAddEquipmentDialog() {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
@@ -123,8 +130,22 @@ export class EquipmentModelComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.http.delete(`/api/equipmentmodel/${id}`)
-          .subscribe(() => {
-            this.loadEquipmentModels();
+          .subscribe( {
+            next: (response: any) => {
+              this.snackBar.open(response.message, 'Close', {
+                duration: 3000,
+                horizontalPosition: 'center',
+                verticalPosition: 'bottom'
+              })
+              this.loadEquipmentModels();
+            },
+            error: (error: HttpErrorResponse) => {
+              this.snackBar.open(error.error.message, 'Close', {
+                duration: 3000,
+                horizontalPosition: 'center',
+                verticalPosition: 'bottom'
+              })
+            }
           });
       }
     });

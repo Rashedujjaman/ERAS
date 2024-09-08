@@ -13,7 +13,7 @@ namespace ERAS.Server.Controllers
     {
         private readonly ApplicationDbContext _dbContext = dbContext;
 
-        // GET: api/equipment-model
+        // GET: api/EquipmentModel
         [HttpGet]
         public async Task<IActionResult> GetAllEquipmentModels()
         {
@@ -22,29 +22,26 @@ namespace ERAS.Server.Controllers
             {
                 return Unauthorized(new { message = "Sorry your session is timed out !!!", sessionOut = true });
             }
-            var equipmentModels = await (from e in _dbContext.EquipmentModel
-                                         join uc in _dbContext.ApplicationUser on e.UserCreated equals uc.Id into createdBy
-                                         from createdUser in createdBy.DefaultIfEmpty()
-                                         join um in _dbContext.ApplicationUser on e.UserModified equals um.Id into modifiedBy
-                                         from modifiedUser in modifiedBy.DefaultIfEmpty()
-                                         where e.IsDeleted == null || e.IsDeleted == false
-                                         select new
-                                         {
-                                            Id = e.Id,
-                                            Name = e.Name,
-                                            Alias = e.Alias,
-                                            UserCreated = createdUser.UserName,
-                                            DateCreated = e.DateCreated,
-                                            UserModified = modifiedUser.UserName,
-                                            DateModified = e.DateModified,
-                                            IsDeleted = e.IsDeleted
-
-                                         }).ToListAsync();
+            var equipmentModels = await _dbContext.EquipmentModel
+                .Include(e => e.UserCreated)
+                .Include(e => e.UserModified)
+                .Where(e => e.IsDeleted == null || e.IsDeleted == false)
+                .Select(e => new 
+                {
+                    e.Id,
+                    e.Name,
+                    e.Alias,
+                    e.DateModified,
+                    e.DateCreated,
+                    e.IsDeleted,
+                    UserCreated = e.UserCreated.UserName,
+                    UserModified = e.UserModified.UserName,
+                }).ToListAsync();
 
             return Ok(equipmentModels);
         }
 
-        // POST: api/equipment-model
+        // POST: api/EquipmentModel
         [HttpPost]
         public async Task<IActionResult> CreateEquipmentModel([FromBody] EquipmentModel equipmentModel)
         {
@@ -54,7 +51,7 @@ namespace ERAS.Server.Controllers
             
 
             equipmentModel.DateCreated = DateTimeOffset.UtcNow;
-            equipmentModel.UserCreated = HttpContext.Session.GetInt32("UserId");
+            equipmentModel.UserCreatedId = HttpContext.Session.GetInt32("UserId");
             equipmentModel.IsDeleted = false;
 
             _dbContext.EquipmentModel.Add(equipmentModel);
@@ -66,7 +63,7 @@ namespace ERAS.Server.Controllers
             return Ok(new {message = "Equipment Model added successfully !!!", equipmentModel});
         }
 
-        // PUT: api/equipment-model/{id}
+        // PUT: api/EquipmentModel/{id}
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateEquipmentModel(int id, [FromBody] EquipmentModel equipmentModel)
         {
@@ -80,7 +77,7 @@ namespace ERAS.Server.Controllers
             existingModel.Name = equipmentModel.Name;
             existingModel.Alias = equipmentModel.Alias;
             existingModel.DateModified = DateTimeOffset.UtcNow;
-            existingModel.UserModified = HttpContext.Session.GetInt32("UserId");
+            existingModel.UserModifiedId = HttpContext.Session.GetInt32("UserId");
 
             _dbContext.Entry(existingModel).State = EntityState.Modified;
             var result = await _dbContext.SaveChangesAsync();
@@ -92,7 +89,7 @@ namespace ERAS.Server.Controllers
             return Ok(new { message = "Equipment model is edited successfully !!!", existingModel });
         }
 
-        // DELETE: api/equipment-model/{id}
+        // DELETE: api/EquipmentModel/{id}
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteEquipmentModel(int id)
         {
@@ -102,12 +99,16 @@ namespace ERAS.Server.Controllers
 
             existingModel.IsDeleted = true;
             existingModel.DateModified = DateTimeOffset.UtcNow;
-            existingModel.UserModified = HttpContext.Session.GetInt32("UserId");
+            existingModel.UserModifiedId = HttpContext.Session.GetInt32("UserId");
 
             _dbContext.Entry(existingModel).State = EntityState.Modified;
-            await _dbContext.SaveChangesAsync();
+            var result = await _dbContext.SaveChangesAsync();
+            if(result == 0)
+            {
+                return BadRequest(new { message = "An error occured while deleting the Equipment Model" });
+            }
 
-            return Ok();
+            return Ok( new { message = "Equipment model deleted successfully !!!"});
         }
     }
 }

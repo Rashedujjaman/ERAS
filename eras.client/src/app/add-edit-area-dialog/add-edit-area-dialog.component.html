@@ -1,7 +1,7 @@
 <div class="container">
   <h2 mat-dialog-title>{{ data.isEditMode ? 'Edit Area' : 'Add Area' }}</h2>
 
-  <form [formGroup]="areaForm">
+  <form [formGroup]="areaForm" (ngSubmit)="onSave()">
     <mat-form-field class="full-width">
       <mat-label>Name</mat-label>
       <input matInput placeholder="Enter area name" formControlName="name" required />
@@ -12,7 +12,7 @@
 
     <mat-form-field class="full-width">
       <mat-label>Alias</mat-label>
-      <input matInput placeholder="Enter area alias" formControlName="alias" required />
+      <input matInput placeholder="Enter area alias" formControlName="alias"/>
     </mat-form-field>
 
     <mat-dialog-actions class="action-buttons" align="end">

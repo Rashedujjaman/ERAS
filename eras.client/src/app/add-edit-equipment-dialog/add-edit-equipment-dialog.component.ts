@@ -37,7 +37,7 @@ export class AddEditEquipmentDialogComponent {
   ) {
     this.equipmentModelForm = this.fb.group({
       name: ['', Validators.required],
-      alias: ['', Validators.required]
+      alias: ['']
     });
 
     if (this.data.isEditMode) {
@@ -54,44 +54,46 @@ export class AddEditEquipmentDialogComponent {
   onSave() {
     if (this.data.isEditMode) {
       this.http.put(`/api/EquipmentModel/${this.data.equipment.id}`, this.equipmentModelForm.value)
-        .subscribe((response: any) => {
-          this.snackBar.open(response.message, "Close", {
-            horizontalPosition: 'center',
-            verticalPosition: 'bottom',
-            duration: 3000,
-            panelClass: ['success-snackbar']
-          });
-          this.dialogRef.close(true)
-        },
-          (error: HttpErrorResponse) => {
+        .subscribe({
+          next: (response: any) => {
+            this.snackBar.open(response.message, "Close", {
+              horizontalPosition: 'center',
+              verticalPosition: 'bottom',
+              duration: 3000,
+              panelClass: ['success-snackbar']
+            });
+            this.dialogRef.close(true)
+          },
+          error: (error: HttpErrorResponse) => {
             this.snackBar.open(error.error.message, "Close", {
               horizontalPosition: 'center',
               verticalPosition: 'bottom',
               duration: 5000,
               panelClass: ['error-snackbar']
             });
-          });
+          }
+        });
     }
-    else
-    {
+    else {
       this.http.post('/api/EquipmentModel', this.equipmentModelForm.value)
-        .subscribe((response: any) => {
-          this.snackBar.open(response.message, "Close", {
-            horizontalPosition: 'center',
-            verticalPosition: 'bottom',
-            duration: 3000,
-            panelClass: ['success-snackbar']
-          });
-          this.dialogRef.close(true)
-        },
-          (error: HttpErrorResponse) => {
-            this.snackBar.open(error.error.message, "Close", {
+        .subscribe({
+          next: (response: any) => {
+            this.snackBar.open(response.message, "Close", {
               horizontalPosition: 'center',
               verticalPosition: 'bottom',
-              duration: 5000,
-              panelClass: ['error-snackbar']
+              duration: 3000,
+              panelClass: ['success-snackbar']
             });
+            this.dialogRef.close(true)
+          },
+          error: (error: HttpErrorResponse) => {
+          this.snackBar.open(error.error.message, "Close", {
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom',
+            duration: 5000,
+            panelClass: ['error-snackbar']
           });
+        }});
     }
   }
 

@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121.
+-->
+<Project>
+  <PropertyGroup>
+    <_PublishTargetUrl>C:\Users\HP\OneDrive\Desktop\Deploy</_PublishTargetUrl>
+    <History>True|2024-09-05T04:17:48.3075426Z||;True|2024-09-05T12:02:48.4586396+08:00||;True|2024-09-05T12:02:13.6202126+08:00||;True|2024-09-05T12:00:26.5756823+08:00||;True|2024-09-05T11:55:19.4007775+08:00||;True|2024-09-05T11:51:17.4529982+08:00||;True|2024-09-05T11:27:03.7650471+08:00||;True|2024-09-05T11:11:54.0059769+08:00||;True|2024-09-04T18:21:24.2570810+08:00||;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+</Project>

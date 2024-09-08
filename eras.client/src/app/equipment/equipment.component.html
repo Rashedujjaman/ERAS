@@ -47,7 +47,7 @@
 
       <ng-container matColumnDef="dateCreated" class="mat-column-date">
         <mat-header-cell *matHeaderCellDef>Date/C</mat-header-cell>
-        <mat-cell *matCellDef="let equipment">{{equipment.dateCreated}}</mat-cell>
+        <mat-cell *matCellDef="let equipment">{{equipment.dateCreated | date:'MMM d, yyyy'}}</mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="userModified" class="mat-column-user">

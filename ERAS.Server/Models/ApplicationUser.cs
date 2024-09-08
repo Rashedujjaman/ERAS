@@ -10,6 +10,5 @@ namespace ERAS.Server.Models
         public required int UserRoleId { get; set; }
         public required string ImageUrl { get; set; }
         public bool? IsActive { get; set; }
-
     }
 }

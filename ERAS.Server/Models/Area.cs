@@ -7,20 +7,18 @@ namespace ERAS.Server.Models
     {
         [Key]
         public int Id { get; set; }
-
         [Required]
-        [Column(TypeName = "varchar(50)")]
-        public required string Name { get; set; }
-        [Column(TypeName = "varchar(50)")]
-        [Required]
-        public string Alias { get; set; }
-
+        public string Name { get; set; }
+        public string? Alias { get; set; }
         public bool? IsDeleted { get; set; }
-
         public DateTimeOffset? DateCreated { get; set; }
         public DateTimeOffset? DateModified { get; set; }
+        public int? UserCreatedId { get; set; }
+        public int? UserModifiedId { get; set; }
 
-        public int? UserCreated { get; set; }
-        public int? UserModified { get; set; }
+        [ForeignKey("UserCreatedId")]
+        public virtual ApplicationUser? UserCreated { get; set; }
+        [ForeignKey("UserModifiedId")]
+        public virtual ApplicationUser? UserModified { get; set; }
     }
 }

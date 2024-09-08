@@ -46,7 +46,8 @@ export class AreaComponent implements OnInit {
     this.http.get<any[]>('/api/Area')
       .subscribe({
         next: (response: any) => {
-          this.dataSource = response;
+          console.log('Response: ', response);
+          this.dataSource = response.areas;
           this.isLoading = false;
         },
         error: (error: HttpErrorResponse) => {
@@ -88,7 +89,6 @@ export class AreaComponent implements OnInit {
   }
 
   editArea(area: any) {
-
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
@@ -113,8 +113,22 @@ export class AreaComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.http.delete(`/api/Area/${id}`)
-          .subscribe(() => {
-            this.loadAreas();
+          .subscribe({
+            next: (response: any) => {
+                this.snackBar.open(response.message, 'Close', {
+                  duration: 3000,
+                  horizontalPosition: 'center',
+                  verticalPosition: 'bottom'
+                })
+              this.loadAreas();
+            },
+            error: (error: HttpErrorResponse) => {
+                this.snackBar.open(error.error.message, 'Close', {
+                  duration: 3000,
+                  horizontalPosition: 'center',
+                  verticalPosition: 'bottom'
+                })
+            }
           });
       }
     });

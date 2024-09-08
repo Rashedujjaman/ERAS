@@ -25,23 +25,24 @@ namespace ERAS.Server.Controllers
             }
             try
             {
-                var areas = await (from a in _dbContext.Area
-                                   join uc in _dbContext.ApplicationUser on a.UserCreated equals uc.Id into createdBy
-                                   from createdUser in createdBy.DefaultIfEmpty()
-                                   join um in _dbContext.ApplicationUser on a.UserModified equals um.Id into modifiedBy
-                                   from modifiedUser in modifiedBy.DefaultIfEmpty()
-                                   where a.IsDeleted == null || a.IsDeleted == false
-                                   select new
-                                   {
-                                       Id = a.Id,
-                                       Name = a.Name,
-                                       Alias = a.Alias,
-                                       UserCreated = createdUser.UserName,
-                                       DateCreated = a.DateCreated,
-                                       UserModified = modifiedUser.UserName,
-                                       DateModified = a.DateModified
-                                   }).ToListAsync();
-                return Ok(areas);
+                var areas = await _dbContext.Area
+                    .Include(a => a.UserCreated)
+                    .Include(a => a.UserModified)
+                    .Where(a => a.IsDeleted == null || a.IsDeleted == false)
+                    .Select(
+                    a => new
+                    {
+                        a.Id,
+                        a.Name,
+                        a.Alias,
+                        a.DateCreated,
+                        a.DateModified,
+                        UserCreated = a.UserCreated.UserName,
+                        UserModified = a.UserModified.UserName,
+                    }
+                    )
+                    .ToListAsync();
+                return Ok(new { message = "Areas are loaded", areas });
             }
             catch (Exception ex)
             {
@@ -58,7 +59,7 @@ namespace ERAS.Server.Controllers
                 return BadRequest(ModelState);
 
             area.DateCreated = DateTimeOffset.UtcNow;
-            area.UserCreated = HttpContext.Session.GetInt32("UserId");
+            area.UserCreatedId = HttpContext.Session.GetInt32("UserId");
             area.IsDeleted = false;
 
             _dbContext.Area.Add(area);
@@ -68,6 +69,50 @@ namespace ERAS.Server.Controllers
                 return BadRequest(new { message = "An error occured while adding the Area" });
             }
             return Ok(new { message = "Area added successfully !!!", area });
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateArea(int id, [FromBody] Area area)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var existingArea = await _dbContext.Area.FindAsync(id);
+            if (existingArea == null)
+                return NotFound();
+
+            existingArea.DateModified = DateTimeOffset.UtcNow;
+            existingArea.UserModifiedId = HttpContext.Session.GetInt32("UserId");
+            existingArea.Name = area.Name;
+            existingArea.Alias = area.Alias;
+
+            _dbContext.Entry(existingArea).State = EntityState.Modified;
+            var result = await _dbContext.SaveChangesAsync();
+            if (result == 0)
+            {
+                return BadRequest(new { message = "An error occured while updating Area" });
+            }
+            return Ok(new { message = "Area updated successfully !!!", area });
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteArea(int id)
+        {
+            var existingArea = await _dbContext.Area.FindAsync(id);
+            if (existingArea == null)
+                return NotFound();
+
+            existingArea.IsDeleted = true;
+            existingArea.DateModified = DateTimeOffset.UtcNow;
+            existingArea.UserModifiedId = HttpContext.Session.GetInt32("UserId");
+
+            _dbContext.Entry(existingArea).State = EntityState.Modified;
+            var result = await _dbContext.SaveChangesAsync();
+            if (result == 0)
+            {
+                return BadRequest(new { message = "An error occured while deleting Area" });
+            }
+            return Ok(new { message = "Area deleted successfully !!!" });
         }
     }
 }

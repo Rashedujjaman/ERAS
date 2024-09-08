@@ -18,33 +18,31 @@ namespace ERAS.Server.Controllers
         {
             try
             {
-                var equipments = await (from e in _dbContext.Equipment
-                                  join a in _dbContext.Area on e.AreaId equals a.Id
-                                  join m in _dbContext.EquipmentModel on e.EquipmentModelId equals m.Id
-                                  join v in _dbContext.Vnc on e.VncId equals v.Id
-                                  join uc in _dbContext.ApplicationUser on e.UserCreated equals uc.Id into createdBy
-                                  from createdUser in createdBy.DefaultIfEmpty()
-                                  join um in _dbContext.ApplicationUser on e.UserModified equals um.Id into modifiedBy
-                                  from modifiedUser in modifiedBy.DefaultIfEmpty()
-                                  where e.IsDeleted == null || e.IsDeleted == false
-                                  select new
-                                  {
-                                      Id = e.Id,
-                                      Name = e.Name,
-                                      Alias = e.Alias,
-                                      IpAddress = v.IpAddress,
-                                      HostName = v.HostName,
-                                      VncUserName = v.VncUserName,
-                                      VncPassword = v.VncPassword,
-                                      Zone = a.Name,
-                                      Model = m.Name,
-                                      UserCreated = createdUser.UserName,
-                                      DateCreated = e.DateCreated,
-                                      UserModified = modifiedUser.UserName,
-                                      DateModified = e.DateModified
-                                  }).ToListAsync();
+                var equipments = await _dbContext.Equipment
+                    .Include(e => e.Area)
+                    .Include(e => e.EquipmentModel)
+                    .Include(e => e.Vnc)
+                    .Include(e => e.UserCreated)
+                    .Include(e => e.UserModified)
+                    .Where(e => e.IsDeleted == null || e.IsDeleted == false)
+                    .Select(e => new
+                    {
+                        e.Id,
+                        e.Name,
+                        e.Alias,
+                        e.Vnc.IpAddress,
+                        e.Vnc.HostName,
+                        e.Vnc.VncUserName,
+                        e.Vnc.VncPassword,
+                        Zone = e.Area.Name,
+                        Model = e.EquipmentModel.Name,
+                        UserCreated = e.UserCreated.UserName,
+                        e.DateCreated,
+                        UserModified = e.UserModified.UserName,
+                        e.DateModified
+                    }).ToListAsync();
 
-                return Ok(equipments);
+                return Ok(new {message = "Equipments fetched successfully !!!", equipments });
             }
             catch (Exception ex)
             {

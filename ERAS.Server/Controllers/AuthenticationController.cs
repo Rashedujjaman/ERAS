@@ -32,12 +32,11 @@ namespace ERAS.Server.Controllers
                     return BadRequest(new { message = "Invalid login attempt." });
                 }
 
-                _logger.LogInformation("User found: {UserName}. Verifying password...", model.UserName);
-
                 var user = await _userManager.FindByNameAsync(model.UserName);
 
                 if (user != null)
                 {
+                    _logger.LogInformation("User found: {UserName}. Verifying password...", model.UserName);
                     if (user.IsActive == false)
                     {
                         _logger.LogWarning("Account is Disabled by Admin");

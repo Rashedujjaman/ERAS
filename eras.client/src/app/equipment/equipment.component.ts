@@ -43,7 +43,8 @@ export class EquipmentComponent {
     this.http.get('/api/Equipment')
       .subscribe({
         next: (response: any) => {
-          this.dataSource = response;
+          console.log(response.message);
+          this.dataSource = response.equipments;
           this.isLoading = false;
         },
         error: (error: HttpErrorResponse) => {
