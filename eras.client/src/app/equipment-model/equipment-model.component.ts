@@ -6,6 +6,7 @@ import { AddEditEquipmentDialogComponent } from '../add-edit-equipment-dialog/ad
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
@@ -25,6 +26,7 @@ import { Router } from '@angular/router';
     MatButtonModule,
     MatDialogModule,
     MatInputModule,
+    MatFormFieldModule,
     MatProgressSpinnerModule]
 })
 export class EquipmentModelComponent implements OnInit {
@@ -43,6 +45,11 @@ export class EquipmentModelComponent implements OnInit {
 
     this.loadEquipmentModels();
 
+    //this.dataSource.filterPredicate = (data: any, filter: string) => {
+    //  const dataStr = Object.values(data).join(' ').toLowerCase();
+    //  return dataStr.includes(filter);
+    //};
+
   }
 
   loadEquipmentModels() {
@@ -50,7 +57,8 @@ export class EquipmentModelComponent implements OnInit {
     this.http.get<any[]>('/api/EquipmentModel')
       .subscribe({
         next: (response: any) => {
-          this.dataSource = response;
+          this.dataSource = new MatTableDataSource(response);
+          //this.dataSource = response;
           this.isLoading = false;
         },
         error: (error: HttpErrorResponse) => {
