@@ -21,6 +21,7 @@ namespace ERAS.Server.Models
         public int VncId { get; set; }
         public bool? Enabled { get; set; }
         public bool? IsDeleted { get; set; }
+        public byte[]? Image { get; set; }
         public DateTimeOffset? DateCreated { get; set; }
         public DateTimeOffset? DateModified { get; set; }
         public int? UserCreatedId { get; set; }

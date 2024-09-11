@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogModule, MatDialogConfig } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { AddEditEquipmentDialogComponent } from '../add-edit-equipment-dialog/add-edit-equipment-dialog.component';
+import { AddEditEquipmentModelDialogComponent } from '../add-edit-equipment-model-dialog/add-edit-equipment-model-dialog.component';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
@@ -42,14 +42,7 @@ export class EquipmentModelComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-
     this.loadEquipmentModels();
-
-    //this.dataSource.filterPredicate = (data: any, filter: string) => {
-    //  const dataStr = Object.values(data).join(' ').toLowerCase();
-    //  return dataStr.includes(filter);
-    //};
-
   }
 
   loadEquipmentModels() {
@@ -57,7 +50,7 @@ export class EquipmentModelComponent implements OnInit {
     this.http.get<any[]>('/api/EquipmentModel')
       .subscribe({
         next: (response: any) => {
-          this.dataSource = new MatTableDataSource(response);
+          this.dataSource = new MatTableDataSource(response.equipmentModels);
           //this.dataSource = response;
           this.isLoading = false;
         },
@@ -97,30 +90,14 @@ export class EquipmentModelComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  openAddEquipmentDialog() {
+  openAddEquipmentModelDialog() {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
-    //dialogConfig.height = '500px';
     dialogConfig.width = '400px';
     dialogConfig.data = { isEditingMode: false }
 
-    const dialogRef = this.dialog.open(AddEditEquipmentDialogComponent, dialogConfig);
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.loadEquipmentModels(); // Reload data after adding new equipment
-      }
-    });
-  }
-
-  editEquipment(equipment: any) {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.width = '400px';
-    dialogConfig.data = { equipment: equipment, isEditMode: true }
-    const dialogRef = this.dialog.open(AddEditEquipmentDialogComponent, dialogConfig);
+    const dialogRef = this.dialog.open(AddEditEquipmentModelDialogComponent, dialogConfig);
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
@@ -129,10 +106,24 @@ export class EquipmentModelComponent implements OnInit {
     });
   }
 
-  deleteEquipment(id: number) {
-    const comingFrom = 'equipmentModel'
+  editEquipmentModel(equipment: any) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = '400px';
+    dialogConfig.data = { equipment: equipment, isEditMode: true }
+    const dialogRef = this.dialog.open(AddEditEquipmentModelDialogComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loadEquipmentModels();
+      }
+    });
+  }
+
+  deleteEquipmentModel(id: number) {
     const dialogConfig = new MatDialogConfig;
-    dialogConfig.data = { comingFrom };
+    dialogConfig.data = { comingFrom : 'equipmentModel' };
     const dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
 
     dialogRef.afterClosed().subscribe(result => {

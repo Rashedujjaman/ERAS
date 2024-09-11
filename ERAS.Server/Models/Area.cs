@@ -15,7 +15,6 @@ namespace ERAS.Server.Models
         public DateTimeOffset? DateModified { get; set; }
         public int? UserCreatedId { get; set; }
         public int? UserModifiedId { get; set; }
-
         [ForeignKey("UserCreatedId")]
         public virtual ApplicationUser? UserCreated { get; set; }
         [ForeignKey("UserModifiedId")]

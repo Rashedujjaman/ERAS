@@ -1,23 +1,52 @@
 <div class="container">
-  <h2 mat-dialog-title>{{ data.isEditMode ? 'Edit Equipment Model' : 'Add Equipment Model' }}</h2>
+  <h2 mat-dialog-title>{{ data.isEditMode ? 'Edit Equipment' : 'Add Equipment' }}</h2>
 
-  <form [formGroup]="equipmentModelForm" (ngSubmit)="onSave()">
+  <form [formGroup]="equipmentForm">
     <mat-form-field class="full-width">
       <mat-label>Name</mat-label>
       <input matInput placeholder="Enter equipment model name" formControlName="name" required />
-      <mat-error *ngIf="equipmentModelForm.get('name')?.hasError('required')">
+      <mat-error *ngIf="equipmentForm.get('name')?.hasError('required')">
         Name is required
       </mat-error>
     </mat-form-field>
 
     <mat-form-field class="full-width">
       <mat-label>Alias</mat-label>
-      <input matInput placeholder="Enter equipment model alias" formControlName="alias"/>
+      <input matInput placeholder="Enter equipment model alias" formControlName="alias" />
     </mat-form-field>
+
+    <mat-form-field class="full-width">
+      <mat-label>VNC</mat-label>
+      <mat-select formControlName="vncId" required>
+        <mat-option *ngFor="let vnc of vncList" [value]="vnc.id">{{ vnc.hostName }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="full-width">
+      <mat-label>Area</mat-label>
+      <mat-select formControlName="areaId" required>
+        <mat-option *ngFor="let area of areaList" [value]="area.id">{{ area.name }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="full-width">
+      <mat-label>Equipment Model</mat-label>
+      <mat-select formControlName="equipmentModelId" required>
+        <mat-option *ngFor="let model of equipmentModelList" [value]="model.id">{{ model.name }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div class="full-width">
+      <label for="imageUpload">Upload Image </label>
+      <input type="file" id="imageUpload" (change)="onFileSelected($event)" />
+      <div *ngIf="imagePreviewUrl">
+        <img [src]="imagePreviewUrl" alt="Image Preview" width="100">
+      </div>
+    </div>
 
     <mat-dialog-actions class="action-buttons" align="end">
       <button mat-button (click)="onCancel()">Cancel</button>
-      <button mat-raised-button color="primary" [disabled]="equipmentModelForm.invalid" (click)="onSave()">Save</button>
+      <button mat-raised-button color="primary" [disabled]="equipmentForm.invalid" (click)="onSave()">Save</button>
     </mat-dialog-actions>
   </form>
 </div>

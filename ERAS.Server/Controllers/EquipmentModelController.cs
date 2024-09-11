@@ -22,23 +22,30 @@ namespace ERAS.Server.Controllers
             {
                 return Unauthorized(new { message = "Sorry your session is timed out !!!", sessionOut = true });
             }
-            var equipmentModels = await _dbContext.EquipmentModel
-                .Include(e => e.UserCreated)
-                .Include(e => e.UserModified)
-                .Where(e => e.IsDeleted == null || e.IsDeleted == false)
-                .Select(e => new 
-                {
-                    e.Id,
-                    e.Name,
-                    e.Alias,
-                    e.DateModified,
-                    e.DateCreated,
-                    e.IsDeleted,
-                    UserCreated = e.UserCreated.UserName,
-                    UserModified = e.UserModified.UserName,
-                }).ToListAsync();
+            try
+            {
+                var equipmentModels = await _dbContext.EquipmentModel
+    .Include(e => e.UserCreated)
+    .Include(e => e.UserModified)
+    .Where(e => e.IsDeleted == null || e.IsDeleted == false)
+    .Select(e => new
+    {
+        e.Id,
+        e.Name,
+        e.Alias,
+        e.DateModified,
+        e.DateCreated,
+        e.IsDeleted,
+        UserCreated = e.UserCreated.UserName,
+        UserModified = e.UserModified.UserName,
+    }).ToListAsync();
 
-            return Ok(equipmentModels);
+                return Ok(new { message = "Equipment Models are loaded", equipmentModels });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"An error occured while fetching Equipment Models. {ex}");
+            }
         }
 
         // POST: api/EquipmentModel

@@ -12,6 +12,7 @@ import { MatButtonModule } from '@angular/material/button';
 })
 export class ConfirmDialogComponent {
 
+  isVnc = false;
   isArea = false;
   isEquipment = false;
   isEquipmentModel = false;
@@ -27,6 +28,9 @@ export class ConfirmDialogComponent {
     }
     else if (this.data.comingFrom === 'area') {
       this.isArea = true;
+    }
+    else if (this.data.comingFrom === 'vnc') {
+      this.isVnc = true;
     }
   }
 

@@ -1,0 +1,23 @@
+<div class="container">
+  <h2 mat-dialog-title>{{ data.isEditMode ? 'Edit Equipment Model' : 'Add Equipment Model' }}</h2>
+
+  <form [formGroup]="equipmentModelForm" (ngSubmit)="onSave()">
+    <mat-form-field class="full-width">
+      <mat-label>Name</mat-label>
+      <input matInput placeholder="Enter equipment model name" formControlName="name" required />
+      <mat-error *ngIf="equipmentModelForm.get('name')?.hasError('required')">
+        Name is required
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="full-width">
+      <mat-label>Alias</mat-label>
+      <input matInput placeholder="Enter equipment model alias" formControlName="alias"/>
+    </mat-form-field>
+
+    <mat-dialog-actions class="action-buttons" align="end">
+      <button mat-button (click)="onCancel()">Cancel</button>
+      <button mat-raised-button color="primary" [disabled]="equipmentModelForm.invalid" (click)="onSave()">Save</button>
+    </mat-dialog-actions>
+  </form>
+</div>

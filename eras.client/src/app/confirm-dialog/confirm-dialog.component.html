@@ -1,9 +1,12 @@
 <h1 mat-dialog-title>Confirm Deletion</h1>
 <mat-dialog-content>
-  <p>Are you sure you want to delete this
-  <b *ngIf="isArea">Area</b>
-  <b *ngIf="isEquipment">Equipment</b>
-  <b *ngIf="isEquipmentModel">Equipment Model</b>?</p>
+  <p>
+    Are you sure you want to delete this
+    <b *ngIf="isArea">Area</b>
+    <b *ngIf="isEquipment">Equipment</b>
+    <b *ngIf="isEquipmentModel">Equipment Model</b>
+    <b *ngIf="isVnc">Vnc</b>
+  </p>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button mat-button (click)="onCancel()">Cancel</button>
