@@ -1,0 +1,69 @@
+<div class="container">
+  <h2 mat-dialog-title>{{ data.isEditMode ? 'Edit Equipment' : 'Add Equipment' }}</h2>
+
+  <form [formGroup]="equipmentForm" class="equipment-form">
+    <div class="upload-section">
+      <input type="file" id="imageUpload" (change)="onFileSelected($event)" hidden #fileInput />
+      <div *ngIf="imagePreviewUrl" class="image-preview">
+        <img [src]="imagePreviewUrl" alt="Image Preview" (click)="fileInput.click()">
+      </div>
+    </div>
+
+    <div class="form-body justify-content-around">
+      <div class="form-column">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Name</mat-label>
+          <input matInput placeholder="Enter equipment model name" formControlName="name" required />
+          <mat-error *ngIf="equipmentForm.get('name')?.hasError('required')">Name is required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>IP Address</mat-label>
+          <input matInput placeholder="Enter equipment IP address" formControlName="ipAddress" required />
+          <mat-error *ngIf="equipmentForm.get('ipAddress')?.hasError('required')">Ip Address is required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>VNC User Name</mat-label>
+          <input matInput placeholder="Enter equipment VNC username" formControlName="vncUserName" required />
+          <mat-error *ngIf="equipmentForm.get('vncUserName')?.hasError('required')">Vnc User Name is required</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Equipment Model</mat-label>
+          <mat-select formControlName="equipmentModelId" required>
+            <mat-option *ngFor="let model of equipmentModelList" [value]="model.id">{{ model.name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="form-column">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Alias</mat-label>
+          <input matInput placeholder="Enter equipment model alias" formControlName="alias" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Host Name</mat-label>
+          <input matInput placeholder="Enter equipment host name" formControlName="hostName" required />
+          <mat-error *ngIf="equipmentForm.get('hostName')?.hasError('required')">Host Name is required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>VNC Password</mat-label>
+          <input matInput type="password" placeholder="Enter equipment VNC password" formControlName="vncPassword" required />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Area</mat-label>
+          <mat-select formControlName="areaId" required>
+            <mat-option *ngFor="let area of areaList" [value]="area.id">{{ area.name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    <mat-dialog-actions align="end" class="action-buttons">
+      <button mat-button (click)="onCancel()">Cancel</button>
+      <button mat-raised-button color="primary" [disabled]="equipmentForm.invalid" (click)="onSave()">Save</button>
+    </mat-dialog-actions>
+  </form>
+</div>

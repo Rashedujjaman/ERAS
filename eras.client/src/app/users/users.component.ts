@@ -1,7 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { MatTableModule } from '@angular/material/table';
+import { MatTableModule, MatTableDataSource } from '@angular/material/table';
+import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -16,6 +20,10 @@ import { Router } from '@angular/router';
   selector: 'app-user',
   standalone: true,
   imports: [MatTableModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatPaginatorModule,
+    MatSortModule,
     MatDialogModule,
     MatSlideToggleModule,
     MatIconModule,
@@ -25,11 +33,12 @@ import { Router } from '@angular/router';
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.css']
 })
-export class UsersComponent implements OnInit {
+export class UsersComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['id', 'name', 'userName', 'email', 'role', 'status', 'actions'];
-  users: any[] = [];
+  users = new MatTableDataSource<any>();
   isLoading: boolean = false;
 
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
   constructor(
     private http: HttpClient,
     private snackBar: MatSnackBar,
@@ -41,13 +50,18 @@ export class UsersComponent implements OnInit {
     this.loadUsers();
   }
 
+  ngAfterViewInit() {
+    this.users.paginator = this.paginator;
+  }
+
   loadUsers() {
     this.isLoading = true;
 
     this.http.get<any[]>(`/api/users/users`)
       .subscribe({
         next: (response: any) => {
-          this.users = response;
+          this.users = new MatTableDataSource(response);
+          this.users.paginator = this.paginator;
           this.isLoading = false;
         },
         error: (error: HttpErrorResponse) => {
@@ -79,6 +93,11 @@ export class UsersComponent implements OnInit {
           this.isLoading = false;
         }
       });
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    this.users.filter = filterValue;
   }
 
 

@@ -1,58 +1,70 @@
 <div class="container">
-  <div class="user-management-container mt-3">
-    <h1 mat-dialog-title>Manage System Users</h1>
-    
-    <div class="loading-overlay" *ngIf="isLoading">
-    <mat-spinner> </mat-spinner>
+  <div class="user-management-container">
+    <div class="row header d-flex align-content-center mt-2 mb-2">
+      <div class="col-md-3 d-flex align-items-center">
+        <h1>Manage Equipments</h1>
+      </div>
+      <div class="col-md-9 d-flex justify-content-end align-items-center">
+        <mat-form-field class="filter" appearance="outline">
+          <mat-icon matPrefix>filter_list</mat-icon>
+          <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Zone 1" #input />
+        </mat-form-field>
+      </div>
     </div>
-    <table mat-table [dataSource]="users" class="mat-elevation-z8" *ngIf="!isLoading">
 
-      <ng-container matColumnDef="id">
-        <th mat-header-cell *matHeaderCellDef class="mat-column-id"> Id </th>
-        <td mat-cell *matCellDef="let user"> {{user.id}} </td>
-      </ng-container>
+    <div class="loading-overlay" *ngIf="isLoading">
+      <mat-spinner> </mat-spinner>
+    </div>
+    <div class="mat-table-container mat-elevation-z3" tabindex="0">
+      <table mat-table [dataSource]="users" *ngIf="!isLoading">
 
-      <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef> Name </th>
-        <td mat-cell *matCellDef="let user"> {{user.name}} </td>
-      </ng-container>
+        <ng-container matColumnDef="id" class="mat-column-id">
+          <mat-header-cell *matHeaderCellDef> Id </mat-header-cell>
+          <mat-cell *matCellDef="let user"> {{user.id}} </mat-cell>
+        </ng-container>
 
-      <ng-container matColumnDef="userName">
-        <th mat-header-cell *matHeaderCellDef> Username </th>
-        <td mat-cell *matCellDef="let user"> {{user.userName}} </td>
-      </ng-container>
+        <ng-container matColumnDef="name" class="mat-column-name">
+          <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+          <mat-cell *matCellDef="let user"> {{user.name}} </mat-cell>
+        </ng-container>
 
-      <ng-container matColumnDef="email">
-        <th mat-header-cell *matHeaderCellDef> Email </th>
-        <td mat-cell *matCellDef="let user"> {{user.email}} </td>
-      </ng-container>
+        <ng-container matColumnDef="userName" class="mat-column-username">
+          <mat-header-cell *matHeaderCellDef> Username </mat-header-cell>
+          <mat-cell *matCellDef="let user"> {{user.userName}} </mat-cell>
+        </ng-container>
 
-      <ng-container matColumnDef="role">
-        <th mat-header-cell *matHeaderCellDef> Role </th>
-        <td mat-cell *matCellDef="let user"> {{user.role}} </td>
-      </ng-container>
+        <ng-container matColumnDef="email" class="mat-column-email">
+          <mat-header-cell *matHeaderCellDef> Email </mat-header-cell>
+          <mat-cell *matCellDef="let user"> {{user.email}} </mat-cell>
+        </ng-container>
 
-      <ng-container matColumnDef="status">
-        <th mat-header-cell *matHeaderCellDef> Status </th>
-        <td mat-cell *matCellDef="let user">
-          <mat-slide-toggle [checked]="user.isActive"
-                            (change)="toggleUserStatus(user)">
-          </mat-slide-toggle>
-        </td>
-      </ng-container>
+        <ng-container matColumnDef="role" class="mat-column-role">
+          <mat-header-cell *matHeaderCellDef> Role </mat-header-cell>
+          <mat-cell *matCellDef="let user"> {{user.role}} </mat-cell>
+        </ng-container>
 
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef> Actions </th>
-        <td mat-cell *matCellDef="let user">
-          <button mat-icon-button color="primary" (click)="resetPassword(user)">
-            <mat-icon>lock_reset</mat-icon>
-          </button>
-        </td>
-      </ng-container>
+        <ng-container matColumnDef="status" class="mat-column-status">
+          <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
+          <mat-cell *matCellDef="let user">
+            <mat-slide-toggle [checked]="user.isActive"
+                              (change)="toggleUserStatus(user)">
+            </mat-slide-toggle>
+          </mat-cell>
+        </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
+        <ng-container matColumnDef="actions" class="mat-column-action">
+          <mat-header-cell *matHeaderCellDef> Actions </mat-header-cell>
+          <mat-cell *matCellDef="let user">
+            <button mat-icon-button color="primary" (click)="resetPassword(user)">
+              <mat-icon>lock_reset</mat-icon>
+            </button>
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+      </table>
+    </div>
+    <mat-paginator class="mat-paginator" [pageSizeOptions]="[7, 15, 30]" aria-label="Select page of users" showFirstLastButtons></mat-paginator>
   </div>
-
 </div>

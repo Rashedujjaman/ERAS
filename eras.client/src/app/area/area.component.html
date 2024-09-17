@@ -1,11 +1,22 @@
 <div class="container">
-  <div class="area-management mt-3">
-    <h1 mat-table-title>Manage Areas</h1>
+  <div class="area-management">
+    <div class="row header d-flex align-content-center mt-2 mb-2">
+      <div class="col-md-3 d-flex align-items-center">
+        <h1>Manage Areas</h1>
+      </div>
+      <div class="col-md-9 d-flex justify-content-end align-items-center">
+        <mat-form-field class="filter" appearance="outline">
+          <mat-icon matPrefix>filter_list</mat-icon>
+          <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Zone 1" #input />
+        </mat-form-field>
+      </div>
+    </div>
+
     <div class="loading-overlay" *ngIf="isLoading">
       <mat-spinner></mat-spinner>
     </div>
 
-    <mat-table [dataSource]="dataSource" class="mat-elevation-z8" *ngIf="!isLoading">
+    <mat-table [dataSource]="dataSource" class="mat-elevation-z3" *ngIf="!isLoading">
       <ng-container matColumnDef="id" class="mat-column-id">
         <mat-header-cell *matHeaderCellDef>ID </mat-header-cell>
         <mat-cell *matCellDef="let area">{{area.id}}</mat-cell>
@@ -56,7 +67,14 @@
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
       <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
 
+      <mat-row *matNoDataRow class="align-self-center">
+        <mat-cell colspan="8">No data matching the filter "{{input.value}}"</mat-cell>
+      </mat-row>
+
     </mat-table>
+
+    <mat-paginator class="mat-paginator" [pageSizeOptions]="[7, 15, 30]" aria-label="Select page of users" showFirstLastButtons></mat-paginator>
+
     <button mat-icon-button class="add-button" (click)="openAddAreaDialog()">
       <mat-icon class="mat-add-button-icon">add</mat-icon>
     </button>

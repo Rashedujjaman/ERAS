@@ -1,81 +1,106 @@
 <div class="container">
-  <div class="equipment-Management mt-3">
-    <h1 mat-title>Manage Equipments</h1>
+  <div class="equipment-Management">
+    <div class="row header d-flex align-content-center mt-2 mb-2">
+      <div class="col-md-3 d-flex align-items-center">
+        <h1>Manage Equipments</h1>
+      </div>
+      <div class="col-md-9 d-flex justify-content-end align-items-center">
+        <mat-form-field class="filter" appearance="outline">
+          <mat-icon matPrefix>filter_list</mat-icon>
+          <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Zone 1" #input />
+        </mat-form-field>
+      </div>
+    </div>
+
     <div class="loading-overlay" *ngIf="isLoading">
       <mat-spinner></mat-spinner>
     </div>
-    <mat-table [dataSource]="dataSource" class="mat-elevation-z8" *ngIf="!isLoading">
-      <ng-container matColumnDef="id" class="mat-column-id">
-        <mat-header-cell *matHeaderCellDef>No</mat-header-cell>
-        <mat-cell *matCellDef="let equipment">{{equipment.id}}</mat-cell>
-      </ng-container>
 
-      <ng-container matColumnDef="name" class="mat-column-name">
-        <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
-        <mat-cell *matCellDef="let equipment">{{equipment.name}}</mat-cell>
-      </ng-container>
+    <div class="mat-table-container mat-elevation-z3" tabindex="0">
+      <mat-table [dataSource]="dataSource" matSort *ngIf="!isLoading">
 
-      <ng-container matColumnDef="alias" class="mat-column-alias">
-        <mat-header-cell *matHeaderCellDef>Alias</mat-header-cell>
-        <mat-cell *matCellDef="let equipment">{{equipment.alias}}</mat-cell>
-      </ng-container>
+        <ng-container matColumnDef="id" class="mat-column-id" sticky>
+          <mat-header-cell *matHeaderCellDef mat-sort-header>No</mat-header-cell>
+          <mat-cell *matCellDef="let equipment">{{equipment.id}}</mat-cell>
+        </ng-container>
 
-      <ng-container matColumnDef="ipAddress" class="mat-column-ipAddress">
-        <mat-header-cell *matHeaderCellDef>Ip Add</mat-header-cell>
-        <mat-cell *matCellDef="let equipment">{{equipment.ipAddress}}</mat-cell>
-      </ng-container>
+        <ng-container matColumnDef="name" class="mat-column-name" sticky>
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
+          <mat-cell *matCellDef="let equipment">{{equipment.name}}</mat-cell>
+        </ng-container>
 
-      <ng-container matColumnDef="hostName" class="mat-column-hostName">
-        <mat-header-cell *matHeaderCellDef>Host N</mat-header-cell>
-        <mat-cell *matCellDef="let equipment">{{equipment.hostName}}</mat-cell>
-      </ng-container>
+        <ng-container matColumnDef="alias" class="mat-column-alias">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Alias</mat-header-cell>
+          <mat-cell *matCellDef="let equipment">{{equipment.alias}}</mat-cell>
+        </ng-container>
 
-      <ng-container matColumnDef="model" class="mat-column-model">
-        <mat-header-cell *matHeaderCellDef>Model</mat-header-cell>
-        <mat-cell *matCellDef="let equipment">{{equipment.model}}</mat-cell>
-      </ng-container>
+        <ng-container matColumnDef="ipAddress" class="mat-column-ipAddress">
+          <mat-header-cell *matHeaderCellDef>Ip Add</mat-header-cell>
+          <mat-cell *matCellDef="let equipment">{{equipment.ipAddress}}</mat-cell>
+        </ng-container>
 
-      <ng-container matColumnDef="zone" class="mat-column-zone">
-        <mat-header-cell *matHeaderCellDef>Zone</mat-header-cell>
-        <mat-cell *matCellDef="let equipment">{{equipment.zone}}</mat-cell>
-      </ng-container>
+        <ng-container matColumnDef="hostName" class="mat-column-hostName">
+          <mat-header-cell *matHeaderCellDef>Host Name</mat-header-cell>
+          <mat-cell *matCellDef="let equipment">{{equipment.hostName}}</mat-cell>
+        </ng-container>
 
-      <ng-container matColumnDef="userCreated" class="mat-column-user">
-        <mat-header-cell *matHeaderCellDef>User/C</mat-header-cell>
-        <mat-cell *matCellDef="let equipment">{{equipment.userCreated}}</mat-cell>
-      </ng-container>
+        <ng-container matColumnDef="vncUserName" class="mat-column-vncUserName">
+          <mat-header-cell *matHeaderCellDef>VNC UserName</mat-header-cell>
+          <mat-cell *matCellDef="let equipment">{{equipment.vncUserName}}</mat-cell>
+        </ng-container>
 
-      <ng-container matColumnDef="dateCreated" class="mat-column-date">
-        <mat-header-cell *matHeaderCellDef>Date/C</mat-header-cell>
-        <mat-cell *matCellDef="let equipment">{{equipment.dateCreated | date:'MMM d, yyyy'}}</mat-cell>
-      </ng-container>
+        <ng-container matColumnDef="model" class="mat-column-model">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Model</mat-header-cell>
+          <mat-cell *matCellDef="let equipment">{{equipment.model}}</mat-cell>
+        </ng-container>
 
-      <ng-container matColumnDef="userModified" class="mat-column-user">
-        <mat-header-cell *matHeaderCellDef>User/M</mat-header-cell>
-        <mat-cell *matCellDef="let equipment">{{equipment.userModified ? (equipment.userModified) : 'NA'}}</mat-cell>
-      </ng-container>
+        <ng-container matColumnDef="zone" class="mat-column-zone">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Zone</mat-header-cell>
+          <mat-cell *matCellDef="let equipment">{{equipment.zone}}</mat-cell>
+        </ng-container>
 
-      <ng-container matColumnDef="dateModified" class="mat-column-date">
-        <mat-header-cell *matHeaderCellDef>Last/M</mat-header-cell>
-        <mat-cell *matCellDef="let equipment">{{equipment.dateModified ? (equipment.dateModified) : 'NA'}}</mat-cell>
-      </ng-container>
+        <ng-container matColumnDef="userCreated" class="mat-column-user">
+          <mat-header-cell *matHeaderCellDef>User Created</mat-header-cell>
+          <mat-cell *matCellDef="let equipment">{{equipment.userCreated}}</mat-cell>
+        </ng-container>
 
-      <ng-container matColumnDef="actions" class="mat-column-action">
-        <mat-header-cell *matHeaderCellDef>Actions</mat-header-cell>
-        <mat-cell *matCellDef="let equipment">
-          <button mat-icon-button color="primary" (click)="editEquipment(equipment)">
-            <mat-icon>edit</mat-icon>
-          </button>
-          <button mat-icon-button color="warn" (click)="deleteEquipment(equipment.id)">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </mat-cell>
-      </ng-container>
+        <ng-container matColumnDef="dateCreated" class="mat-column-date">
+          <mat-header-cell *matHeaderCellDef>Date Created</mat-header-cell>
+          <mat-cell *matCellDef="let equipment">{{equipment.dateCreated | date:'MMM d, yyyy'}}</mat-cell>
+        </ng-container>
 
-      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        <ng-container matColumnDef="userModified" class="mat-column-user">
+          <mat-header-cell *matHeaderCellDef>User Modified</mat-header-cell>
+          <mat-cell *matCellDef="let equipment">{{equipment.userModified ? (equipment.userModified) : 'NA'}}</mat-cell>
+        </ng-container>
 
-    </mat-table>
+        <ng-container matColumnDef="dateModified" class="mat-column-date">
+          <mat-header-cell *matHeaderCellDef>Last Modified</mat-header-cell>
+          <mat-cell *matCellDef="let equipment">{{equipment.dateModified ? (equipment.dateModified | date: 'MMM d, YYYY') : 'NA'}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="actions" class="mat-column-action" stickyEnd>
+          <mat-header-cell *matHeaderCellDef>Actions</mat-header-cell>
+          <mat-cell *matCellDef="let equipment">
+            <button mat-icon-button color="primary" class="mat-action-button" (click)="editEquipment(equipment)">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" class="mat-action-button" (click)="deleteEquipment(equipment.id)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+        <mat-row *matNoDataRow class="align-self-center">
+          <mat-cell colspan="4">No data matching the filter "{{input.value}}"</mat-cell>
+        </mat-row>
+      </mat-table>
+    </div>
+
+    <mat-paginator class="mat-paginator" [pageSizeOptions]="[7, 15, 30]" aria-label="Select page of users" showFirstLastButtons></mat-paginator>
 
     <button mat-icon-button class="add-button" (click)="openAddEquipmentDialog()">
       <mat-icon class="mat-add-button-icon">add</mat-icon>

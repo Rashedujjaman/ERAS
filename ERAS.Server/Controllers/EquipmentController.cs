@@ -18,10 +18,14 @@ namespace ERAS.Server.Controllers
         {
             try
             {
+                var userId = HttpContext.Session.GetInt32("UserId");
+                if (userId == null)
+                {
+                    return Unauthorized(new { message = "Your session is out !!! Login to continue." });
+                }
                 var equipments = await _dbContext.Equipment
                     .Include(e => e.Area)
                     .Include(e => e.EquipmentModel)
-                    .Include(e => e.Vnc)
                     .Include(e => e.UserCreated)
                     .Include(e => e.UserModified)
                     .Where(e => e.IsDeleted == null || e.IsDeleted == false)
@@ -30,11 +34,10 @@ namespace ERAS.Server.Controllers
                         e.Id,
                         e.Name,
                         e.Alias,
-                        e.VncId,
-                        e.Vnc.IpAddress,
-                        e.Vnc.HostName,
-                        e.Vnc.VncUserName,
-                        e.Vnc.VncPassword,
+                        e.IpAddress,
+                        e.HostName,
+                        e.VncUserName,
+                        e.VncPassword,
                         e.Image,
                         e.AreaId,
                         Zone = e.Area.Name,
@@ -68,10 +71,14 @@ namespace ERAS.Server.Controllers
                 {
                     Name = eq.Name,
                     Alias = eq.Alias,
+                    HostName = eq.HostName,
+                    IpAddress = eq.IpAddress,
+                    VncUserName = eq.VncUserName,
+                    VncPassword = eq.VncPassword,
                     EquipmentModelId = eq.EquipmentModelId,
                     AreaId = eq.AreaId,
-                    VncId = eq.VncId,
                     DateCreated = DateTime.UtcNow,
+                    Enabled = true,
                     IsDeleted = false,
                     UserCreatedId = HttpContext.Session.GetInt32("UserId")
                 };
@@ -133,7 +140,10 @@ namespace ERAS.Server.Controllers
 
                 existingEquipment.Name = updatedEquipment.Name;
                 existingEquipment.Alias = updatedEquipment.Alias;
-                existingEquipment.VncId = updatedEquipment.VncId;
+                existingEquipment.HostName = updatedEquipment.HostName;
+                existingEquipment.IpAddress = updatedEquipment.IpAddress;
+                existingEquipment.VncUserName = updatedEquipment.VncUserName;
+                existingEquipment.VncPassword = updatedEquipment.VncPassword;
                 existingEquipment.EquipmentModelId = updatedEquipment.EquipmentModelId;
                 existingEquipment.AreaId = updatedEquipment.AreaId;
                 existingEquipment.DateModified = DateTime.UtcNow;

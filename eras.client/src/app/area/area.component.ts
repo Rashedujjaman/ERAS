@@ -1,5 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
+import { CdkTableModule } from '@angular/cdk/table';
+import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialogConfig } from '@angular/material/dialog';
@@ -11,7 +16,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
-import { AddEditAreaDialogComponent } from '../add-edit-area-dialog/add-edit-area-dialog.component';
+import { AddEditAreaDialogComponent } from './add-edit-area-dialog/add-edit-area-dialog.component';
 
 
 
@@ -22,15 +27,22 @@ import { AddEditAreaDialogComponent } from '../add-edit-area-dialog/add-edit-are
   styleUrl: './area.component.css',
   imports: [CommonModule,
     MatTableModule,
+    CdkTableModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatPaginatorModule,
+    MatSortModule,
     MatIconModule,
     MatButtonModule,
     MatDialogModule,
     MatProgressSpinnerModule]  
 })
-export class AreaComponent implements OnInit {
+export class AreaComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['id', 'name', 'alias', 'userCreated', 'dateCreated', 'userModified', 'lastModified', 'actions'];
   dataSource = new MatTableDataSource<any>();
   isLoading = false;
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
   constructor(private http: HttpClient,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
@@ -41,13 +53,18 @@ export class AreaComponent implements OnInit {
     this.loadAreas();
   }
 
+  ngAfterViewInit(){
+    this.dataSource.paginator = this.paginator;
+    //this.dataSource.sort = this.sort;
+  }
+
   loadAreas() {
     this.isLoading = true;
     this.http.get<any[]>('/api/Area')
       .subscribe({
         next: (response: any) => {
-          console.log('Response: ', response);
-          this.dataSource = response.areas;
+          this.dataSource = new MatTableDataSource(response.areas);
+          this.dataSource.paginator = this.paginator;
           this.isLoading = false;
         },
         error: (error: HttpErrorResponse) => {
@@ -70,6 +87,13 @@ export class AreaComponent implements OnInit {
           this.router.navigate(['']);
         }
       });
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    this.dataSource.filter = filterValue;
+
+    console.log('Filtered Data Length: ', this.dataSource.filteredData.length);
   }
 
   openAddAreaDialog() {

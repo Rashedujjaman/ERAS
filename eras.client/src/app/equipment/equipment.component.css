@@ -2,92 +2,111 @@
   position: relative;
 }
 
+mat-form-field {
+  height: 40px;
+}
 
-/* Header and Cell Font Size */
-mat-header-cell {
+::ng-deep .mat-mdc-form-field-infix {
+  height: 40px !important;
+}
+
+::ng-deep .mat-mdc-form-field-flex {
+  height: 100% !important;
+}
+
+::ng-deep .mdc-notched-outline {
+  height: 100% !important;
+}
+
+::ng-deep .mat-mdc-text-field-wrapper {
+  height: 100% !important;
+}
+
+/*mat-form-field input{
+    background: blue;
+}*/
+.filter input::-webkit-input-placeholder {
+  color: #dad7d7;
+}
+
+
+.mat-table-container{
+    width: 100%;
+    overflow: auto;
+}
+
+mat-table{
+    width: 1500px;
+    table-layout: fixed;
+}
+
+mat-header-row, mat-row {
+  display: flex;
   font-size: 12px;
 }
 
-mat-cell {
-  font-size: 10px;
+mat-header-row {
+  background-color: #f0f0f0;
+  font-size: 14px;
+}
+
+mat-cell, mat-header-cell {
+  flex: 1;
   white-space: nowrap;
+  border-bottom: 1px solid #ddd;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
+.mat-column-id, .mat-column-name, .mat-column-action {
+  position: sticky;
+  z-index: 10;
+  background-color: white;
+}
+
 .mat-column-id {
-  flex: 0 0 40px;
+  flex: 0 0 60px;
 }
 
 .mat-column-name {
-  flex: 0 0 100px;
-}
-
-.mat-column-alias {
-  flex: 0 0 100px;
-}
-
-.mat-column-ipAddress {
-  flex: 0 0 100px;
-}
-
-.mat-column-hostName {
-  flex: 0 0 80px;
+  min-width: 80px;
 }
 
 .mat-column-model {
-  flex: 0 0 80px;
+  flex: 0 0 70px;
 }
 
 .mat-column-zone {
   flex: 0 0 70px;
 }
 
-.mat-column-user {
-  flex: 0 0 90px;
-}
-
-.mat-column-date {
-  flex: 0 0 90px;
-}
-
 .mat-column-action {
-  flex: 0 0 60px;
-  align-self: end;
-  justify-content: center;
+  flex: 0 0 120px;
 }
 
-mat-table {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  border-collapse: collapse;
-}
-
-mat-row {
-  display: flex;
-  align-items: center;
-}
-
-mat-header-row {
-  display: flex;
-  align-items: center;
-  background-color: #f0f0f0;
-}
-
-mat-cell,
-mat-header-cell {
-/*  padding: 8px;*/
-  border-bottom: 1px solid #ddd;
+.mat-column-action mat-cell,
+.mat-column-action mat-header-cell {
+  text-align: center;
 }
 
 .mat-action-button:hover {
-  background-color: #ffbf00;
-  color: white;
-  transform: scale(1);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  background: #fff;
+  color: #ffbf00;
 }
 
+.mat-mdc-table-sticky-border-elem-right {
+  border-left: 1px solid #e0e0e0;
+}
+
+.mat-mdc-table-sticky-border-elem-left {
+  border-right: 1px solid #e0e0e0;
+}
+
+.mat-paginator {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
 
 .add-button {
   position: fixed;

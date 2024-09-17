@@ -1,5 +1,3 @@
-
-
 .register-area {
   height: auto;
   justify-content: center;
@@ -76,6 +74,10 @@
 
     .form-gp input:-moz-placeholder {
       color: #dad7d7;
+    }
+
+    .form-gp label{
+        font-size: 16px;
     }
 
 .text-danger{
