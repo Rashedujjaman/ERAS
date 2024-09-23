@@ -9,6 +9,7 @@ import { UsersComponent } from './users/users.component';
 import { EquipmentModelComponent } from './equipment-model/equipment-model.component';
 import { AreaComponent } from './area/area.component';
 import { EquipmentComponent } from './equipment/equipment.component';
+import { VncClientComponent } from './vnc-client/vnc-client.component';
 
 const routes: Routes = [
   {
@@ -51,6 +52,11 @@ const routes: Routes = [
     path: 'profile',
     component: ProfileComponent,
     title: 'Profile'
+  },
+  {
+    path: 'vnc-client',
+    component: VncClientComponent,
+    title: 'Vnc Client Component'
   },
 ];
 
