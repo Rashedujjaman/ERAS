@@ -22,7 +22,7 @@ export class GuacamoleVncService {
         this.initializeGuacamoleConnection(websocketUrl, password);
       } else {
         console.error('Unable to connect to WebSocket server.');
-        alert('Error: Unable to connect to the WebSocket server. Please check the server status.');
+        //alert('Error: Unable to connect to the WebSocket server. Please check the server status.');
         this.router.navigate(['/dashboard']); // Redirect user on failure
       }
     });
@@ -143,7 +143,7 @@ export class GuacamoleVncService {
 //      // Add event listener for errors
 //      this.tunnel.onerror = (error: any) => {
 //        console.error('Error during WebSocket connection:', error);
-//        alert('Error: Unable to connect to the VNC server. The host might be offline.');
+//        //alert('Error: Unable to connect to the VNC server. The host might be offline.');
 //        this.disconnect();
 //      };
 

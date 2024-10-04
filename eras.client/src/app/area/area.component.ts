@@ -12,7 +12,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { SnackBarService } from '../services/snackbar.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
@@ -45,7 +45,7 @@ export class AreaComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   constructor(private http: HttpClient,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar,
+    private snackBar: SnackBarService,
     private router: Router
   ) { }
 
@@ -71,18 +71,10 @@ export class AreaComponent implements OnInit, AfterViewInit {
           console.log(error);
 
           if (error.status === 200) {
-            this.snackBar.open('You are not authorized to perform this action.', 'Close', {
-              duration: 8000,
-              horizontalPosition: 'center',
-              verticalPosition: 'top'
-            });
+            this.snackBar.error('You are not authorized to perform this action.', 'Close', 8000);
           }
           else {
-            this.snackBar.open(error.error.message, 'Close', {
-              duration: 4000,
-              horizontalPosition: 'center',
-              verticalPosition: 'top'
-            });
+            this.snackBar.error(error.error.message, 'Close', 4000);
           }
           this.router.navigate(['']);
         }
@@ -139,19 +131,11 @@ export class AreaComponent implements OnInit, AfterViewInit {
         this.http.delete(`/api/Area/${id}`)
           .subscribe({
             next: (response: any) => {
-                this.snackBar.open(response.message, 'Close', {
-                  duration: 3000,
-                  horizontalPosition: 'center',
-                  verticalPosition: 'bottom'
-                })
+              this.snackBar.bottomSuccess(response.message, 'Close', 3000);
               this.loadAreas();
             },
             error: (error: HttpErrorResponse) => {
-                this.snackBar.open(error.error.message, 'Close', {
-                  duration: 3000,
-                  horizontalPosition: 'center',
-                  verticalPosition: 'bottom'
-                })
+              this.snackBar.bottomError(error.error.message, 'Close', 3000);
             }
           });
       }

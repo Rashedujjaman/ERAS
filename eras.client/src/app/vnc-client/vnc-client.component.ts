@@ -22,8 +22,9 @@ export class VncClientComponent implements OnInit {
         console.log(this.ipAddress, this.vncPassword)
         const port = 5900;
         const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
-        const tunnelUrl = `ws://localhost:${port}`;
-        //const tunnelUrl = `${protocol}://${this.ipAddress}:${port}/guacamole/websocket-tunnel?token=${this.vncPassword}`;
+        //const tunnelUrl = `ws://localhost:${port}`;
+        const tunnelUrl = `${protocol}://${this.ipAddress}:${port}/guacamole/websocket-tunnel?token=${this.vncPassword}`;
+        //const tunnelUrl = `${protocol}://170.10.10.1:5900`;
         // Call the connect method from the service
         this.guacService.connect(tunnelUrl, this.vncPassword);
       } else {

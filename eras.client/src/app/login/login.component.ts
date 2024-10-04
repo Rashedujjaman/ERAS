@@ -3,7 +3,8 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { SnackBarService } from '../services/snackbar.service';
+//import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http'; 
 
 @Component({
@@ -21,7 +22,7 @@ export class LoginComponent{
   constructor(
     private http: HttpClient,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: SnackBarService,
   ) { }
   login() {
     this.loading = true;
@@ -40,23 +41,13 @@ export class LoginComponent{
 
         this.loading = false;
         this.router.navigate(['/dashboard']);
-        this.snackBar.open(response.message, 'Close', {
-          duration: 3000,
-          horizontalPosition: 'center',
-          verticalPosition: 'bottom',
-          panelClass: ['mat-primary']
-        })
+        this.snackBar.success(response.message, 'Close', 3000);
       },
 
        error: (error: HttpErrorResponse) => {
-          console.error(error);
-            this.snackBar.open(error.error.message, 'Close', {
-              duration: 5000,
-              horizontalPosition: 'center',
-              verticalPosition: 'top',
-              panelClass: ['error-snackbar']
-            })
-          this.loading = false;
+         console.error(error);
+         this.snackBar.success(error.error.message, 'Close', 5000);
+         this.loading = false;
         }
         }
       );

@@ -1,7 +1,6 @@
 ﻿// server.js
 const WebSocket = require('ws');
 
-//import WebSocket from 'ws'; // Import the WebSocket library
 
 const PORT = 5900;
 //const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';

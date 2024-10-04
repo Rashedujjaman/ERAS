@@ -19,8 +19,8 @@
       <table mat-table [dataSource]="users" *ngIf="!isLoading">
 
         <ng-container matColumnDef="id" class="mat-column-id">
-          <mat-header-cell *matHeaderCellDef> Id </mat-header-cell>
-          <mat-cell *matCellDef="let user"> {{user.id}} </mat-cell>
+          <mat-header-cell *matHeaderCellDef> No </mat-header-cell>
+          <mat-cell *matCellDef="let user; let i = index"> {{i+1}} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="name" class="mat-column-name">

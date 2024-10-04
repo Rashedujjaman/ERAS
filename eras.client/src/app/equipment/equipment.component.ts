@@ -2,7 +2,7 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
@@ -11,9 +11,10 @@ import { MatDialogModule, MatDialog, MatDialogConfig } from '@angular/material/d
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Router } from '@angular/router';
-import { MatSnackBar} from '@angular/material/snack-bar';
+import { SnackBarService } from '../services/snackbar.service';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { AddEditEquipmentDialogComponent } from './add-edit-equipment-dialog/add-edit-equipment-dialog.component';
+
 
 
 @Component({
@@ -42,7 +43,7 @@ export class EquipmentComponent implements OnInit, AfterViewInit {
   constructor(private http: HttpClient,
     private dialog: MatDialog,
     private router: Router,
-    private snackBar: MatSnackBar,
+    private snackBar: SnackBarService,
   ) { }
 
   ngOnInit(): void {
@@ -68,27 +69,15 @@ export class EquipmentComponent implements OnInit, AfterViewInit {
         },
         error: (error: HttpErrorResponse) => {
           if (error.status === 200) {
-            this.snackBar.open('You are not authorized to perform this action.', 'Close', {
-              duration: 6000,
-              horizontalPosition: 'center',
-              verticalPosition: 'top'
-            });
+            this.snackBar.error('You are not authorized to perform this action.', 'Close', 6000);
             this.router.navigate(['']);
 
           } else if (error.error.sessionOut === true) {
-            this.snackBar.open(error.error.message, 'Close', {
-              duration: 4000,
-              horizontalPosition: 'center',
-              verticalPosition: 'top'
-            });
+            this.snackBar.error(error.error.message, 'Close', 4000);
             this.router.navigate(['']);
           }
           else {
-            this.snackBar.open(error.error.message, 'Close', {
-              duration: 4000,
-              horizontalPosition: 'center',
-              verticalPosition: 'top'
-            });
+            this.snackBar.error(error.error.message, 'Close', 4000);
           }
           this.isLoading = false;
         }
@@ -142,18 +131,10 @@ export class EquipmentComponent implements OnInit, AfterViewInit {
         this.http.delete(`/api/Equipment/${id}`)
           .subscribe({
             next: (response: any) => {
-              this.snackBar.open(response.message, 'Close', {
-                duration: 3000,
-                horizontalPosition: 'center',
-                verticalPosition: 'bottom'
-              })
+              this.snackBar.bottomSuccess(response.message, 'Close', 3000);
             },
             error: (error: HttpErrorResponse) => {
-              this.snackBar.open(error.error.message, 'Close', {
-                duration: 3000,
-                horizontalPosition: 'center',
-                verticalPosition: 'bottom'
-              })
+              this.snackBar.bottomError(error.error.message, 'Close', 3000);
             }
           });
       }

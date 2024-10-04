@@ -14,7 +14,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { SnackBarService } from '../services/snackbar.service';
 import { Router } from '@angular/router';
 
 
@@ -47,7 +47,7 @@ export class EquipmentModelComponent implements OnInit, AfterViewInit {
     private http: HttpClient,
     private dialog: MatDialog,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: SnackBarService
   ) { }
 
   ngOnInit() {
@@ -83,27 +83,15 @@ export class EquipmentModelComponent implements OnInit, AfterViewInit {
         error: (error: HttpErrorResponse) => {
 
           if (error.status === 200) {
-            this.snackBar.open('You are not authorized to perform this action.', 'Close', {
-              duration: 8000,
-              horizontalPosition: 'center',
-              verticalPosition: 'top',
-              panelClass: ['error-snackBar']
-            });
+            this.snackBar.error('You are not authorized to perform this action.', 'Close', 8000);
             this.router.navigate(['']);
+
           } else if (error.error.sessionOut === true) {
-            this.snackBar.open(error.error.message, 'Close', {
-              horizontalPosition: 'center',
-              verticalPosition: 'top',
-              panelClass: ['error-snackBar']
-            });
+            this.snackBar.error(error.error.message, 'Close', 4000);
             this.router.navigate(['']);
+
           } else {
-            this.snackBar.open('An error occurred while fetching user Equipment Model data', 'Close', {
-              duration: 3000,
-              horizontalPosition: 'center',
-              verticalPosition: 'top',
-              panelClass: ['error-snackBar']
-            });
+            this.snackBar.error('An error occurred while fetching user Equipment Model data', 'Close', 3000);
           }
           this.isLoading = false;
         }
@@ -156,19 +144,11 @@ export class EquipmentModelComponent implements OnInit, AfterViewInit {
         this.http.delete(`/api/equipmentmodel/${id}`)
           .subscribe( {
             next: (response: any) => {
-              this.snackBar.open(response.message, 'Close', {
-                duration: 3000,
-                horizontalPosition: 'center',
-                verticalPosition: 'bottom'
-              })
+              this.snackBar.bottomSuccess(response.message, 'Close', 3000);
               this.loadEquipmentModels();
             },
             error: (error: HttpErrorResponse) => {
-              this.snackBar.open(error.error.message, 'Close', {
-                duration: 3000,
-                horizontalPosition: 'center',
-                verticalPosition: 'bottom'
-              })
+              this.snackBar.bottomError(error.error.message, 'Close', 3000);
             }
           });
       }

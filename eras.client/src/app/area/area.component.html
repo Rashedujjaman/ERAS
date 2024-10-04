@@ -18,8 +18,8 @@
 
     <mat-table [dataSource]="dataSource" class="mat-elevation-z3" *ngIf="!isLoading">
       <ng-container matColumnDef="id" class="mat-column-id">
-        <mat-header-cell *matHeaderCellDef>ID </mat-header-cell>
-        <mat-cell *matCellDef="let area">{{area.id}}</mat-cell>
+        <mat-header-cell *matHeaderCellDef>No </mat-header-cell>
+        <mat-cell *matCellDef="let area; let i=index">{{i+1}}</mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="name" class="mat-column-name">
