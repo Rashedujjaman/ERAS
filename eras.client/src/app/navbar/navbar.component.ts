@@ -13,6 +13,7 @@ import { Router, RouterModule } from '@angular/router';
 export class NavbarComponent implements OnInit {
   UserRole: string | null = '';
   isDashboardRoute: boolean = false;
+  isVNCRoute: boolean = false;
 
   constructor(private router: Router) { }
 

@@ -1,0 +1,24 @@
+.vnc-container{
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
+}
+
+.exit-button {
+  position: fixed;
+  right: 30px;
+  top: 30px;
+  background-color: transparent;
+  color: #f44336;
+  border: 2px solid #f44336;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+  .exit-button:hover {
+    background-color: #f44336;
+    color: #fff;
+    cursor: pointer;
+  }

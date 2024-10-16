@@ -1,4 +1,8 @@
 <body>
-  <section class="header-content"><app-navbar *ngIf="!isLoginRoute"></app-navbar></section>
-  <section class="body-content"><router-outlet></router-outlet></section>
+  <section class="header-content">
+    <app-navbar *ngIf="!isLoginRoute && !isVNCRoute"></app-navbar>
+  </section>
+  <section class="body-content">
+    <router-outlet></router-outlet>
+  </section>
 </body>

@@ -15,5 +15,8 @@ export class AppComponent {
   get isLoginRoute(): boolean {
     return this.router.url === '/';
   }
+  get isVNCRoute(): boolean {
+    return this.router.url.startsWith('/vnc-client');
+  }
   title = 'Equipment Remote Access System';
 }

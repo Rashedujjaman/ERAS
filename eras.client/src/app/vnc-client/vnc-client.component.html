@@ -1,5 +1,9 @@
-<div #vncContainer class="vnc-container" id="guac-container" style="width: 100%; height: 100%;">
+<!-- Add a button to disconnect -->
+<button mat-icon-button (click)="onDisconnect()" class="exit-button">
+  <mat-icon>close</mat-icon>
+</button>
+<div #vncContainer class="vnc-container" id="guac-container">
   <!-- The Guacamole display element will be appended here -->
 </div>
-<button (click)="onDisconnect()"></button>
+
 
