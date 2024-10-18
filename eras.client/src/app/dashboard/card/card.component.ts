@@ -42,7 +42,7 @@ export class CardComponent {
   }
 
   onClick() {
-    this.router.navigate(['/vnc-client'], { queryParams: { ip: this.equipment.ipAddress, password: this.equipment.vncPassword } });
+    this.router.navigate(['/vnc-client'], { queryParams: { name: this.equipment.name, ip: this.equipment.ipAddress, password: this.equipment.vncPassword } });
     //this.router.navigate(['/vnc-component', this.equipment.ipAddress, this.equipment.vncPassword]);
   }
 }

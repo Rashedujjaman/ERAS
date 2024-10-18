@@ -7,10 +7,19 @@ const target = env.ASPNETCORE_HTTPS_PORT ? `https://localhost:${env.ASPNETCORE_H
 const PROXY_CONFIG = [
   {
     context: [
-      "/api",
+      "/api",  // This is for dotnet backend API
     ],
     target,
     secure: false
+  },
+  {
+    context: [
+      "/guacamole", // This is for Guacamole server API
+    ],
+    target: 'http://localhost:8080', // Guacamole server
+    secure: false,
+    changeOrigin: true,
+    logLevel: 'debug'
   }
 ]
 module.exports = PROXY_CONFIG;
