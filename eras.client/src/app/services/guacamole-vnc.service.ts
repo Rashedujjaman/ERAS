@@ -3,9 +3,24 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import Guacamole  from 'guacamole-common-js';
 import { Router } from '@angular/router';
 
+interface Connection {
+  name: string;
+  identifier: string;
+  parentIdentifier: string;
+  protocol: string;
+  attributes: any;
+  activeConnections: number;
+  lastActive?: number;
+}
+
+interface ConnectionResponse {
+  [key: string]: Connection;
+}
+
 @Injectable({
   providedIn: 'root'
 })
+
 export class GuacamoleVncService {
   private baseUrl = 'http://localhost:8080/guacamole/api'; // Base API URL of Guacamole
   private client: any;
@@ -14,6 +29,54 @@ export class GuacamoleVncService {
 
   constructor(private http: HttpClient, private router: Router) {
 }
+
+  public generateToken(name: string, ipAddress: string, vncPassword: string, displayElementId: string) {
+
+    // Step 1: Authenticate with the Guacamole server
+    this.authenticate(this.guacUser, this.guacPass)
+      .subscribe((authResponse: any) => {
+        const authToken = authResponse.authToken;
+        const dataSource = authResponse.dataSource;
+        console.log('Authentication Response: ', authResponse);
+
+        // Step 2: Check if the connection exists
+        this.existingConnectionCheck(authToken, dataSource, name).subscribe((response: ConnectionResponse) => {
+          // Convert the object to an array of connections
+          const existingConnections = Object.values(response);
+
+          // Find the connection with the specified name
+          const existingConnection = existingConnections.find((connection: Connection) => connection.name === name);
+
+          if (existingConnection) {
+            // Use the existing connection ID
+            const connectionId = existingConnection.identifier;
+            console.log('Found existing connection:', existingConnection);
+
+            this.generateTunnelUrl(authToken, connectionId, displayElementId);
+
+          } else {
+            // Create a new connection if none exists
+            this.createConnection(authToken, dataSource, name, ipAddress, vncPassword).subscribe((connectionResponse: Connection) => {
+              const connectionId = connectionResponse.identifier;
+              console.log('Created new connection: ', connectionResponse);
+
+              this.generateTunnelUrl(authToken, connectionId, displayElementId);
+
+            }, error => {
+              console.error('Failed to create connection', error);
+              alert('Failed to create VNC connection. Please check the server.');
+            });
+          }
+        }, error => {
+          console.error('Failed to check for existing connections', error);
+        });
+
+      }, error => {
+        console.error('Authentication failed', error);
+        alert('Authentication failed. Please check your credentials.');
+      });
+  }
+
 
   // Step 1: Authenticate with Guacamole
   private authenticate(username: string, password: string) {
@@ -26,84 +89,84 @@ export class GuacamoleVncService {
     });
   }
 
-  // Step 2: Create a new VNC connection dynamically
+  // Step 2: Existing connection check
+  private existingConnectionCheck(authToken: string, datasource: string, name: string) {
+    return this.http.get<ConnectionResponse>(`${this.baseUrl}/session/data/${datasource}/connections?token=${authToken}`);
+  }
+
+  // Step 3: Create a new VNC connection dynamically
   private createConnection(authToken: string, dataSource: string, name: string, ipAddress: string, vncPassword: string) {
     var port = '5900';
+
     const connectionData = {
       "parentIdentifier": "ROOT",
       "name": name,
       "protocol": "vnc",
+      "parameters": {
+        "port": port,
+        "password": vncPassword,
+        "username": name,
+        "hostname": ipAddress,
+        "read-only": "",
+        "swap-red-blue": "",
+        "cursor": "",
+        "color-depth": "",
+        "clipboard-encoding": "",
+        "disable-copy": "",
+        "disable-paste": "",
+        "dest-port": "",
+        "recording-exclude-output": "",
+        "recording-exclude-mouse": "",
+        "recording-include-keys": "",
+        "create-recording-path": "",
+        "enable-sftp": "",
+        "sftp-port": "",
+        "sftp-server-alive-interval": "",
+        "enable-audio": "",
+        "audio-servername": "",
+        "sftp-directory": "",
+        "sftp-root-directory": "",
+        "sftp-passphrase": "",
+        "sftp-private-key": "",
+        "sftp-username": "",
+        "sftp-password": "",
+        "sftp-host-key": "",
+        "sftp-hostname": "",
+        "recording-name": "",
+        "recording-path": "",
+        "dest-host": ""
+      },
+
       "attributes": {
-        "failover- only": "",
-        "guacd-encryption": "",
-        "guacd-hostname": "",
-        "guacd-port": "",
         "max-connections": "",
         "max-connections-per-user": "",
-        "weight": ""
-
-      },
-      "parameters": {
-        "hostname": ipAddress,
-        "port": port,
-        "username": this.guacUser,
-        "password": this.guacPass,
-        //"password": "vncPassword" // Pass VNC password if required
+        "weight": "",
+        "failover-only": "",
+        "guacd-port": "",
+        "guacd-encryption": "",
+        "guacd-hostname": ""
       }
     };
 
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${authToken}`);
-    return this.http.post(`${this.baseUrl}/session/data/${dataSource}/connections`, connectionData, { headers });
+    return this.http.post<Connection>(`${this.baseUrl}/session/data/${dataSource}/connections?token=${authToken}`, connectionData);
   }
 
-  // Step 2: Generate connection token
-  public generateToken(name: string, ipAddress: string, vncPassword: string, displayElementId: string) {
+  private generateTunnelUrl(authToken: string, connectionId: string, displayElementId: string) {
+    // Continue with the tunnel URL preparation
+    const connectionParams = new URLSearchParams();
+    connectionParams.set('id', connectionId);
 
-    // Step 1: Authenticate with the Guacamole server
-    this.authenticate(this.guacUser, this.guacPass)
-      .subscribe((authResponse: any) => {
-        const authToken = authResponse.authToken;
-        const dataSource = authResponse.dataSource;
-        console.log('Authentication Response: ', authResponse);
-
-          //const connectionParams = new URLSearchParams();
-          //connectionParams.set('id', '1');
-
-          //const tunnelUrl = `${this.baseUrl}/tunnel?token=${authToken}&${connectionParams.toString()}`;
-
-          //// Step 4: Load the connection into the Guacamole client
-          //this.startGuacamoleClient(tunnelUrl, displayElementId);
-
-        //// Step 2: Create a new connection
-        this.createConnection(authToken, dataSource, name, ipAddress, vncPassword).subscribe((connectionResponse: any) => {
-          const connectionId = connectionResponse.identifier;
-          console.log('Connection ID: ', connectionId);
-          console.log('Connection Response: ', connectionResponse);
-
-
-          // Step 3: Prepare the WebSocket tunnel URL
-          const connectionParams = new URLSearchParams();
-          connectionParams.set('id', connectionId); // Use the dynamically created connection ID
-
-          const tunnelUrl = `${this.baseUrl}/tunnel?token=${authToken}&${connectionParams.toString()}`;
-
-          // Step 4: Load the connection into the Guacamole client
-          this.startGuacamoleClient(tunnelUrl, displayElementId);
-        }, error => {
-          console.error('Failed to create connection', error);
-          alert('Failed to create VNC connection. Please check the server.');
-        });
-      }, error => {
-        console.error('Authentication failed', error);
-        alert('Authentication failed. Please check your credentials.');
-      });
+    const tunnelUrl = `${this.baseUrl}/tunnel?token=${authToken}&${connectionParams.toString()}`;
+    // Start the Guacamole client with the existing connection
+    this.startGuacamoleClient(tunnelUrl, displayElementId);
   }
 
-  // Step 3: Initialize the Guacamole Client and WebSocket Tunnel
+
+  // Step 5: Initialize the Guacamole Client and WebSocket Tunnel
   private startGuacamoleClient(tunnelUrl: string, displayElementId: string): void {
     // Initialize WebSocket tunnel
-    const tunnel = new Guacamole.HTTPTunnel(tunnelUrl);
-    //const tunnel = new Guacamole.WebSocketTunnel(tunnelUrl);
+    //const tunnel = new Guacamole.HTTPTunnel(tunnelUrl);
+    const tunnel = new Guacamole.WebSocketTunnel(tunnelUrl);
 
     // Initialize Guacamole client with the tunnel
     this.client = new Guacamole.Client(tunnel);
