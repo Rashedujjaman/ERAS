@@ -23,8 +23,8 @@ interface Equipment {
 
 export class CardComponent {
   @Input() equipment!: Equipment;
+  @Input() isLoading!: false;
 
-  isLoading = false;
 
   constructor(private vncService: GuacamoleVncService, private router: Router) { }
 
