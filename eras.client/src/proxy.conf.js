@@ -9,20 +9,34 @@ const PROXY_CONFIG = [
     context: [
       "/api",  // This is for dotnet backend API
     ],
-    target,
-    secure: false
+    target: 'https://localhost:4000',
+    secure: false,
+    changeOrigin: true,
+    logLevel: 'debug'
   },
   {
     context: [
       "/guacamole", // This is for Guacamole server API
     ],
-    target: 'http://localhost:8080', // Guacamole server
+    target: 'http://localhost:8080', 
+    secure: false,
+    changeOrigin: true,
+    logLevel: 'debug'
+  },
+  {
+    context: [
+      "/WS",
+    ],
+    target: 'https://ydsws.azurewebsites.net', 
     secure: false,
     changeOrigin: true,
     logLevel: 'debug'
   }
 ]
 module.exports = PROXY_CONFIG;
+
+
+
 
 
 ////proxy.conf.js

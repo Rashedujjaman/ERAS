@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import Guacamole  from 'guacamole-common-js';
+import Guacamole  from 'guacamole-client';
 import { Router } from '@angular/router';
 
 interface Connection {
@@ -22,7 +22,7 @@ interface ConnectionResponse {
 })
 
 export class GuacamoleVncService {
-  private baseUrl = 'http://localhost:8080/guacamole/api'; // Base API URL of Guacamole
+  private baseUrl = '/guacamole/api'; // Base API URL of Guacamole
   private client: any;
   private guacUser: string = 'Admin';
   private guacPass: string = 'Admin1234';
@@ -84,14 +84,15 @@ export class GuacamoleVncService {
     body.set('username', username);
     body.set('password', password);
 
-    return this.http.post(`${this.baseUrl}/tokens`, body.toString(), {
+    //return this.http.post(`${this.baseUrl}/tokens`, body.toString(), {
+    return this.http.post(`/guacamole/api/tokens`, body.toString(), {
       headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded')
     });
   }
 
   // Step 2: Existing connection check
   private existingConnectionCheck(authToken: string, datasource: string, name: string) {
-    return this.http.get<ConnectionResponse>(`${this.baseUrl}/session/data/${datasource}/connections?token=${authToken}`);
+    return this.http.get<ConnectionResponse>(`/guacamole/api/session/data/${datasource}/connections?token=${authToken}`);
   }
 
   // Step 3: Create a new VNC connection dynamically
@@ -148,38 +149,59 @@ export class GuacamoleVncService {
       }
     };
 
-    return this.http.post<Connection>(`${this.baseUrl}/session/data/${dataSource}/connections?token=${authToken}`, connectionData);
+    return this.http.post<Connection>(`/guacamole/api/session/data/${dataSource}/connections?token=${authToken}`, connectionData);
   }
 
+  // Step 4: Generate tunnel url
   private generateTunnelUrl(authToken: string, connectionId: string, displayElementId: string) {
     // Continue with the tunnel URL preparation
     const connectionParams = new URLSearchParams();
-    connectionParams.set('id', connectionId);
+    connectionParams.set('GUAC_DATA_SOURCE', 'mysql');
+    connectionParams.set('GUAC_ID', connectionId);
+    connectionParams.set('GUAC_TYPE', 'c');
+    //connectionParams.set('GUAC_DISPLAY', '1280x1024x32');
+    connectionParams.set('GUAC_WIDTH', '970');
+    connectionParams.set('GUAC_HEIGHT', '912');
+    connectionParams.set('GUAC_DPI', '150');
+    connectionParams.set('GUAC_TIMEZONE', 'Asia % 2FKuala_Lumpur');
+    connectionParams.set('GUAC_AUDIO', 'audio % 2FL8');
+    connectionParams.set('GUAC_IMAGE', 'image % 2Fjpeg');
 
-    const tunnelUrl = `${this.baseUrl}/tunnel?token=${authToken}&${connectionParams.toString()}`;
+    //const tunnelUrl = `ws://localhost:8080/guacamole/api/tunnel?token=${authToken}&id=${connectionId}`;
+    const tunnelUrl = `ws://localhost:8080/guacamole/websocket-tunnel?token=${authToken}&${connectionParams.toString()}`;
+    //const tunnelUrl = `ws://localhost:8080/guacamole/websocket-tunnel?token=${authToken}&GUAC_DATA_SOURCE=mysql&GUAC_ID=${connectionId}&GUAC_TYPE=c&GUAC_WIDTH=1215&GUAC_HEIGHT=912&GUAC_DPI=150&GUAC_TIMEZONE=Asia%2FKuala_Lumpur&GUAC_AUDIO=audio%2FL8&GUAC_IMAGE=image%2Fjpeg`;
+    //const tunnelUrl = `${this.baseUrl}/tunnel?token=${authToken}&${connectionParams.toString()}`;
     // Start the Guacamole client with the existing connection
-    this.startGuacamoleClient(tunnelUrl, displayElementId);
+    this.startGuacamoleClient(tunnelUrl, displayElementId, authToken);
   }
 
 
   // Step 5: Initialize the Guacamole Client and WebSocket Tunnel
-  private startGuacamoleClient(tunnelUrl: string, displayElementId: string): void {
-    // Initialize WebSocket tunnel
-    //const tunnel = new Guacamole.HTTPTunnel(tunnelUrl);
-    const tunnel = new Guacamole.WebSocketTunnel(tunnelUrl);
+  private startGuacamoleClient(tunnelUrl: string, displayElementId: string, token: string): void {
+    // Use a ChainedTunnel to wrap the WebSocketTunnel
+    const tunnel = new Guacamole.ChainedTunnel(
+      //new Guacamole.HTTPTunnel(tunnelUrl)
+      new Guacamole.WebSocketTunnel(tunnelUrl)
+    );
 
-    // Initialize Guacamole client with the tunnel
+    // Initialize the Guacamole client with the ChainedTunnel
     this.client = new Guacamole.Client(tunnel);
 
-    // Get the display element (canvas) where the remote screen will be shown
+    // Get the display element from the DOM
     const displayElement = document.getElementById(displayElementId);
-    if (displayElement) {
-      // Set up the Guacamole client display
-      displayElement.innerHTML = '';  // Clear previous content
-      displayElement.appendChild(this.client.getDisplay().getElement());  // Add Guacamole canvas to display element
 
-      // Start the client
-      this.client.connect(tunnelUrl);
+    if (displayElement) {
+      // Clear any existing content in the display element
+      displayElement.innerHTML = '';
+
+      // Append the Guacamole display to the element
+      displayElement.appendChild(this.client.getDisplay().getElement());
+
+      // Prepare connection arguments with the token
+      const connectArgs = `token=${token}`;
+
+      // Start the Guacamole client
+      this.client.connect(connectArgs);
 
       console.log('Guacamole session started successfully.');
     } else {
@@ -187,8 +209,10 @@ export class GuacamoleVncService {
     }
   }
 
+
   // Disconnect from the server
   public disconnect(displayElementId: string): void {
+    this.client.disconnect();
     const displayElement = document.getElementById(displayElementId);
     if (displayElement) {
       displayElement.innerHTML = ''; // Clear the content (remove iframe)

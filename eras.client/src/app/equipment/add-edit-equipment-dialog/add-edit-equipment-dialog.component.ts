@@ -94,7 +94,6 @@ export class AddEditEquipmentDialogComponent {
 
   onSave() {
     if (this.equipmentForm.valid) {
-      console.log('Save button clicked')
       const formData = new FormData();
       formData.append('name', this.equipmentForm.get('name')?.value);
       formData.append('alias', this.equipmentForm.get('alias')?.value);

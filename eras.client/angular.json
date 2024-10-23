@@ -26,6 +26,7 @@
             "outputPath": "dist/eras.client",
             "index": "src/index.html",
             "browser": "src/main.ts",
+            "sourceMap": true,
             "polyfills": [
               "zone.js"
             ],
@@ -52,8 +53,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "3MB",
-                  "maximumError": "2MB"
+                  "maximumWarning": "3MB", // Increased from 500kb to 3mb
+                  "maximumError": "2MB" // Increased from 1mb to 2mb
                 },
                 {
                   "type": "anyComponentStyle",
@@ -61,7 +62,8 @@
                   "maximumError": "4kB"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "sourceMap": false
             },
             "development": {
               "optimization": false,
@@ -74,16 +76,19 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
-            "production": {
-              "buildTarget": "eras.client:build:production"
-            },
             "development": {
               "buildTarget": "eras.client:build:development"
+            },
+            "production": {
+              "buildTarget": "eras.client:build:production"
             }
           },
           "defaultConfiguration": "development",
           "options": {
-            "proxyConfig": "src/proxy.conf.js"
+            "proxyConfig": "src/proxy.conf.js",
+            "ssl": false,
+            "host": "localhost",
+            "port": 4200
           }
         },
         "extract-i18n": {

@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { GuacamoleVncService } from '../services/guacamole-vnc.service';
 import { MatIconModule } from '@angular/material/icon';
 
+
 @Component({
   selector: 'app-vnc-client',
   standalone: true,
