@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 
 interface Equipment {
   name: string;
+  hostName: string;
   image: string;
   ipAddress: string;
   zone: number;
@@ -24,6 +25,7 @@ interface Equipment {
 export class CardComponent {
   @Input() equipment!: Equipment;
   @Input() isLoading!: false;
+  urlToken: string = 'MjEAYwBteXNxbA';
 
 
   constructor(private vncService: GuacamoleVncService, private router: Router) { }
@@ -42,7 +44,7 @@ export class CardComponent {
   }
 
   onClick() {
-    this.router.navigate(['/vnc-client'], { queryParams: { name: this.equipment.name, ip: this.equipment.ipAddress, password: this.equipment.vncPassword } });
+    this.router.navigate(['/vnc-client'], { queryParams: { urlToken: this.urlToken, hostName: this.equipment.hostName, ip: this.equipment.ipAddress, password: this.equipment.vncPassword } });
     //this.router.navigate(['/vnc-component', this.equipment.ipAddress, this.equipment.vncPassword]);
   }
 }

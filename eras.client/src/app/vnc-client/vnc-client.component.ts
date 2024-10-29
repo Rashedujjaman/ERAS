@@ -12,22 +12,27 @@ import { MatIconModule } from '@angular/material/icon';
   imports: [MatIconModule],
 })
 export class VncClientComponent implements OnInit {
-  name: string = '';
+  hostName: string = '';
   ipAddress: string = '';
   vncPassword: string = '';
+  urlToken: string = '';
   displayElementId = 'guac-container';
 
   constructor(private route: ActivatedRoute, private guacService: GuacamoleVncService) { }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
-      this.name = params['name']?.trim();
+      this.hostName = params['name']?.trim();
       this.ipAddress = params['ip']?.trim();
       this.vncPassword = params['password']?.trim();
+      this.urlToken = params['urlToken']?.trim();
 
       if (this.ipAddress && this.vncPassword) {
         // Call the service to generate the token and connect
-        this.guacService.generateToken(this.name, this.ipAddress, this.vncPassword, this.displayElementId);
+        //this.guacService.generateToken(this.hostName, this.ipAddress, this.vncPassword, this.displayElementId);
+
+        //Call the service to connect to vnc using token
+        this.guacService.connect(this.urlToken, this.displayElementId)
       } else {
         console.error('Missing IP address or password');
       }

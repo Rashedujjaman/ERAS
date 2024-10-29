@@ -12,7 +12,8 @@ const PROXY_CONFIG = [
     target: 'https://localhost:4000',
     secure: false,
     changeOrigin: true,
-    logLevel: 'debug'
+    logLevel: 'debug',
+    ws: true
   },
   {
     context: [
@@ -21,7 +22,28 @@ const PROXY_CONFIG = [
     target: 'http://localhost:8080', 
     secure: false,
     changeOrigin: true,
-    logLevel: 'debug'
+    logLevel: 'debug',
+    ws: true
+  },
+  {
+    context: [
+      "/guacamole/websocket-tunnel", // This is for Websocket
+    ],
+    target: 'ws://localhost:8080', 
+    secure: false,
+    changeOrigin: true,
+    logLevel: 'debug',
+    ws: true
+  },
+  {
+    context: [
+      "/tunnel", // This is for HTTPTunnel
+    ],
+    target: 'http://localhost:8080',
+    secure: false,
+    changeOrigin: true,
+    logLevel: 'debug',
+    ws: true
   },
   {
     context: [
