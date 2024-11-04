@@ -1,71 +1,78 @@
 <div class="register-area">
-  <div class="register-box mt-3">
-    <form [formGroup]="registrationForm" (ngSubmit)="register()" #registrationFormDirective="ngForm">
-      <div class="register-head">
-        <div class="row">
-          <!--<div class="col-12">
-            <img src="assets/images/logo_unisem.gif" alt="Logo" class="brand-image" style="opacity: 0.8">
-          </div>-->
-          <div class="col-12">
-            <h2>ERAS User Registration</h2>
-            <!--<h5>Remote Equipment Management System</h5>-->
-          </div>
-        </div>
-      </div>
-      <div class="register-form-body">
-        <div class="col-12 form-gp">
-          <input type="text" id="UserName" class="form-control" placeholder="UserName" formControlName="UserName">
-          <div *ngIf="f['UserName'].touched && f['UserName'].invalid" class="text-danger">
-            User Name is required.
-          </div>
-        </div>
-        <div class="col-12 form-gp">
-          <input type="text" id="Name" class="form-control" placeholder="Name" formControlName="Name">
-          <div *ngIf="f['Name'].touched && f['Name'].invalid" class="text-danger">
-            Name is required.
-          </div>
-        </div>
-        <div class="col-12 form-gp">
-          <input type="text" id="Alias" class="form-control" placeholder="Alias" formControlName="Alias">
-          <div *ngIf="f['Alias'].touched && f['Alias'].invalid" class="text-danger">
-            Alias is required.
-          </div>
-        </div>
-        <div class="col-12 form-gp">
-          <input type="text" id="Email" class="form-control" placeholder="Email" formControlName="Email">
-          <div *ngIf="f['Email'].touched && f['Email'].invalid" class="text-danger">
-            <div *ngIf="f['Email'].errors?.['required']">Email is required.</div>
-            <div *ngIf="f['Email'].errors?.['email']">Invalid email format.</div>
-          </div>
-        </div>
-        <div class="col-12 form-gp">
-          <input type="password" id="Password" class="form-control" placeholder="Password" formControlName="Password">
-          <div *ngIf="f['Password'].touched && f['Password'].invalid" class="text-danger">
-            <div *ngIf="f['Password'].errors?.['required']">Password is required.</div>
-            <div *ngIf="f['Password'].errors?.['passwordStrength']">
-            Password must be at least 6 characters long & include at least 1 lowercase,
-              1 uppercase letter, 1 number, & 1 special character.
+  <div class="register-frame col-lg-10 col-md-10 col-sm-10 mt-4">
+    <div class="image-frame col-lg-6 col-md-6 col-sm-10 mt-5 mb-5">
+      <img src="../../assets/images/industry.webp" />
+    </div>
+    <div class="register-box col-lg-6 col-md-6 col-sm-10">
+      <form [formGroup]="registrationForm" (ngSubmit)="register()" #registrationFormDirective="ngForm">
+        <div class="register-head">
+          <div class="row">
+            <div class="col-12">
+              <h2>Register User</h2>
             </div>
           </div>
         </div>
-        <div class="col-12 form-gp">
-          <label>User Role : </label>
-          <mat-radio-group formControlName="UserRoleId">
-            <mat-radio-button value="1">Admin</mat-radio-button>
-            <mat-radio-button value="2">Engineer</mat-radio-button>
-            <mat-radio-button value="3">Viewer</mat-radio-button>
-          </mat-radio-group>
-          <div *ngIf="f['UserRoleId'].touched && f['UserRoleId'].invalid" class="text-danger">
-            User Role is required.
+        <div class="register-form-body">
+          <div class="col-12 form-gp">
+            <input type="text" id="Name" class="form-control" placeholder="Name" formControlName="Name">
+            <div *ngIf="f['Name'].touched && f['Name'].invalid" class="text-danger">
+              Name is required.
+            </div>
+          </div>
+          <div class="col-12 form-gp">
+            <input type="text" id="Alias" class="form-control" placeholder="Alias" formControlName="Alias">
+            <div *ngIf="f['Alias'].touched && f['Alias'].invalid" class="text-danger">
+              Alias is required.
+            </div>
+          </div>
+          <div class="col-12 form-gp">
+            <input type="text" id="Email" class="form-control" placeholder="Email" formControlName="Email">
+            <div *ngIf="f['Email'].touched && f['Email'].invalid" class="text-danger">
+              <div *ngIf="f['Email'].errors?.['required']">Email is required.</div>
+              <div *ngIf="f['Email'].errors?.['email']">Invalid email format.</div>
+            </div>
+          </div>
+          <div class="col-12 form-gp">
+            <input type="text" id="UserName" class="form-control" placeholder="UserName" formControlName="UserName">
+            <div *ngIf="f['UserName'].touched && f['UserName'].invalid" class="text-danger">
+              User Name is required.
+            </div>
+          </div>
+          <div class="col-12 form-gp">
+            <input type="password" id="Password" class="form-control" placeholder="Password" formControlName="Password">
+            <div *ngIf="f['Password'].touched && f['Password'].invalid" class="text-danger">
+              <!--<div *ngIf="f['Password'].errors?.['required']">Password is required.</div>-->
+              <div *ngIf="f['Password'].errors?.['passwordStrength']">
+                <span>Password Criteria:</span>
+                <ul class="password-criteria">
+                  <li>At least 6 characters</li>
+                  <li>1 lowercase (a-z)</li>
+                  <li>1 uppercase (A-Z)</li>
+                  <li>1 number (0-9)</li>
+                  <li>1 special character (!, &#64;, #, etc.)</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 form-gp">
+            <label>User Role : </label>
+            <mat-radio-group formControlName="UserRoleId">
+              <mat-radio-button value="1">Admin</mat-radio-button>
+              <mat-radio-button value="2">Engineer</mat-radio-button>
+              <mat-radio-button value="3">Viewer</mat-radio-button>
+            </mat-radio-group>
+            <div *ngIf="f['UserRoleId'].touched && f['UserRoleId'].invalid" class="text-danger">
+              User Role is required.
+            </div>
+          </div>
+          <div class="col-12 submit-btn-area">
+            <button id="form_submit" type="submit" class="btn btn-primary" [disabled]="loading || !(registrationForm.valid)">
+              <span *ngIf="!loading">Submit</span>
+              <span *ngIf="loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            </button>
           </div>
         </div>
-        <div class="col-12 submit-btn-area">
-          <button id="form_submit" type="submit" class="btn btn-primary" [disabled]="loading || !(registrationForm.valid)">
-            <span *ngIf="!loading">Submit</span>
-            <span *ngIf="loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-          </button>
-        </div>
-      </div>
-    </form>
+      </form>
+    </div>
   </div>
 </div>

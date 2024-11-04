@@ -11,6 +11,8 @@ import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faEdit, faTrash, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -28,6 +30,7 @@ import { Router } from '@angular/router';
     MatPaginatorModule,
     MatSortModule,
     MatIconModule,
+    FontAwesomeModule,
     MatButtonModule,
     MatDialogModule,
     MatInputModule,
@@ -39,6 +42,10 @@ export class EquipmentModelComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource<any>();
   isLoading: boolean = false;
 
+  //Icon
+  faEdit = faEdit;
+  faTrash = faTrash;
+  faPlus = faPlusCircle;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;

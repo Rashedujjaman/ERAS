@@ -9,8 +9,9 @@ interface Equipment {
   hostName: string;
   image: string;
   ipAddress: string;
-  zone: number;
+  area: any;
   vncPassword: string;
+  urlToken: string;
 }
 
 @Component({
@@ -25,7 +26,7 @@ interface Equipment {
 export class CardComponent {
   @Input() equipment!: Equipment;
   @Input() isLoading!: false;
-  urlToken: string = 'MjEAYwBteXNxbA';
+  //urlToken: string = 'MjEAYwBteXNxbA';
 
 
   constructor(private vncService: GuacamoleVncService, private router: Router) { }
@@ -40,11 +41,10 @@ export class CardComponent {
     return this.equipment.ipAddress;
   }
   get zone(): number {
-    return this.equipment.zone;
+    return this.equipment.area.name;
   }
 
   onClick() {
-    this.router.navigate(['/vnc-client'], { queryParams: { urlToken: this.urlToken, hostName: this.equipment.hostName, ip: this.equipment.ipAddress, password: this.equipment.vncPassword } });
-    //this.router.navigate(['/vnc-component', this.equipment.ipAddress, this.equipment.vncPassword]);
+    this.router.navigate(['/vnc-client'], { queryParams: { urlToken: this.equipment.urlToken, hostName: this.equipment.hostName, ip: this.equipment.ipAddress, password: this.equipment.vncPassword } });
   }
 }

@@ -1,52 +1,58 @@
-.profile-card {
-  height: 550px;
-  width: 600px;
-  background-color: aliceblue;
-}
 
-.user-info {
-  text-align: center;
-}
 
-.user-photo {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 1px solid orangered;
-}
+/*@media (max-width: 992px) {
+  .profile-card{
+    padding: 50px;
+  }*/
 
-.user-info h3{
-    font-size: 1.5rem;
-    font-weight: 500;
-}
+/*  .profile-card .info-container{
+      width: 95%;
+  }*/
+  
+  /*.profile-card .info-container .user-info {
+    flex-direction: column;
+    padding: 0 20px;
+    gap: 0;
+  }
 
-.user-info .row {
-  border: 1px solid orangered;
-  border-radius: 5px;
-}
+  .profile-card .header {
+    height: 50px;
+  }
 
-.user-info .row:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
+  .profile-card .header span {
+    transform: translateY(-30px);
+    font-size: 40px;
+    font-weight: bold;
+  }
 
-.buttons button:hover {
-  background: #ffbf00;
-  color: #fff;
-  transform: scale(1.1);
-}
+    .profile-card .info-container form {
+      width: 90%;
+    }
 
-.buttons .reset-password-button{
-    border: 1px solid #ffbf00;
-}
+  .profile-form-body .input-group span {
+    width: 70px;
+  }
 
-.buttons .sign-out-button {
-  border: 1px solid #008bff;
-}
+  .profile-card .input-group span, input{
+      font-size: 14px;
+  }
 
-.success-snackbar {
-  background-color: green !important;
-  color: white;
-}
+  .profile-card .image-frame {
+    display: flex;
+    justify-content: center;
+  }
 
+  .profile-card .image-frame img {
+    width: 100px;
+  }
+
+  .profile-card .buttons .sign-out-button {
+    font-size: 12px;
+    width: 30%;
+  }
+
+  .profile-card .buttons .reset-password-button {
+    width: 40%;
+    font-size: 12px;
+  }
+}*/

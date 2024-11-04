@@ -6,6 +6,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatIconModule } from '@angular/material/icon';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faEdit, faTrash, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialogConfig } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -33,6 +35,7 @@ import { AddEditAreaDialogComponent } from './add-edit-area-dialog/add-edit-area
     MatPaginatorModule,
     MatSortModule,
     MatIconModule,
+    FontAwesomeModule,
     MatButtonModule,
     MatDialogModule,
     MatProgressSpinnerModule]  
@@ -41,6 +44,11 @@ export class AreaComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['id', 'name', 'alias', 'userCreated', 'dateCreated', 'userModified', 'lastModified', 'actions'];
   dataSource = new MatTableDataSource<any>();
   isLoading = false;
+
+  //Icon
+  faEdit = faEdit;
+  faTrash = faTrash;
+  faPlus = faPlus;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   constructor(private http: HttpClient,

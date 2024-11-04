@@ -5,9 +5,6 @@ import { CardSkeletonComponent } from './card-skeleton/card-skeleton';
 import { HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FilterComponent } from '../filter/filter.component';
-import { Router } from '@angular/router';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatDialog } from '@angular/material/dialog';
 
 
 @Component({
@@ -21,9 +18,6 @@ import { MatDialog } from '@angular/material/dialog';
 export class DashboardComponent {
   constructor(
     private http: HttpClient,
-    private dialog: MatDialog,
-    private router: Router,
-    private snackBar: MatSnackBar
   ) { }
 
   equipmentList: any[] = [];
@@ -32,13 +26,14 @@ export class DashboardComponent {
 
   ngOnInit() {
     this.loadEquipments();
+    //this.authenticate();
     //this.testApi();
   }
 
-  loadEquipments() {
+  async loadEquipments() {
     this.isLoading = true;
     this.isError = false;
-    this.http.get<any[]>('/api/equipment').subscribe({
+    this.http.get<any[]>('/api/Equipment/getAllEquipments').subscribe({
       next: (response: any) => {
         this.equipmentList = response.equipments;
         this.isLoading = false;
@@ -50,6 +45,7 @@ export class DashboardComponent {
       }
     });
   }
+
 
   //testApi(): void {
   //  const salesmanId = 'D00117';

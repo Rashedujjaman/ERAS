@@ -1,29 +1,28 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="/dashboard"><img src="assets/images/logo_unisem.png" alt="Unisem Logo" style="height: 50px; width: auto;" /></a>
+<nav class="navbar navbar-expand-lg navbar-light ">
+  <a class="navbar-brand"  routerLink="/dashboard"><img src="assets/images/logo_unisem.png" alt="Unisem Logo" style="height: 50px; width: auto;" /></a>
   <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav me-auto">
       <li class="nav-item active">
-        <a class="nav-link"  routerLink="/dashboard">DashBoard</a>
+        <a class="nav-link" routerLink="/dashboard">DashBoard</a>
       </li>
-      <li class="nav-item" *ngIf="UserRole === 'Admin'">
-        <a class="nav-link" routerLink="/registration">Create User</a>
+      <li class="nav-item" *ngIf="userRole === 'Admin'">
+        <a class="nav-link" routerLink="/registration">Register New User</a>
+      </li>
+      <li class="nav-item" *ngIf="userRole === 'Admin'">
+        <a class="nav-link" routerLink="/users">Users</a>
       </li>
       <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" *ngIf="UserRole === 'Admin' || UserRole === 'Engineer'" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <a class="nav-link dropdown-toggle" *ngIf="userRole === 'Admin' || userRole === 'Engineer'" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
           Setup
         </a>
         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <li><a class="dropdown-item" *ngIf="UserRole === 'Admin' || UserRole === 'Engineer'" routerLink="/equipment">Manage Equipment</a></li>
-          <li><a class="dropdown-item" *ngIf="UserRole === 'Admin'" routerLink="/equipment-model">Manage Equipment Model</a></li>
-          <li><a class="dropdown-item" *ngIf="UserRole === 'Admin'" routerLink="/area">Manage Area</a></li>
-          <li><a class="dropdown-item" *ngIf="UserRole === 'Admin'" routerLink="/users">Manage Users</a></li>
+          <li class="nav-item"><a class="dropdown-item" *ngIf="userRole === 'Admin' || userRole === 'Engineer'" routerLink="/equipment">Equipments</a></li>
+          <li class="nav-item"><a class="dropdown-item" *ngIf="userRole === 'Admin'" routerLink="/equipment-model">Equipment Models</a></li>
+          <li class="nav-item"><a class="dropdown-item" *ngIf="userRole === 'Admin'" routerLink="/area">Areas</a></li>
         </ul>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" >Help</a>
       </li>
     </ul>
     <!--<form class="d-flex my-2 my-lg-0 me-auto" *ngIf="isDashboardRoute">

@@ -25,8 +25,7 @@
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>VNC User Name</mat-label>
-          <input matInput placeholder="Enter equipment VNC username" formControlName="vncUserName" required />
-          <mat-error *ngIf="equipmentForm.get('vncUserName')?.hasError('required')">Vnc User Name is required</mat-error>
+          <input matInput placeholder="Enter equipment VNC username" formControlName="vncUserName"/>
         </mat-form-field>
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Equipment Model</mat-label>
@@ -51,6 +50,7 @@
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>VNC Password</mat-label>
           <input matInput type="password" placeholder="Enter equipment VNC password" formControlName="vncPassword" required />
+          <mat-error *ngIf="equipmentForm.get('vncPassword')?.hasError('required')">VNC password is required</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">

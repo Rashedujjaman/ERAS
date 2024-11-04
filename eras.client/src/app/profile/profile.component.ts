@@ -3,23 +3,27 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { SnackBarService } from '../services/snackbar.service';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { ResetPasswordDialogComponent } from '../resetpassworddialog/resetpassworddialog.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { ReactiveFormsModule, FormControl, FormBuilder, FormGroup, Validators, FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [MatCardModule, MatButtonModule, CommonModule, MatDialogModule, ResetPasswordDialogComponent],
+  imports: [MatCardModule, MatButtonModule, CommonModule, MatDialogModule, ResetPasswordDialogComponent, ReactiveFormsModule, FormsModule, MatFormFieldModule],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
+  profileForm!: FormGroup;
+
   userId: string = '';
   userName: string = '';
-  Name: string = '';
-  Alias: string = '';
+  name: string = '';
+  alias: string = '';
   userEmail: string = '';
   userRole: string = '';
   userPhotoUrl: string = 'assets/images/profile.jpg';
@@ -27,14 +31,22 @@ export class ProfileComponent implements OnInit {
   errorMessage: string = '';
 
   constructor(
+    private formBuilder: FormBuilder,
     private http: HttpClient,
     private router: Router,
-    private snackBar: MatSnackBar,
+    private snackBar: SnackBarService,
     private dialogBox: MatDialog
   ) { }
 
-  ngOnInit() {
+
+  ngOnInit(): void {
     this.profileDataFetch();
+    this.profileForm = this.formBuilder.group({
+      UserName: new FormControl<string | null>(null, [Validators.required]),
+      Name: new FormControl<string | null>(null, [Validators.required]),
+      Alias: new FormControl<string | null>(null, [Validators.required]),
+      Email: new FormControl<string | null>(null, [Validators.required, Validators.email]),
+    });
   }
 
   profileDataFetch(): void {
@@ -46,8 +58,8 @@ export class ProfileComponent implements OnInit {
         next: (response: any) => {
           this.userId = response.profile.userId;
           this.userName = response.profile.userName || '';
-          this.Name = response.profile.name || '';
-          this.Alias = response.profile.alias || '';
+          this.name = response.profile.name || '';
+          this.alias = response.profile.alias || '';
           this.userEmail = response.profile.email || '';
           this.userPhotoUrl = response.profile.photoUrl || this.userPhotoUrl;
           this.userRole = response.profile.userRole || '';
@@ -59,10 +71,7 @@ export class ProfileComponent implements OnInit {
           this.loading = false;
           if (error.error.sessionOut === true) {
             this.router.navigate(['']);
-            this.snackBar.open(error.error.message, 'Close', {
-              horizontalPosition: 'center',
-              verticalPosition: 'top'
-            })
+            this.snackBar.error(error.error.message, 'Close')
           } else if (error.status === 404) {
             this.errorMessage = 'Profile not found.';
           } else if (error.status === 500) {
@@ -88,12 +97,7 @@ export class ProfileComponent implements OnInit {
         next: (response: any) => {
           localStorage.removeItem('userRole');
           this.router.navigate(['']);
-          this.snackBar.open(response.message, 'Close', {
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top',
-            panelClass: ['success-snackbar']
-          })
+          this.snackBar.success(response.message, 'Close', 3000);
         },
         error: (error: any) => {
           console.error('Error logging out:', error);

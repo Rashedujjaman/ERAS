@@ -7,23 +7,21 @@ namespace ERAS.Server.Models
     {
         [Key]
         public int Id { get; set; }
-        [Required]
-        public required string Name { get; set; }
+
+        public string? Name { get; set; }
         public string? Alias { get; set; }
-        [Required]
-        public required string HostName { get; set; }
-        [Required]
-        public required string IpAddress { get; set; }
-        [Required]
-        public required string VncUserName { get; set; }
-        [Required]
-        public required string VncPassword { get; set; }
-        [Required]
+  
+        public string? HostName { get; set; }
+
+        public string? IpAddress { get; set; }
+
+        public string? VncUserName { get; set; }
+
+        public string? VncPassword { get; set; }
         [ForeignKey("EquipmentModel")]
-        public int EquipmentModelId { get; set; }
-        [Required]
+        public int? EquipmentModelId { get; set; }
         [ForeignKey("Area")]
-        public int AreaId { get; set; }
+        public int? AreaId { get; set; }
         public bool? Enabled { get; set; }
         public bool? IsDeleted { get; set; }
         public byte[]? Image { get; set; }
@@ -31,6 +29,7 @@ namespace ERAS.Server.Models
         public DateTimeOffset? DateModified { get; set; }
         public int? UserCreatedId { get; set; }
         public int? UserModifiedId { get; set; }
+        public string? UrlToken { get; set; }
 
         [ForeignKey("EquipmentModelId")]
         public virtual EquipmentModel? EquipmentModel { get; set; }

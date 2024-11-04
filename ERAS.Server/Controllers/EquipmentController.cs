@@ -13,7 +13,7 @@ namespace ERAS.Server.Controllers
     {
         private readonly ApplicationDbContext _dbContext = dbcontext;
 
-        [HttpGet]
+        [HttpGet("getAllEquipments")]
         public async Task<IActionResult> GetEquipments()
         {
             try
@@ -28,26 +28,7 @@ namespace ERAS.Server.Controllers
                     .Include(e => e.EquipmentModel)
                     .Include(e => e.UserCreated)
                     .Include(e => e.UserModified)
-                    .Where(e => e.IsDeleted == null || e.IsDeleted == false)
-                    .Select(e => new
-                    {
-                        e.Id,
-                        e.Name,
-                        e.Alias,
-                        e.IpAddress,
-                        e.HostName,
-                        e.VncUserName,
-                        e.VncPassword,
-                        e.Image,
-                        e.AreaId,
-                        Zone = e.Area.Name,
-                        e.EquipmentModelId,
-                        Model = e.EquipmentModel.Name,
-                        UserCreated = e.UserCreated.UserName,
-                        e.DateCreated,
-                        UserModified = e.UserModified.UserName,
-                        e.DateModified
-                    }).ToListAsync();
+                    .Where(e => e.IsDeleted == null || e.IsDeleted == false).ToListAsync();
 
                 return Ok(new { message = "Equipments fetched successfully !!!", equipments });
             }
@@ -57,38 +38,51 @@ namespace ERAS.Server.Controllers
             }
         }
 
-        [HttpPost]
-        public async Task<IActionResult> PostEquipment([FromForm] EquipmentAddEditModel eq)
+        private Equipment? GetEquipmentById(int id)
+        {
+            var equipment = _dbContext.Equipment
+                .Include(e => e.Area)
+                .Include(e => e.EquipmentModel)
+                .Include(e => e.UserCreated)
+                .Include(e => e.UserModified)
+                .FirstOrDefault(e => e.Id == id);
+
+            return equipment;
+        }
+
+
+        [HttpPost("addEquipment")]
+        public async Task<IActionResult> PostEquipment([FromForm] EquipmentAddEditModel model)
         {
             try
             {
-                if (eq == null)
+                if (model == null)
                 {
                     return BadRequest(new { message = "Invalid equipment data." });
                 }
 
                 var equipment = new Equipment
                 {
-                    Name = eq.Name,
-                    Alias = eq.Alias,
-                    HostName = eq.HostName,
-                    IpAddress = eq.IpAddress,
-                    VncUserName = eq.VncUserName,
-                    VncPassword = eq.VncPassword,
-                    EquipmentModelId = eq.EquipmentModelId,
-                    AreaId = eq.AreaId,
+                    Name = model.Name,
+                    Alias = model.Alias,
+                    HostName = model.HostName,
+                    IpAddress = model.IpAddress,
+                    VncUserName = model.VncUserName,
+                    VncPassword = model.VncPassword,
+                    EquipmentModelId = model.EquipmentModelId,
+                    AreaId = model.AreaId,
                     DateCreated = DateTime.UtcNow,
                     Enabled = true,
                     IsDeleted = false,
                     UserCreatedId = HttpContext.Session.GetInt32("UserId")
                 };
 
-                if (eq.Image != null)
+                if (model.Image != null)
                 {
                     try
                     {
                         using var memoryStream = new MemoryStream();
-                        await eq.Image.CopyToAsync(memoryStream);
+                        await model.Image.CopyToAsync(memoryStream);
 
                         if (memoryStream.Length > 0)
                         {
@@ -105,7 +99,6 @@ namespace ERAS.Server.Controllers
                     }
                 }
 
-
                 _dbContext.Equipment.Add(equipment);
 
                 var result = await _dbContext.SaveChangesAsync();
@@ -114,7 +107,10 @@ namespace ERAS.Server.Controllers
                     return BadRequest(new { message = "An error occurred while adding the equipment." });
                 }
 
-                return Ok(new { message = "Equipment added successfully!" });
+                // Retrieve the newly added equipment
+                var newEquipment = this.GetEquipmentById(equipment.Id);
+
+                return Ok(new { message = "Equipment added successfully!", equipment = newEquipment});
             }
             catch (Exception ex)
             {
@@ -122,8 +118,8 @@ namespace ERAS.Server.Controllers
             }
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutEquipment(int id, [FromForm] EquipmentAddEditModel updatedEquipment)
+        [HttpPut("updateEquipment/{id}")]
+        public async Task<IActionResult> UpdateEquipment(int id, [FromForm] EquipmentAddEditModel updatedEquipment)
         {
             try
             {
@@ -156,7 +152,7 @@ namespace ERAS.Server.Controllers
                         using var memoryStream = new MemoryStream();
                         await updatedEquipment.Image.CopyToAsync(memoryStream);
 
-                        // Optional: Check the file size if necessary
+                        // Check the file size
                         if (memoryStream.Length > 0)
                         {
                             existingEquipment.Image = memoryStream.ToArray();
@@ -172,6 +168,44 @@ namespace ERAS.Server.Controllers
                     }
                 }
 
+                _dbContext.Entry(existingEquipment).State = EntityState.Modified;
+
+                var result = await _dbContext.SaveChangesAsync();
+                if (result == 0)
+                {
+                    return BadRequest(new { message = "An error occurred while updating the equipment." });
+                }
+
+                // Retrieve the newly added equipment
+                var editedEquipment = this.GetEquipmentById(id);
+
+                return Ok(new { message = "Equipment updated successfully!", equipment = editedEquipment });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An error occurred while updating the equipment.", error = ex.Message });
+            }
+        }
+
+        [HttpPut("urlToken/{id}")]
+        public async Task<IActionResult> UpdateEquipmentUrlToken(int id, [FromBody] Equipment equipment)
+        {
+            try
+            {
+                if (equipment == null)
+                {
+                    return BadRequest(new { message = "Invalid data." });
+                }
+
+                var existingEquipment = await _dbContext.Equipment.FindAsync(id);
+                if (existingEquipment == null)
+                {
+                    return NotFound(new { message = "Equipment not found." });
+                }
+
+                existingEquipment.UrlToken = equipment.UrlToken;
+                existingEquipment.DateModified = DateTime.UtcNow;
+                existingEquipment.UserModifiedId = HttpContext.Session.GetInt32("UserId");
 
                 _dbContext.Entry(existingEquipment).State = EntityState.Modified;
 
@@ -181,15 +215,15 @@ namespace ERAS.Server.Controllers
                     return BadRequest(new { message = "An error occurred while updating the equipment." });
                 }
 
-                return Ok(new { message = "Equipment updated successfully!" });
+                return Ok(new { message = "Equipment url token updated successfully!" });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { message = "An error occurred while updating the equipment.", error = ex.Message });
+                return StatusCode(500, new { message = "An error occurred while updating the equipment url token", error = ex.Message });
             }
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("deleteEquipment/{id}")]
         public async Task<IActionResult> DeleteEquipment(int id)
         {
             try

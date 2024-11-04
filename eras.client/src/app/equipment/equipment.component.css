@@ -72,6 +72,11 @@ mat-cell, mat-header-cell {
   min-width: 80px;
 }
 
+.mat-column-urlToken{
+  flex: 0 0 150px;
+  gap: 5px;
+}
+
 .mat-column-model {
   flex: 0 0 70px;
 }
@@ -81,17 +86,12 @@ mat-cell, mat-header-cell {
 }
 
 .mat-column-action {
-  flex: 0 0 120px;
+  flex: 0 0 60px;
 }
 
 .mat-column-action mat-cell,
 .mat-column-action mat-header-cell {
   text-align: center;
-}
-
-.mat-action-button:hover {
-  background: #fff;
-  color: #ffbf00;
 }
 
 .mat-mdc-table-sticky-border-elem-right {
@@ -106,34 +106,6 @@ mat-cell, mat-header-cell {
   display: flex;
   justify-content: center;
   margin-top: 16px;
-}
-
-.add-button {
-  position: fixed;
-  height: 60px;
-  width: 60px;
-  right: 40px;
-  bottom: 40px;
-  z-index: 1000;
-  border-radius: 50%;
-  background-color: rgba(255, 191, 0, .8);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  transition: all 0.3s ease;
-}
-
-  .add-button:hover {
-    transform: scale(1.1);
-    background-color: #f5b800;
-    box-shadow: 0 8px 16px rgba(255, 0, 0, 0.4);
-    color: white;
-  }
-
-.mat-add-button-icon {
-  font-size: 24px;
 }
 
 

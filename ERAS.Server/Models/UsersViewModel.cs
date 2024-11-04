@@ -11,6 +11,7 @@ namespace ERAS.Server.Models
         public required string Email { get; set; }
         public required string PhotoUrl { get; set; }
         public required string Role { get; set; }
+        public int? UserRoleId { get; set; }
         public required bool IsActive { get; set; }
     }
 }

@@ -11,14 +11,14 @@ import { Router, RouterModule } from '@angular/router';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
-  UserRole: string | null = '';
+  userRole: string | null = '';
   isDashboardRoute: boolean = false;
   isVNCRoute: boolean = false;
 
   constructor(private router: Router) { }
 
   ngOnInit() {
-    this.UserRole = localStorage.getItem('userRole');
+    this.userRole = localStorage.getItem('userRole');
 
     this.router.events.subscribe(() => {
       this.isDashboardRoute = this.router.url === '/dashboard';

@@ -71,36 +71,6 @@ mat-header-row {
   margin-top: 16px;
 }
 
-
-.add-button {
-  position: fixed;
-  height: 60px;
-  width: 60px;
-  right: 40px;
-  bottom: 40px;
-  z-index: 1000;
-  border-radius: 50%;
-  background-color: rgba(255, 191, 0, .8);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  transition: all 0.3s ease;
-}
-
-  .add-button:hover {
-    transform: scale(1.1);
-    background-color: #f5b800;
-    box-shadow: 0 8px 16px rgba(255, 0, 0, 0.4);
-    color: white;
-  }
-
-.mat-add-button-icon {
-  font-size: 24px;
-}
-
-
 .loading-overlay {
   position: absolute;
   top: 200px;

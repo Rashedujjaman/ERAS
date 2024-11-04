@@ -105,25 +105,5 @@ namespace ERAS.Server.Controllers
             HttpContext.Session.Remove("UserRole");
             return Ok(new { message = "Logout successful" });
         }
-
-
-        [HttpPost("reset-password")]
-        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordModel model)
-        {
-            var user = await _userManager.FindByIdAsync(model.UserId.ToString());
-            if (user == null)
-            {
-                return NotFound(new { message = "User not found." });
-            }
-
-            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            var result = await _userManager.ResetPasswordAsync(user, token, model.NewPassword);
-
-            if (result.Succeeded)
-            {
-                return Ok(new { message = "Password reset successful." });
-            }
-            return BadRequest(new { message = "Failed to reset password.", errors = result.Errors });
-        }
     }
 }

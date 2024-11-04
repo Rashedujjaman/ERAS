@@ -25,20 +25,20 @@ namespace ERAS.Server.Controllers
             try
             {
                 var equipmentModels = await _dbContext.EquipmentModel
-    .Include(e => e.UserCreated)
-    .Include(e => e.UserModified)
-    .Where(e => e.IsDeleted == null || e.IsDeleted == false)
-    .Select(e => new
-    {
-        e.Id,
-        e.Name,
-        e.Alias,
-        e.DateModified,
-        e.DateCreated,
-        e.IsDeleted,
-        UserCreated = e.UserCreated.UserName,
-        UserModified = e.UserModified.UserName,
-    }).ToListAsync();
+                    .Include(e => e.UserCreated)
+                    .Include(e => e.UserModified)
+                    .Where(e => e.IsDeleted == null || e.IsDeleted == false)
+                    .Select(e => new
+                    {
+                        e.Id,
+                        e.Name,
+                        e.Alias,
+                        e.DateModified,
+                        e.DateCreated,
+                        e.IsDeleted,
+                        UserCreated = e.UserCreated.UserName,
+                        UserModified = e.UserModified.UserName,
+                    }).ToListAsync();
 
                 return Ok(new { message = "Equipment Models are loaded", equipmentModels });
             }

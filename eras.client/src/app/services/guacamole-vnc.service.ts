@@ -2,20 +2,9 @@ import { Injectable } from '@angular/core';
 import Guacamole from 'guacamole-common-js';
 import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Connection, ConnectionResponse } from '../models/guacamole-connection.model';
+import { Observable} from 'rxjs';
 import { OnInit } from '@angular/core';
-interface Connection {
-  name: string;
-  identifier: string;
-  parentIdentifier: string;
-  protocol: string;
-  attributes: any;
-  activeConnections: number;
-  lastActive?: number;
-}
-
-interface ConnectionResponse {
-  [key: string]: Connection;
-}
 
 @Injectable({
   providedIn: 'root'
@@ -30,18 +19,17 @@ export class GuacamoleVncService {
   private baseUrl: string = '/guacamole/api';
   private guacUser: string = 'Admin';
   private guacPass: string = 'Admin1234';
-  private authToken: string = '';
-  private dataSource: string = '';
+
 
   constructor(private http: HttpClient, private router: Router) {}
 
   ngOnInit(): void {
-    this.authenticate();
+    //this.authenticate();
   }
 
 
   // Authenticate the user and return a Promise for the auth token
-  public async authenticate(): Promise<string> {
+  public async authenticate(): Promise<any> {
     const body = new URLSearchParams();
     body.set('username', this.guacUser);
     body.set('password', this.guacPass);
@@ -49,19 +37,18 @@ export class GuacamoleVncService {
     return this.http.post(`${this.baseUrl}/tokens`, body.toString(), {
       headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded')
     }).toPromise().then((authResponse: any) => {
-      this.authToken = authResponse.authToken;
-      this.dataSource = authResponse.dataSource;
-      return this.authToken;
+      return authResponse ? { authToken: authResponse.authToken, dataSource: authResponse.dataSource } : null;
     });
   }
 
   // Existing connection check in Guacamole server
-  public getExistingConnections() {
-    return this.http.get<ConnectionResponse>(`${this.baseUrl}/session/data/${this.dataSource}/connections?token=${this.authToken}`);
+  public getExistingConnections(authToken: string, dataSource: string): Observable<ConnectionResponse> {
+    //this.getAuthToken();
+    return this.http.get<ConnectionResponse>(`${this.baseUrl}/session/data/${dataSource}/connections?token=${authToken}`);
   }
 
   // Create new connection in Guacamole server
-  public createConnection( hostName: string, ipAddress: string, vncPassword: string, userName: string) {
+  public createConnection( hostName: string, ipAddress: string, vncPassword: string, userName: string, authToken: string, dataSource: string) {
     //Constructing Connection data here
     const connectionData = {
       "parentIdentifier": "ROOT",
@@ -113,11 +100,11 @@ export class GuacamoleVncService {
       }
     };
 
-    return this.http.post<Connection>(`${this.baseUrl}/session/data/${this.dataSource}/connections?token=${this.authToken}`, connectionData);
+    return this.http.post<Connection>(`${this.baseUrl}/session/data/${dataSource}/connections?token=${authToken}`, connectionData);
   }
 
   // Update existing connection
-  public updateConnection(connectionId: string, hostName: string, ipAddress: string, vncPassword: string, userName: string) {
+  public updateConnection(connectionId: string, hostName: string, ipAddress: string, vncPassword: string, userName: string, authToken: string, dataSource: string) {
     const connectionData = {
       "parentIdentifier": "ROOT",
       "name": hostName,
@@ -169,14 +156,21 @@ export class GuacamoleVncService {
       }
     }
 
-    return this.http.put<Connection>(`${this.baseUrl}/session/data/${this.dataSource}/connections/${connectionId}?token=${this.authToken}`, connectionData);
+    return this.http.put<Connection>(`${this.baseUrl}/session/data/${dataSource}/connections/${connectionId}?token=${authToken}`, connectionData);
+  }
+
+  //Delete connection
+  public deleteConnection(connectionId: string, authToken: string, dataSource: string) {
+    return this.http.delete(`${this.baseUrl}/session/data/${dataSource}/connections/${connectionId}?token=${authToken}`);
+    console.log(`${this.baseUrl}/session/data/${dataSource}/connections/${connectionId}?token=${authToken}`);
   }
 
   // Connect to the Server
   public connect(urlToken: string, displayElementId: string): void {
     try {
-      this.authenticate().then(authToken => {
-        const clientUrl = `http://localhost:8080/guacamole/#/client/${urlToken}?token=${this.authToken}`;
+      this.authenticate().then(authResponse => {
+        const authToken = authResponse.authToken;
+        const clientUrl = `http://localhost:8080/guacamole/#/client/${urlToken}?token=${authToken}`;
 
         const displayElement = document.getElementById(displayElementId);
         if (displayElement) {

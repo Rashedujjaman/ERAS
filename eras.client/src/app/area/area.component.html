@@ -2,7 +2,7 @@
   <div class="area-management">
     <div class="row header d-flex align-content-center mt-2 mb-2">
       <div class="col-md-3 d-flex align-items-center">
-        <h1>Manage Areas</h1>
+        <h1>Areas</h1>
       </div>
       <div class="col-md-9 d-flex justify-content-end align-items-center">
         <mat-form-field class="filter" appearance="outline">
@@ -54,12 +54,12 @@
 
       <ng-container matColumnDef="actions" class="mat-column-action">
         <mat-header-cell *matHeaderCellDef>Actions</mat-header-cell>
-        <mat-cell *matCellDef="let area">
-          <button mat-icon-button color="primary" (click)="editArea(area)">
-            <mat-icon>edit</mat-icon>
+        <mat-cell *matCellDef="let area" class="action-button-container">
+          <button class="edit-button action-button" (click)="editArea(area)">
+            <fa-icon [icon]="faEdit"></fa-icon>
           </button>
-          <button mat-icon-button color="warn" (click)="deleteArea(area.id)">
-            <mat-icon>delete</mat-icon>
+          <button class="delete-button action-button" (click)="deleteArea(area.id)">
+            <fa-icon [icon]="faTrash" class="icon-button"></fa-icon>
           </button>
         </mat-cell>
       </ng-container>
@@ -70,13 +70,13 @@
       <mat-row *matNoDataRow class="align-self-center">
         <mat-cell colspan="8">No data matching the filter "{{input.value}}"</mat-cell>
       </mat-row>
-
     </mat-table>
 
-    <mat-paginator class="mat-paginator" [pageSizeOptions]="[7, 15, 30]" aria-label="Select page of users" showFirstLastButtons></mat-paginator>
+    <mat-paginator class="mat-paginator" [pageSizeOptions]="[10, 15, 30]" aria-label="Select page of users" showFirstLastButtons></mat-paginator>
 
-    <button mat-icon-button class="add-button" (click)="openAddAreaDialog()">
+    <button class="add-button" (click)="openAddAreaDialog()">
       <mat-icon class="mat-add-button-icon">add</mat-icon>
+      <!--<fa-icon [icon]="faPlus"></fa-icon>-->
     </button>
   </div>
 </div>

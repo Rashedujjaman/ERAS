@@ -16,7 +16,7 @@ export class VncClientComponent implements OnInit {
   ipAddress: string = '';
   vncPassword: string = '';
   urlToken: string = '';
-  displayElementId = 'guac-container';
+  displayElementId = 'vnc-container';
 
   constructor(private route: ActivatedRoute, private guacService: GuacamoleVncService) { }
 

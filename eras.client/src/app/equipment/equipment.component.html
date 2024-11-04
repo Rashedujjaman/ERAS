@@ -2,7 +2,7 @@
   <div class="equipment-Management">
     <div class="row header d-flex align-content-center mt-2 mb-2">
       <div class="col-md-3 d-flex align-items-center">
-        <h1>Manage Equipments</h1>
+        <h1>Equipments</h1>
       </div>
       <div class="col-md-9 d-flex justify-content-end align-items-center">
         <mat-form-field class="filter" appearance="outline">
@@ -17,7 +17,7 @@
     </div>
 
     <div class="mat-table-container mat-elevation-z3" tabindex="0">
-      <mat-table [dataSource]="dataSource" matSort *ngIf="!isLoading">
+      <mat-table [dataSource]="tableData" matSort *ngIf="!isLoading">
 
         <ng-container matColumnDef="id" class="mat-column-id" sticky>
           <mat-header-cell *matHeaderCellDef mat-sort-header>No</mat-header-cell>
@@ -44,49 +44,57 @@
           <mat-cell *matCellDef="let equipment">{{equipment.hostName}}</mat-cell>
         </ng-container>
 
+        <ng-container matColumnDef="urlToken" class="mat-column-urlToken">
+          <mat-header-cell *matHeaderCellDef>UrlToken</mat-header-cell>
+          <mat-cell *matCellDef="let equipment">
+            {{ equipment.urlToken ? equipment.urlToken : 'Add' }}
+            <fa-icon [icon]="equipment.urlToken? faEdit : faPlus" (click)="updateUrlToken(equipment)" class="edit-button"></fa-icon>
+          </mat-cell>
+        </ng-container>
+
         <ng-container matColumnDef="vncUserName" class="mat-column-vncUserName">
           <mat-header-cell *matHeaderCellDef>VNC UserName</mat-header-cell>
-          <mat-cell *matCellDef="let equipment">{{equipment.vncUserName}}</mat-cell>
+          <mat-cell *matCellDef="let equipment">{{equipment.vncUserName ? equipment.vncUserName : ''}}</mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="model" class="mat-column-model">
           <mat-header-cell *matHeaderCellDef mat-sort-header>Model</mat-header-cell>
-          <mat-cell *matCellDef="let equipment">{{equipment.model}}</mat-cell>
+          <mat-cell *matCellDef="let equipment">{{equipment.equipmentModel?.name}}</mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="zone" class="mat-column-zone">
           <mat-header-cell *matHeaderCellDef mat-sort-header>Zone</mat-header-cell>
-          <mat-cell *matCellDef="let equipment">{{equipment.zone}}</mat-cell>
+          <mat-cell *matCellDef="let equipment">{{equipment.area?.name}}</mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="userCreated" class="mat-column-user">
           <mat-header-cell *matHeaderCellDef>User Created</mat-header-cell>
-          <mat-cell *matCellDef="let equipment">{{equipment.userCreated}}</mat-cell>
+          <mat-cell *matCellDef="let equipment">{{equipment.userCreated?.userName || ''}}</mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="dateCreated" class="mat-column-date">
           <mat-header-cell *matHeaderCellDef>Date Created</mat-header-cell>
-          <mat-cell *matCellDef="let equipment">{{equipment.dateCreated | date:'MMM d, yyyy'}}</mat-cell>
+          <mat-cell *matCellDef="let equipment">{{equipment.dateCreated ? (equipment.dateCreated | date:'MMM d, yyyy') : ''}}</mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="userModified" class="mat-column-user">
           <mat-header-cell *matHeaderCellDef>User Modified</mat-header-cell>
-          <mat-cell *matCellDef="let equipment">{{equipment.userModified ? (equipment.userModified) : 'NA'}}</mat-cell>
+          <mat-cell *matCellDef="let equipment">{{equipment.userModified?.userName || ''}}</mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="dateModified" class="mat-column-date">
           <mat-header-cell *matHeaderCellDef>Last Modified</mat-header-cell>
-          <mat-cell *matCellDef="let equipment">{{equipment.dateModified ? (equipment.dateModified | date: 'MMM d, YYYY') : 'NA'}}</mat-cell>
+          <mat-cell *matCellDef="let equipment">{{equipment.dateModified ? (equipment.dateModified | date: 'MMM d, YYYY') : ''}}</mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="actions" class="mat-column-action" stickyEnd>
           <mat-header-cell *matHeaderCellDef>Actions</mat-header-cell>
-          <mat-cell *matCellDef="let equipment">
-            <button mat-icon-button color="primary" class="mat-action-button" (click)="editEquipment(equipment)">
-              <mat-icon>edit</mat-icon>
+          <mat-cell *matCellDef="let equipment" class="action-button-container">
+            <button class="edit-button action-button" (click)="editEquipment(equipment)">
+              <fa-icon [icon]="faEdit"></fa-icon>
             </button>
-            <button mat-icon-button color="warn" class="mat-action-button" (click)="deleteEquipment(equipment.id)">
-              <mat-icon>delete</mat-icon>
+            <button class="delete-button action-button" (click)="deleteEquipment(equipment.id, equipment.hostName)">
+              <fa-icon [icon]="faTrash"></fa-icon>
             </button>
           </mat-cell>
         </ng-container>
@@ -95,15 +103,17 @@
         <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
 
         <mat-row *matNoDataRow class="align-self-center">
-          <mat-cell colspan="4">No data matching the filter "{{input.value}}"</mat-cell>
+          <mat-cell [attr.colspan]="displayedColumns.length">No Equipment Found "{{input.value}}"</mat-cell>
         </mat-row>
+
       </mat-table>
     </div>
 
-    <mat-paginator class="mat-paginator" [pageSizeOptions]="[7, 15, 30]" aria-label="Select page of users" showFirstLastButtons></mat-paginator>
+    <mat-paginator class="mat-paginator" [pageSizeOptions]="[10, 15, 30]" aria-label="Select page of users" showFirstLastButtons></mat-paginator>
 
-    <button mat-icon-button class="add-button" (click)="openAddEquipmentDialog()">
+    <button class="add-button" (click)="openAddEquipmentDialog()">
       <mat-icon class="mat-add-button-icon">add</mat-icon>
+      <!--<fa-icon [icon]="faPlus" class="mat-add-button-icon"></fa-icon>-->
     </button>
 
   </div>

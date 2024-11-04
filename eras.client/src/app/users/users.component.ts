@@ -8,11 +8,14 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatIconModule } from '@angular/material/icon';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faEdit, faRotateLeft } from '@fortawesome/free-solid-svg-icons';
 import { MatButtonModule } from '@angular/material/button';
 import { SnackBarService } from '../services/snackbar.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ResetPasswordDialogComponent } from '../resetpassworddialog/resetpassworddialog.component';
+import { UpdateRoleDialogComponent } from './edit-role-dialog/update-role-dialog.component';
 import { Router } from '@angular/router';
 
 
@@ -26,6 +29,7 @@ import { Router } from '@angular/router';
     MatSortModule,
     MatDialogModule,
     MatSlideToggleModule,
+    FontAwesomeModule,
     MatIconModule,
     MatButtonModule,
     CommonModule,
@@ -34,9 +38,14 @@ import { Router } from '@angular/router';
   styleUrls: ['./users.component.css']
 })
 export class UsersComponent implements OnInit, AfterViewInit {
+  users: any[] = [];
   displayedColumns: string[] = ['id', 'name', 'userName', 'email', 'role', 'status', 'actions'];
-  users = new MatTableDataSource<any>();
+  tableData = new MatTableDataSource<any>();
   isLoading: boolean = false;
+
+  //icon
+  faEdit = faEdit;
+  faRotate = faRotateLeft;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   constructor(
@@ -51,17 +60,17 @@ export class UsersComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.users.paginator = this.paginator;
+    this.tableData.paginator = this.paginator;
   }
 
   loadUsers() {
     this.isLoading = true;
 
-    this.http.get<any[]>(`/api/users/users`)
+    this.http.get<any[]>(`/api/users/getAllUsers`)
       .subscribe({
         next: (response: any) => {
-          this.users = new MatTableDataSource(response);
-          this.users.paginator = this.paginator;
+          this.users = response;
+          this.updateTableData();
           this.isLoading = false;
         },
         error: (error: HttpErrorResponse) => {
@@ -81,16 +90,25 @@ export class UsersComponent implements OnInit, AfterViewInit {
       });
   }
 
+  updateTableData() {
+    if (!this.tableData) {
+      this.tableData = new MatTableDataSource();
+    }
+    this.tableData.data = this.users.length ? this.users : [];
+    this.tableData.paginator = this.paginator;
+  }
+
+
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
-    this.users.filter = filterValue;
+    this.tableData.filter = filterValue;
   }
 
 
   toggleUserStatus(user: any) {
     user.IsActive = !user.IsActive;
 
-    this.http.put(`api/users/${user.id}/toggle`, {})
+    this.http.put(`api/users/accountStatus/${user.id}`, {})
       .subscribe({
         next: (response: any) => {
           console.log('User status updated:', response);
@@ -102,6 +120,27 @@ export class UsersComponent implements OnInit, AfterViewInit {
           this.snackBar.error(error.error.message, 'Close', 3000);
         }
       });
+  }
+
+  updateRole(user: any) {
+    const dialogRef = this.dialog.open(UpdateRoleDialogComponent, {
+      width: '400px',
+      data: { userId: user.id, userName: user.userName, userRoleId: user.userRoleId }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        if (result === 1) {
+          user.role = 'Admin';
+        } else if (result === 2) {
+          user.role = 'Engineer';
+        } else {
+          user.role = 'Viewer';
+        }
+        console.log('Role edit dialog was closed');
+      }
+      console.log('Error occured during role edit.')
+    });
   }
 
   resetPassword(user: any) {

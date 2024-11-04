@@ -6,7 +6,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { SnackBarService } from '../services/snackbar.service';
+
 
 @Component({
   selector: 'app-reset-password-dialog',
@@ -23,7 +24,7 @@ export class ResetPasswordDialogComponent {
     @Inject(MAT_DIALOG_DATA) public data: { userId: number, userName: string },
     private fb: FormBuilder,
     private http: HttpClient,
-    private snackBar: MatSnackBar
+    private snackBar: SnackBarService
   ) {
     this.form = this.fb.group({
       newPassword: ['', [Validators.required, Validators.minLength(6), this.passwordStrengthValidator]]
@@ -46,27 +47,16 @@ export class ResetPasswordDialogComponent {
 
   resetPassword() {
     const resetData = {
-      userId: this.data.userId,
       newPassword: this.form.value.newPassword
     }
-    this.http.post('/api/authentication/reset-password', resetData)
+    this.http.post(`/api/Users/resetPassword/${this.data.userId}`, resetData)
       .subscribe({
         next: (response: any) => {
-          this.snackBar.open(response.message, "Close", {
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'bottom',
-            panelClass: ['success-snackbar']
-          });
+          this.snackBar.bottomSuccess(response.message, "Close", 3000);
           this.dialogRef.close(true);
         },
         error: (error: HttpErrorResponse) => {
-          this.snackBar.open(error.error.message, "Close", {
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'bottom',
-            panelClass: ['error-snackbar']
-          });
+          this.snackBar.bottomError(error.error.message, "Close", 3000);
           this.dialogRef.close(false);
         }
       });

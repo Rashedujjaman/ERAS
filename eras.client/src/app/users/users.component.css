@@ -41,19 +41,19 @@ mat-form-field {
   z-index: 1000;
 }
 
-mat-table {
+/*mat-table {
   width: 100%;
   table-layout: fixed;
-}
+}*/
 
-mat-header-row, mat-row {
-  display: flex;
+/*mat-header-row, mat-row {
+  display: flex;*/
 /*  font-size: 12px;*/
-}
+/*}*/
 
 mat-header-row {
   background-color: #f0f0f0;
-  font-size: 14px;
+/*  font-size: 14px;*/
 }
 
 mat-cell, mat-header-cell {
@@ -61,13 +61,14 @@ mat-cell, mat-header-cell {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  gap: 8px;
 }
 
 .mat-column-id {
-  flex: 0 0 80px;
+  flex: 0 0 50px;
 }
 
-.mat-column-name {
+/*.mat-column-name {
   flex: 0 0 220px;
 }
 
@@ -81,14 +82,14 @@ mat-cell, mat-header-cell {
 
 .mat-column-role {
   flex: 0 0 120px;
-}
+}*/
 
 .mat-column-status {
-  flex: 0 0 100px;
+  flex: 0 0 60px;
 }
 
 .mat-column-action {
-  flex: 0 0 100px;
+  flex: 0 0 60px;
 }
 
 .mat-paginator {

@@ -4,8 +4,8 @@ import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { SnackBarService } from '../services/snackbar.service';
-//import { MatSnackBar } from '@angular/material/snack-bar';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http'; 
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { GuacamoleVncService } from '../services/guacamole-vnc.service';
 
 @Component({
   selector: 'app-login',
@@ -23,7 +23,9 @@ export class LoginComponent{
     private http: HttpClient,
     private router: Router,
     private snackBar: SnackBarService,
+    private guacamoleService: GuacamoleVncService,
   ) { }
+
   login() {
     this.loading = true;
 
@@ -35,13 +37,14 @@ export class LoginComponent{
     this.http.post('/api/authentication/login', loginData)
       .subscribe({
         next: (response: any) => {
-        console.log(response);
 
-        localStorage.setItem('userRole', response.userRole);
+          localStorage.setItem('userRole', response.userRole);
 
-        this.loading = false;
-        this.router.navigate(['/dashboard']);
-        this.snackBar.success(response.message, 'Close', 3000);
+          this.loading = false;
+
+          this.authenticate();
+          this.router.navigate(['/dashboard']);
+          this.snackBar.success(response.message, 'Close', 3000);
       },
 
        error: (error: HttpErrorResponse) => {
@@ -51,5 +54,17 @@ export class LoginComponent{
         }
         }
       );
+  }
+
+  async authenticate() {
+    try {
+      const response = await this.guacamoleService.authenticate();
+      localStorage.setItem('authToken', response.authToken);
+      localStorage.setItem('dataSource', response.dataSource);
+      console.log('User authenticated with Guacamole server.');
+    } catch (error) {
+      console.error('Authentication failed', error);
+      throw new Error('Authentication failed. Please try again.');
+    }
   }
 }
