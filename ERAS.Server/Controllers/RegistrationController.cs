@@ -17,7 +17,7 @@ namespace ERAS.Server.Controllers
         private readonly RoleManager<UserRole> _roleManager = roleManager;
 
         [HttpPost("register")]
-        [Authorize(Roles="Admin")]
+        //[Authorize(Roles="Admin")]
         public async Task<IActionResult> Registration([FromBody] RegistrationViewModel model)
         {
             try

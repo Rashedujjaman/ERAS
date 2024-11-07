@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ERAS.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240826050701_UpdatePrimaryKeyToInt")]
-    partial class UpdatePrimaryKeyToInt
+    [Migration("20241107141338_ApplicationUser")]
+    partial class ApplicationUser
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -37,7 +37,6 @@ namespace ERAS.Server.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Alias")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -51,9 +50,11 @@ namespace ERAS.Server.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<byte[]>("Image")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<bool?>("IsActive")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -62,7 +63,6 @@ namespace ERAS.Server.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NormalizedEmail")
@@ -92,7 +92,7 @@ namespace ERAS.Server.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<int>("UserRoleId")
+                    b.Property<int?>("UserRoleId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -106,6 +106,173 @@ namespace ERAS.Server.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("ERAS.Server.Models.Area", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Alias")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("DateCreated")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("DateModified")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<bool?>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("UserCreatedId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UserModifiedId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserCreatedId");
+
+                    b.HasIndex("UserModifiedId");
+
+                    b.ToTable("Area");
+                });
+
+            modelBuilder.Entity("ERAS.Server.Models.Equipment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Alias")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("AreaId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset?>("DateCreated")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("DateModified")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<bool?>("Enabled")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("EquipmentModelId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("HostName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("Image")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("IpAddress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UrlToken")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("UserCreatedId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UserModifiedId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("VncPassword")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VncUserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AreaId");
+
+                    b.HasIndex("EquipmentModelId");
+
+                    b.HasIndex("UserCreatedId");
+
+                    b.HasIndex("UserModifiedId");
+
+                    b.ToTable("Equipment");
+                });
+
+            modelBuilder.Entity("ERAS.Server.Models.EquipmentModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Alias")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("DateCreated")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("DateModified")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<bool?>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("UserCreatedId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UserModifiedId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserCreatedId");
+
+                    b.HasIndex("UserModifiedId");
+
+                    b.ToTable("EquipmentModel");
+                });
+
+            modelBuilder.Entity("ERAS.Server.Models.Permission", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ApplicationUserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EquipmentId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Permission");
                 });
 
             modelBuilder.Entity("ERAS.Server.Models.UserRole", b =>
@@ -239,6 +406,63 @@ namespace ERAS.Server.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("ERAS.Server.Models.Area", b =>
+                {
+                    b.HasOne("ERAS.Server.Models.ApplicationUser", "UserCreated")
+                        .WithMany()
+                        .HasForeignKey("UserCreatedId");
+
+                    b.HasOne("ERAS.Server.Models.ApplicationUser", "UserModified")
+                        .WithMany()
+                        .HasForeignKey("UserModifiedId");
+
+                    b.Navigation("UserCreated");
+
+                    b.Navigation("UserModified");
+                });
+
+            modelBuilder.Entity("ERAS.Server.Models.Equipment", b =>
+                {
+                    b.HasOne("ERAS.Server.Models.Area", "Area")
+                        .WithMany()
+                        .HasForeignKey("AreaId");
+
+                    b.HasOne("ERAS.Server.Models.EquipmentModel", "EquipmentModel")
+                        .WithMany()
+                        .HasForeignKey("EquipmentModelId");
+
+                    b.HasOne("ERAS.Server.Models.ApplicationUser", "UserCreated")
+                        .WithMany()
+                        .HasForeignKey("UserCreatedId");
+
+                    b.HasOne("ERAS.Server.Models.ApplicationUser", "UserModified")
+                        .WithMany()
+                        .HasForeignKey("UserModifiedId");
+
+                    b.Navigation("Area");
+
+                    b.Navigation("EquipmentModel");
+
+                    b.Navigation("UserCreated");
+
+                    b.Navigation("UserModified");
+                });
+
+            modelBuilder.Entity("ERAS.Server.Models.EquipmentModel", b =>
+                {
+                    b.HasOne("ERAS.Server.Models.ApplicationUser", "UserCreated")
+                        .WithMany()
+                        .HasForeignKey("UserCreatedId");
+
+                    b.HasOne("ERAS.Server.Models.ApplicationUser", "UserModified")
+                        .WithMany()
+                        .HasForeignKey("UserModifiedId");
+
+                    b.Navigation("UserCreated");
+
+                    b.Navigation("UserModified");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>

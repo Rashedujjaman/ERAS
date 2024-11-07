@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Security.Claims;
 
 
@@ -33,6 +34,26 @@ namespace ERAS.Server.Controllers
                 }
 
                 var user = await _userManager.FindByNameAsync(model.UserName);
+
+
+                ////Uncomment to create first user in the system-----------------------------------
+                //var newUser = new ApplicationUser
+                //{
+                //    UserName = "Admin",
+                //    Name = "Name",
+                //    Alias = "Alias",
+                //    Email = "abcd@gmail.com",
+                //    UserRoleId = 1,   //1 for Admin
+                //    EmailConfirmed = false,
+                //    PhoneNumberConfirmed = false,
+                //    TwoFactorEnabled = false,
+                //    LockoutEnabled = false,
+                //    AccessFailedCount = 0,
+                //    IsActive = true
+                //};
+                //var registerResult = await _userManager.CreateAsync(newUser, "Admin1234#");
+                ////--------------------------------------------------------------------------------
+
 
                 if (user != null)
                 {
