@@ -67,7 +67,7 @@ namespace ERAS.Server.Controllers
                         HttpContext.Session.SetString("UserRole", roles.FirstOrDefault());
                         HttpContext.Session.SetInt32("UserId", user.Id);
                         _logger.LogInformation("User {UserName} successfully logged in", model.UserName);
-                        return Ok(new { message = "Login successful", userRole = roles.FirstOrDefault() });
+                        return Ok(new { message = "Login successful", userRole = roles.FirstOrDefault(), userId = user.Id });
                     }
 
                     if (result.IsLockedOut)

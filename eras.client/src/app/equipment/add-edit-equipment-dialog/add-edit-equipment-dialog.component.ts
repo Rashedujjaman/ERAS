@@ -161,28 +161,6 @@ export class AddEditEquipmentDialogComponent {
               }
             }
             this.dialogRef.close(newEquipment);
-
-
-            ////Open dialog to update url token to connect to VNC
-            //const dialogRef = this.dialog.open(AddEditUrlTokenDialogComponent, {
-            //  width: '400px',
-            //  data: {
-            //    id: newEquipment.id,
-            //    hostName: newEquipment.hostName,
-            //    urlToken: newEquipment.urlToken,
-            //    isEditMode: this.data.isEditMode
-            //  }
-            //});
-
-            //dialogRef.afterClosed().subscribe(result => {
-            //  if (result || result === null) {
-            //    newEquipment.urlToken = result;
-            //    this.dialogRef.close(newEquipment);
-            //  } else if (result === false) {
-            //    //console.log('Error occured during url token update.')
-            //    this.dialogRef.close(newEquipment);
-            //  }
-            //});
           },
           error: (error: HttpErrorResponse) => {
             console.log(error);

@@ -8,7 +8,7 @@ namespace ERAS.Server.Models
         public required string Name { get; set; }
         public required string Alias { get; set; }
         public required int UserRoleId { get; set; }
-        public required string ImageUrl { get; set; }
+        public byte[]? Image { get; set; }
         public bool? IsActive { get; set; }
     }
 }

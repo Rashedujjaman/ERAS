@@ -37,7 +37,7 @@ namespace ERAS.Server.Controllers
                     Name = user.Name,
                     Alias = user.Alias ?? "",
                     Email = user.Email ?? "",
-                    PhotoUrl = user.ImageUrl ?? "",
+                    ImageUrl = user.Image != null ? $"data:image/jpeg;base64,{Convert.ToBase64String(user.Image)}" : "assets/images/profile.jpg",
                     UserRoleId = user.UserRoleId,
                     Role = roleName ?? "",
                     IsActive = user.IsActive ?? true
@@ -46,7 +46,6 @@ namespace ERAS.Server.Controllers
 
             return Ok(userViewModel);
         }
-
 
         [HttpPut("accountStatus/{id}")]
         public async Task<IActionResult> ToggleUserStatus(int id)

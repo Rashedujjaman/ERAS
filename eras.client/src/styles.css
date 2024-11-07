@@ -320,15 +320,55 @@ body {
 
 .profile-card .image-frame {
   width: 50%;
+  padding: 0;
+  margin-bottom: 10px;
 }
 
 .profile-card .user-photo {
   width: 100%;
   border-radius: 50%;
   object-fit: cover;
+  aspect-ratio: 1/1;
   border: 1px solid orangered;
-  margin: 10px 0;
 }
+
+.image-change-button {
+  position: absolute;
+  bottom: 5%;
+  right: 5%;
+  background-color: white;
+  border-radius: 50%;
+  width: 20%;
+  height: 20%;
+  display: flex;
+  border: 1px solid orangered;
+  justify-content: center;
+  align-items: center;
+}
+
+.image-change-button:hover{
+    background: #ddd;
+}
+
+  .image-change-button .camera-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 100%;
+    height: 70%;
+    width: 70%;
+    color: #333;
+  }
+
+  .image-change-button mat-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 100%;
+    height: 70%;
+    width: 70%;
+    color: #333;
+  }
 
 .footer {
   margin-top: 20px;
@@ -375,15 +415,6 @@ body {
   .profile-form-body .input-group input {
     font-size: 12px ;
   }
-
-  .profile-card .image-frame {
-    display: flex;
-    justify-content: center;
-  }
-
-    .profile-card .image-frame img {
-      width: 100px;
-    }
 
   .update-button{
       width: 100%;

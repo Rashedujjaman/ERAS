@@ -36,7 +36,6 @@ namespace ERAS.Server.Controllers
                     Alias = model.Alias,
                     Email = model.Email,
                     UserRoleId = model.UserRoleId,
-                    ImageUrl = "",
                     EmailConfirmed = false,
                     PhoneNumberConfirmed = false,
                     TwoFactorEnabled = false,

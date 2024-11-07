@@ -9,90 +9,51 @@
         <!--Left-->
         <div class="col-lg-5 col-md-4 col-sm-12 d-flex justify-content-center x">
           <div class="image-frame">
-            <img [src]="userPhotoUrl" alt="User Photo" class="user-photo mt-3">
+            <div class="position-relative">
+              <img [src]="profile.imageUrl" alt="User Photo" class="user-photo">
+              <div class="image-change-button" (click)="imageInput.click()">
+                <mat-icon>photo_camera</mat-icon>
+              </div>
+              <input type="file" #imageInput accept="image/*" (change)="onImageSelected($event)" hidden />
+            </div>
           </div>
         </div>
+
         <!--Right-->
         <div class="col-lg-7 col-md-8 col-sm-12 d-flex justify-content-center x">
           <form [formGroup]="profileForm" #profileFormDirective="ngForm">
             <div class="profile-form-body">
               <div class="col-12 input-group">
                 <span class="input-group-text">Alias</span>
-                <input type="text" id="Alias" class="form-control" [placeholder]="alias" formControlName="Alias">
+                <input type="text" id="Alias" class="form-control" formControlName="alias">
               </div>
               <div class="col-12 input-group">
                 <span class="input-group-text">Name</span>
-                <input type="text" id="Name" class="form-control" [placeholder]="name" formControlName="Name">
+                <input type="text" id="Name" class="form-control" formControlName="name">
               </div>
               <div class="col-12 input-group">
                 <span class="input-group-text">Username</span>
-                <input type="text" id="Username" class="form-control" [placeholder]="userName" formControlName="UserName">
+                <input type="text" id="Username" class="form-control" formControlName="userName">
               </div>
               <div class="col-12 input-group">
                 <span class="input-group-text">Email</span>
-                <input type="text" id="Email" class="form-control" [placeholder]="userEmail" formControlName="Email">
+                <input type="text" id="Email" class="form-control" formControlName="email">
               </div>
               <div class="col-12 input-group">
                 <span class="input-group-text">Role</span>
-                <input type="text" id="Role" class="form-control" [placeholder]="userRole" readonly disabled>
+                <input type="text" id="Role" class="form-control" [placeholder]="profile.userRole" readonly>
               </div>
             </div>
-              <button mat-flat-button color="primary" class="update-button">Update</button>
+            <button mat-flat-button color="primary" class="update-button" (click)="updateProfile()" [disabled]="profileForm.pristine && !isImageSelected">Update</button>
           </form>
         </div>
       </mat-card-content>
       <div class="footer d-flex justify-content-between">
         <button (click)="resetPassword()" class="text-button reset-password-button">Reset Password</button>
-        <button (click)="logout()" class="sign-out-button">Sign Out</button>
+        <button (click)="logout()" class="sign-out-button">
+          Logout <fa-icon [icon]="faSignOut" class="ms-2"></fa-icon>
+        </button>
       </div>
     </div>
   </mat-card>
 </div>
-
-
-<!--<div>
-  <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
-</div>-->
-<!--<div *ngIf="!errorMessage">
-  <mat-card-header class="justify-content-center text-uppercase">
-    <mat-card-title>My Profile</mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
-    <div class="user-info">
-      <img [src]="userPhotoUrl" alt="User Photo" class="user-photo mt-3">
-      <h3 *ngIf="!loading" class="m-3">{{Alias}}</h3>
-      <h3 *ngIf="loading" class="m-3">Loading...</h3>
-
-      <div class="row justify-content-around m-2 p-2 bg-white">
-        <div class="col-3 align-items-start text-start">
-          <p class="mb-2">UserName</p>
-          <p class="mb-2">Full Name</p>
-          <p class="mb-2">Email</p>
-          <p>Role</p>
-        </div>
-        <div class="col-sm-1 text-start">
-          <p class="mb-2">:</p>
-          <p class="mb-2">:</p>
-          <p class="mb-2">:</p>
-          <p>:</p>
-        </div>
-        <div class="col-7 text-start ">
-          <p class="mb-2" *ngIf="!loading">{{userName}}</p>
-          <p class="mb-2" *ngIf="!loading">{{Name}}</p>
-          <p class="mb-2" *ngIf="!loading">{{userEmail}}</p>
-          <p *ngIf="!loading">{{userRole}}</p>
-
-          <p class="mb-2" *ngIf="loading">Loading...</p>
-          <p class="mb-2" *ngIf="loading">Loading...</p>
-          <p class="mb-2" *ngIf="loading">Loading...</p>
-          <p *ngIf="loading">Loading...</p>
-        </div>
-      </div>
-
-    </div>
-  </mat-card-content>
-  <mat-card-actions class="buttons d-flex justify-content-between mt-5 ms-3 me-3">
-    <button mat-flat-button (click)="resetPassword()" class="reset-password-button">Reset Password</button>
-    <button mat-flat-button (click)="logout()" class="sign-out-button">Sign Out</button>
-  </mat-card-actions>
-</div>-->

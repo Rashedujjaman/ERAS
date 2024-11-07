@@ -61,10 +61,6 @@
             <button mat-icon-button color="primary" (click)="resetPassword(user)">
               <mat-icon>lock_reset</mat-icon>
             </button>
-            <!--<button class="reset-password-button action-button" (click)="resetPassword(user)">
-              <fa-icon [icon]="faRotate"></fa-icon>
-            </button>-->
-
           </mat-cell>
         </ng-container>
 
@@ -72,6 +68,6 @@
         <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
       </mat-table>
     </div>
-    <mat-paginator class="mat-paginator" [pageSizeOptions]="[10, 15, 30]" aria-label="Select page of users" showFirstLastButtons></mat-paginator>
+    <mat-paginator class="mat-paginator" [pageSize]="[10, 15, 30]" aria-label="Select page of users" showFirstLastButtons></mat-paginator>
   </div>
 </div>

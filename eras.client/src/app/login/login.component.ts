@@ -39,6 +39,7 @@ export class LoginComponent{
         next: (response: any) => {
 
           localStorage.setItem('userRole', response.userRole);
+          localStorage.setItem('userId', response.userId);
 
           this.loading = false;
 

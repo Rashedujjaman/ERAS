@@ -2,12 +2,13 @@
 {
     public class ProfileViewModel
     {
-        public required string userId { get; set; }
-        public required string userName{ get; set; }
-        public required string name { get; set; }
-        public required string alias { get; set; }
-        public required string email { get; set; }
-        public required string photoUrl { get; set; }
-        public required string userRole { get; set; }
+        public string? UserId { get; set; }
+        public required string UserName{ get; set; }
+        public required string Name { get; set; }
+        public string? Alias { get; set; }
+        public string? Email { get; set; }
+        public string? ImageUrl { get; set; }
+        public IFormFile? Image { get; set; }
+        public string? UserRole { get; set; }
     }
 }
