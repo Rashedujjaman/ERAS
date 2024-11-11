@@ -52,50 +52,74 @@ export class AddEditAreaDialogComponent {
   }
 
   onSave() {
-    if (this.data.isEditMode) {
-      this.http.put(`/api/Area/${this.data.area.id}`, this.areaForm.value)
-        .subscribe({
-          next: (response: any) => {
-            this.snackBar.open(response.message, "Close", {
-              horizontalPosition: 'center',
-              verticalPosition: 'bottom',
-              duration: 3000,
-              panelClass: ['success-snackbar']
-            });
-            this.dialogRef.close(true)
-          },
-          error: (error: HttpErrorResponse) => {
-          this.snackBar.open(error.error.message, "Close", {
-            horizontalPosition: 'center',
-            verticalPosition: 'bottom',
-            duration: 5000,
-            panelClass: ['error-snackbar']
-          });
-          }
+    const request = this.data.isEditMode
+      ? this.http.put(`/api/Area/editArea/${this.data.area.id}`, this.areaForm.value)
+      : this.http.post('/api/Area/addArea', this.areaForm.value);
+
+    request.subscribe({
+      next: (response: any) => {
+        this.snackBar.open(response.message, "Close", {
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom',
+          duration: 3000,
+          panelClass: ['success-snackbar']
         });
-    }
-    else {
-      this.http.post('/api/Area', this.areaForm.value)
-        .subscribe({
-          next: (response: any) => {
-            this.snackBar.open(response.message, "Close", {
-              horizontalPosition: 'center',
-              verticalPosition: 'bottom',
-              duration: 3000,
-              panelClass: ['success-snackbar']
-            });
-            this.dialogRef.close(true)
-          },
-          error: (error: HttpErrorResponse) => {
-            this.snackBar.open(error.error.message, "Close", {
-              horizontalPosition: 'center',
-              verticalPosition: 'bottom',
-              duration: 5000,
-              panelClass: ['error-snackbar']
-            });
-          }
+        this.dialogRef.close(true)
+      },
+      error: (error: HttpErrorResponse) => {
+        this.snackBar.open(error.error.message, "Close", {
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom',
+          duration: 5000,
+          panelClass: ['error-snackbar']
         });
-    }
+      }
+    });
+
+    //if (this.data.isEditMode) {
+    //  this.http.put(`/api/Area/editArea/${this.data.area.id}`, this.areaForm.value)
+    //    .subscribe({
+    //      next: (response: any) => {
+    //        this.snackBar.open(response.message, "Close", {
+    //          horizontalPosition: 'center',
+    //          verticalPosition: 'bottom',
+    //          duration: 3000,
+    //          panelClass: ['success-snackbar']
+    //        });
+    //        this.dialogRef.close(true)
+    //      },
+    //      error: (error: HttpErrorResponse) => {
+    //      this.snackBar.open(error.error.message, "Close", {
+    //        horizontalPosition: 'center',
+    //        verticalPosition: 'bottom',
+    //        duration: 5000,
+    //        panelClass: ['error-snackbar']
+    //      });
+    //      }
+    //    });
+    //}
+    //else {
+    //  this.http.post('/api/Area/addArea', this.areaForm.value)
+    //    .subscribe({
+    //      next: (response: any) => {
+    //        this.snackBar.open(response.message, "Close", {
+    //          horizontalPosition: 'center',
+    //          verticalPosition: 'bottom',
+    //          duration: 3000,
+    //          panelClass: ['success-snackbar']
+    //        });
+    //        this.dialogRef.close(true)
+    //      },
+    //      error: (error: HttpErrorResponse) => {
+    //        this.snackBar.open(error.error.message, "Close", {
+    //          horizontalPosition: 'center',
+    //          verticalPosition: 'bottom',
+    //          duration: 5000,
+    //          panelClass: ['error-snackbar']
+    //        });
+    //      }
+    //    });
+    //}
   }
 
   onCancel() {

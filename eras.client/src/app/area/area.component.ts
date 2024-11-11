@@ -68,7 +68,7 @@ export class AreaComponent implements OnInit, AfterViewInit {
 
   loadAreas() {
     this.isLoading = true;
-    this.http.get<any[]>('/api/Area')
+    this.http.get<any[]>('/api/Area/getAllArea')
       .subscribe({
         next: (response: any) => {
           this.dataSource = new MatTableDataSource(response.areas);
@@ -136,7 +136,7 @@ export class AreaComponent implements OnInit, AfterViewInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.http.delete(`/api/Area/${id}`)
+        this.http.delete(`/api/Area/deleteArea/${id}`)
           .subscribe({
             next: (response: any) => {
               this.snackBar.bottomSuccess(response.message, 'Close', 3000);

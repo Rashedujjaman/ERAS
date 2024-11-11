@@ -74,7 +74,7 @@ export class AddEditEquipmentDialogComponent {
   }
 
   loadDropdownData() {
-    this.http.get<any[]>('/api/Area').subscribe((response: any) => this.areaList = response.areas);
+    this.http.get<any[]>('/api/Area/getAllArea').subscribe((response: any) => this.areaList = response.areas);
     this.http.get<any[]>('/api/EquipmentModel').subscribe((response: any) => this.equipmentModelList = response.equipmentModels);
   }
 

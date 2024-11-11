@@ -1,11 +1,3 @@
-.equipment-Management{
-    position: relative;
-}
-
-mat-form-field {
-  height: 40px;
-}
-
 ::ng-deep .mat-mdc-form-field-infix {
   height: 40px !important;
 }
@@ -24,9 +16,6 @@ mat-form-field {
 
 /*mat-form-field input{
     background: blue;
-}*/
-.filter input::-webkit-input-placeholder {
-  color: #dad7d7;
 }
 
 
@@ -40,7 +29,7 @@ mat-header-row {
   flex: 0 0 30px;
 }
 
-/*.mat-column-name {
+.mat-column-name {
   flex: 0 0 90px;
 }
 
@@ -54,7 +43,7 @@ mat-header-row {
 
 .mat-column-date {
   flex: 0 0 50px;
-}*/
+}
 
 .mat-column-action {
   flex: 0 0 100px;
@@ -72,7 +61,7 @@ mat-header-row {
   justify-content: center;
   align-items: center;
   margin-top: 16px;
-/*  border: 1px solid gray;*/
+  border: 1px solid gray;
 }
 
 
@@ -87,3 +76,4 @@ mat-header-row {
   align-items: center;
   z-index: 1000;
 }
+*/

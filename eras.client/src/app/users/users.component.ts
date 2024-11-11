@@ -16,6 +16,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ResetPasswordDialogComponent } from '../resetpassworddialog/resetpassworddialog.component';
 import { UpdateRoleDialogComponent } from './edit-role-dialog/update-role-dialog.component';
+import { User } from '../models/user';
 import { Router } from '@angular/router';
 
 
@@ -38,7 +39,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./users.component.css']
 })
 export class UsersComponent implements OnInit, AfterViewInit {
-  users: any[] = [];
+  users: User[] = [];
   displayedColumns: string[] = ['id', 'name', 'userName', 'email', 'role', 'status', 'actions'];
   tableData = new MatTableDataSource<any>();
   isLoading: boolean = false;
@@ -66,9 +67,10 @@ export class UsersComponent implements OnInit, AfterViewInit {
   loadUsers() {
     this.isLoading = true;
 
-    this.http.get<any[]>(`/api/users/getAllUsers`)
+    this.http.get<User[]>(`/api/users/getAllUsers`)
       .subscribe({
-        next: (response: any) => {
+        next: (response: User[]) => {
+          console.log(response);
           this.users = response;
           this.updateTableData();
           this.isLoading = false;
@@ -137,7 +139,6 @@ export class UsersComponent implements OnInit, AfterViewInit {
         } else {
           user.role = 'Viewer';
         }
-        console.log('Role edit dialog was closed');
       }
       console.log('Error occured during role edit.')
     });

@@ -17,20 +17,20 @@
     </div>
 
     <div class="mat-table-container mat-elevation-z3" tabindex="0">
-      <mat-table [dataSource]="tableData" matSort *ngIf="!isLoading">
+      <mat-table [dataSource]="tableData" *ngIf="!isLoading">
 
         <ng-container matColumnDef="id" class="mat-column-id" sticky>
-          <mat-header-cell *matHeaderCellDef mat-sort-header>No</mat-header-cell>
+          <mat-header-cell *matHeaderCellDef >No</mat-header-cell>
           <mat-cell *matCellDef="let equipment; let i = index">{{i + 1}}</mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="name" class="mat-column-name" sticky>
-          <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
+          <mat-header-cell *matHeaderCellDef >Name</mat-header-cell>
           <mat-cell *matCellDef="let equipment">{{equipment.name}}</mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="alias" class="mat-column-alias">
-          <mat-header-cell *matHeaderCellDef mat-sort-header>Alias</mat-header-cell>
+          <mat-header-cell *matHeaderCellDef >Alias</mat-header-cell>
           <mat-cell *matCellDef="let equipment">{{equipment.alias}}</mat-cell>
         </ng-container>
 
@@ -58,12 +58,12 @@
         </ng-container>
 
         <ng-container matColumnDef="model" class="mat-column-model">
-          <mat-header-cell *matHeaderCellDef mat-sort-header>Model</mat-header-cell>
+          <mat-header-cell *matHeaderCellDef >Model</mat-header-cell>
           <mat-cell *matCellDef="let equipment">{{equipment.equipmentModel?.name}}</mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="zone" class="mat-column-zone">
-          <mat-header-cell *matHeaderCellDef mat-sort-header>Zone</mat-header-cell>
+          <mat-header-cell *matHeaderCellDef >Zone</mat-header-cell>
           <mat-cell *matCellDef="let equipment">{{equipment.area?.name}}</mat-cell>
         </ng-container>
 
@@ -99,7 +99,7 @@
           </mat-cell>
         </ng-container>
 
-        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-header-row *matHeaderRowDef="displayedColumns" class="mat-header-row"></mat-header-row>
         <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
 
         <mat-row *matNoDataRow class="align-self-center">

@@ -15,7 +15,7 @@ namespace ERAS.Server.Controllers
     {
         private readonly ApplicationDbContext _dbContext = dbContext;
 
-        [HttpGet]
+        [HttpGet("getAllArea")]
         public async Task<IActionResult> GetAreas()
         {
             var userId = HttpContext.Session.GetInt32("UserId");
@@ -52,7 +52,7 @@ namespace ERAS.Server.Controllers
         }
 
 
-        [HttpPost]
+        [HttpPost("addArea")]
         public async Task<IActionResult> CreateArea([FromBody] Area area)
         {
             if (!ModelState.IsValid)
@@ -71,7 +71,7 @@ namespace ERAS.Server.Controllers
             return Ok(new { message = "Area added successfully !!!", area });
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("editArea/{id}")]
         public async Task<IActionResult> UpdateArea(int id, [FromBody] Area area)
         {
             if (!ModelState.IsValid)
@@ -95,7 +95,7 @@ namespace ERAS.Server.Controllers
             return Ok(new { message = "Area updated successfully !!!", area });
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("deleteArea/{id}")]
         public async Task<IActionResult> DeleteArea(int id)
         {
             var existingArea = await _dbContext.Area.FindAsync(id);

@@ -20,6 +20,7 @@ namespace ERAS.Server.Data
         public DbSet<EquipmentModel> EquipmentModel { get; set; }
         public DbSet<Equipment> Equipment { get; set; }
         public DbSet<Permission> Permission { get; set; }
+        public DbSet<UserArea> UserArea { get; set; }
 
     }
 }

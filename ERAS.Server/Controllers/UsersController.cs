@@ -2,17 +2,23 @@
 using Microsoft.AspNetCore.Identity;
 using ERAS.Server.Models;
 using Microsoft.AspNetCore.Authorization;
+using ERAS.Server.Data;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace ERAS.Server.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize (Roles="Admin")]
+    //[Authorize (Roles="Admin")]
     [ApiController]
-    public class UsersController(UserManager<ApplicationUser> userManager, RoleManager<UserRole> roleManager) : ControllerBase
+    public class UsersController(
+        UserManager<ApplicationUser> userManager, 
+        RoleManager<UserRole> roleManager, 
+        ApplicationDbContext dbContext) : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager = userManager;
         private readonly RoleManager<UserRole> _roleManager = roleManager;
+        private readonly ApplicationDbContext _dbContext = dbContext;
 
         [HttpGet("getAllUsers")]
         public async Task<IActionResult> GetUsers()
@@ -34,7 +40,7 @@ namespace ERAS.Server.Controllers
                 {
                     Id = user.Id,
                     UserName = user.UserName ?? "",
-                    Name = user.Name,
+                    Name = user.Name ?? "",
                     Alias = user.Alias ?? "",
                     Email = user.Email ?? "",
                     ImageUrl = user.Image != null ? $"data:image/jpeg;base64,{Convert.ToBase64String(user.Image)}" : "assets/images/profile.jpg",
@@ -46,6 +52,108 @@ namespace ERAS.Server.Controllers
 
             return Ok(userViewModel);
         }
+
+        [HttpGet("getAllUserArea")]
+        public async Task<IActionResult> GetAllUserArea()
+        {
+            try
+            {
+                var userArea = await _dbContext.UserArea
+                    .Include(e => e.Area)
+                    .Include(e => e.User)
+                    .Select(e => new
+                    {
+                        e.Id,
+                        e.AreaId,
+                        e.UserId,
+                        User = e.User.UserName,
+                        Area = e.Area.Name
+                    })
+                    .ToListAsync();
+                return Ok(userArea);
+            } catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+        [HttpGet("getExistingAreasByUser/{userId}")]
+        public async Task<IActionResult> GetExistingAreasByUser(int userId)
+        {
+            try
+            {
+                // Fetch all areas assigned to the selected user
+                var assignedAreas = await _dbContext.UserArea
+                    .Where(ua => ua.UserId == userId)
+                    .Select(ua => ua.AreaId)
+                    .ToListAsync();
+
+                // Fetch all areas that are not assigned to the selected user
+                var availableAreas = await _dbContext.Area
+                    .Where(a => assignedAreas.Contains(a.Id))
+                    .ToListAsync();
+
+                return Ok(availableAreas);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+        [HttpPost("assignArea")]
+        public async Task<IActionResult> AssignArea([FromBody] AssignAreaRequest model)
+        {
+            try
+            {
+                // Delete existing UserArea entries for the selected user
+                var existingUserAreas = _dbContext.UserArea.Where(ua => ua.UserId == model.UserId);
+                _dbContext.UserArea.RemoveRange(existingUserAreas);
+
+                // Create new UserArea entries for each selected area
+                var newUserAreas = model.Areas.Select(areaId => new UserArea
+                {
+                    UserId = model.UserId,
+                    AreaId = areaId
+                });
+
+                await _dbContext.UserArea.AddRangeAsync(newUserAreas);
+                await _dbContext.SaveChangesAsync();
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+        [HttpDelete("deleteUserArea/{userAreaId}")]
+        public async Task<IActionResult> DeleteUserArea(int userAreaId)
+        {
+            try
+            {
+                var userArea = await _dbContext.UserArea.FindAsync(userAreaId);
+                if (userArea == null)
+                {
+                    return NotFound(new { message = "User area not found." });
+                }
+
+                _dbContext.UserArea.Remove(userArea);
+                await _dbContext.SaveChangesAsync();
+
+                return Ok(new { message = "User area deleted successfully." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+
 
         [HttpPut("accountStatus/{id}")]
         public async Task<IActionResult> ToggleUserStatus(int id)
@@ -74,6 +182,7 @@ namespace ERAS.Server.Controllers
             return BadRequest(new { message = "Failed to update user status.", errors = result.Errors });
         }
 
+
         [HttpPost("resetPassword/{id}")]
         public async Task<IActionResult> ResetPassword(int id, [FromBody] ResetPasswordModel model)
         {
@@ -92,6 +201,7 @@ namespace ERAS.Server.Controllers
             }
             return BadRequest(new { message = "Failed to reset password.", errors = result.Errors });
         }
+
 
         [HttpPut("updateUserRole/{id}")]
         public async Task<IActionResult> EditUserRole(int id, [FromBody] EditRoleModel model)

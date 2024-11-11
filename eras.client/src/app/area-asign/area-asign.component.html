@@ -1,0 +1,192 @@
+<div class="container">
+  <div class="row">
+    <!-- Left Section -->
+    <div class="col-md-3 pt-2 form-container">
+      <div>
+        <h2>Assign User Area</h2>
+        <mat-form-field class="w-100 pt-2" appearance="outline">
+          <mat-label>Select User</mat-label>
+          <mat-select [(value)]="selectedUserId" (selectionChange)="onUserSelected($event)">
+            <mat-option *ngFor="let user of users" [value]="user.id">{{ user.name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!--<mat-form-field class="w-100" *ngIf="selectedUserId" appearance="outline">
+          <mat-label>Select Area</mat-label>
+          <mat-select multiple [(value)]="selectedAreas" (selectionChange)="onAreaSelectionChange($event)">
+            <mat-option *ngFor="let area of areas" [value]="area" [class.selected]="isAreaSelected(area)">
+              {{ area.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>-->
+
+
+        <div class="area-container" *ngIf="selectedUserId">
+          <label class="w-100"> Select Area</label>
+          <div *ngFor="let area of areas" class="area-item"
+               [class.selected]="isAreaSelected(area)"
+               (click)="toggleAreaSelection(area)">
+            {{ area.name }}
+          </div>
+        </div>
+
+        <button mat-raised-button [disabled]="!selectedUserId && !selectedAreas" color="primary" class="w-100 mt-3" (click)="assignArea()">
+          Assign Area
+        </button>
+      </div>
+    </div>
+
+    <!-- Right Section -->
+    <div class="col-md-9 pt-2 table-container">
+      <div class="d-flex align-items-center mb-2">
+        <h2 class="flex-grow-1">Assigned Areas</h2>
+        <mat-form-field class="filter" appearance="outline">
+          <mat-icon matPrefix>filter_list</mat-icon>
+          <input matInput (keyup)="applyFilter($event)" placeholder="Filter by User or Area" #filterInput />
+        </mat-form-field>
+      </div>
+
+      <div class="loading-overlay" *ngIf="isLoading">
+        <mat-spinner></mat-spinner>
+      </div>
+
+      <div class="mat-table-container" tabindex="0">
+        <mat-table [dataSource]="tableData" *ngIf="!isLoading">
+          <!-- User Name Column -->
+          <ng-container matColumnDef="user">
+            <mat-header-cell *matHeaderCellDef>User Name</mat-header-cell>
+            <mat-cell *matCellDef="let userArea">{{ userArea.user }}</mat-cell>
+          </ng-container>
+
+          <!-- Area Name Column -->
+          <ng-container matColumnDef="area">
+            <mat-header-cell *matHeaderCellDef>Area</mat-header-cell>
+            <mat-cell *matCellDef="let userArea">{{ userArea.area }}</mat-cell>
+          </ng-container>
+
+          <!-- Actions Column -->
+          <ng-container matColumnDef="action">
+            <mat-header-cell *matHeaderCellDef>Action</mat-header-cell>
+            <mat-cell *matCellDef="let userArea">
+              <button mat-icon-button color="warn" (click)="deleteUserArea(userArea)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </mat-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        </mat-table>
+      </div>
+      <mat-paginator [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons></mat-paginator>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--<section>
+  <div class="container-fluid mt-5">
+    <div class="row">-->
+<!-- Modal -->
+<!--<div class="modal" tabindex="-1" role="dialog" [class.show]="showModal" [style.display]="showModal ? 'block' : 'none'" aria-hidden="!showModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Role Assignment</h5>
+        <button type="button" class="close ml-auto" (click)="onCloseClick()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">-->
+<!-- User Selection -->
+<!--<div class="input-group row mb-3">
+  <div class="col-12">
+    <label for="usernameSelect">Username</label>
+    <select class="form-control" id="usernameSelect" [(ngModel)]="username" (change)="onUserSelect($event)">
+      <option value="" disabled selected>- Select user -</option>
+      <option *ngFor="let option of usernameOptions" [value]="option.id">{{ option.userName }}</option>
+    </select>
+    <small class="form-text text-muted">{{ usernameMessage }}</small>
+  </div>
+</div>-->
+<!-- Role Selection -->
+<!--<div class="input-group row mb-3">
+          <div class="col-12">
+            <label for="roles">Roles</label>
+            <div class="role-container">
+              <div *ngFor="let option of roleNameOptions" class="role-item"
+                   [class.selected]="selectedRoles.includes(option)"
+                   (click)="toggleRoleSelection(option)">
+                {{ option }}
+              </div>
+            </div>
+            <small class="form-text text-muted">{{ roleNameMessage }}</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="onUpdateClick()">Update</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="col-12">
+  <div class="d-flex justify-content-between">
+    <div class="mb-3">
+      <button type="button" class="btn btn-secondary" (click)="onNewClick()">
+        Assign <fa-icon [icon]="faPlus"></fa-icon>
+      </button>
+    </div>-->
+<!-- Search box with trailing icon -->
+<!--<div class="mb-3">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Ex. Name, Role"
+                     [(ngModel)]="searchQuery" (ngModelChange)="onFilter()">
+              <span class="input-group-text">
+                <fa-icon [icon]="faFilter"></fa-icon>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <app-stg-assign-table [filteredRoles]="filteredRoles"
+                              [currentPage]="currentPage"
+                              [itemsPerPage]="itemsPerPage"
+                              [totalPages]="totalPages"
+                              [pages]="pages"
+                              [getPagedData]="getPagedData"
+                              (correctiveDeleted)="fetchData()">
+        </app-stg-assign-table>
+      </div>
+    </div>
+  </div>
+</section>-->

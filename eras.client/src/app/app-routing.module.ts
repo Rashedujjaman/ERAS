@@ -8,8 +8,10 @@ import { RegistrationComponent } from './registration/registration.component';
 import { UsersComponent } from './users/users.component';
 import { EquipmentModelComponent } from './equipment-model/equipment-model.component';
 import { AreaComponent } from './area/area.component';
+import { AreaAsignComponent } from './area-asign/area-asign.component';
 import { EquipmentComponent } from './equipment/equipment.component';
 import { VncClientComponent } from './vnc-client/vnc-client.component';
+
 
 const routes: Routes = [
   {
@@ -32,6 +34,11 @@ const routes: Routes = [
     path: 'area',
     component: AreaComponent,
     title: 'Area Management'
+  },
+  {
+    path: 'area-asign',
+    component: AreaAsignComponent,
+    title: 'Area Asignment'
   },
   {
     path: 'equipment',
