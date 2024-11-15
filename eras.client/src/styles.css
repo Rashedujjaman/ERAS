@@ -18,12 +18,20 @@ body {
   padding-right: 40px;
   background-color: #f6f8fa;
   border-bottom: 1px solid #ddd;
-  background: linear-gradient(#aaa, #bbb, #ccc, #ddd, #eee)
+  background: linear-gradient(#aaa, #bbb, #ccc, #ddd, #eee);
+  font-size: 20px;
 }
-
-  .navbar li:hover {
-    text-decoration: underline;
+  .navbar ul{
+    gap: 20px;
   }
+  .navbar li:hover {
+    text-decoration:wavy;
+    color: white;
+/*    transform: scale(1.05);*/
+    font-weight: bold;
+  }
+
+/*  .navbar*/
 
 /*Dashboard*/
 
