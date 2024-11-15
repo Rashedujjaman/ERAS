@@ -1,7 +1,7 @@
 <!--<app-filter></app-filter>-->
-<div class="container">
-  <div class="row d-flex flex-wrap mt-1 g-3" *ngIf="!isLoading && !isError">
-    <div class="filter-container">
+<div class="dashboard-container">
+  <div class="row" *ngIf="!isLoading && !isError">
+    <div class="filter-container" *ngIf="areas.length > 1">
       <label>Filter By:</label>
       <div *ngFor="let area of areas" class="filter-item"
            [class.selected]="isAreaSelected(area)"
@@ -9,13 +9,15 @@
         {{ area.name }}
       </div>
     </div>
-    <div class="card-wrapper" *ngFor="let equipment of equipmentList">
-        <equipment-card [equipment]="equipment"></equipment-card>
+    <div class="card-wrapper g-3" *ngFor="let equipment of equipmentList">
+      <equipment-card [equipment]="equipment"></equipment-card>
     </div>
   </div>
-  <div class="row d-flex flex-wrap mt-1 g-3" *ngIf="isLoading || isError">
-    <div class="card-wrapper" *ngFor="let x of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]">
-        <equipment-card-skeleton></equipment-card-skeleton>
+  <div class="row d-flex flex-wrap mt-1" *ngIf="isLoading || isError">
+    <div class="card-wrapper g-3" *ngFor="let x of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]">
+      <equipment-card-skeleton></equipment-card-skeleton>
     </div>
   </div>
 </div>
+
+

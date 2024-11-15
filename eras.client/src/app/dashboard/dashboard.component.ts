@@ -18,7 +18,8 @@ import { forkJoin } from 'rxjs';
   styleUrls: ['./dashboard.component.css']
 })
 
-export class DashboardComponent {
+export class DashboardComponent implements OnInit {
+
   constructor(
     private http: HttpClient,
   ) { }
