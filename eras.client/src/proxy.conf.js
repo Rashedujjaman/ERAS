@@ -15,16 +15,16 @@ const PROXY_CONFIG = [
     logLevel: 'debug',
     ws: true
   },
-  {
-    context: [
-      "/guacamole", // This is for Guacamole server API
-    ],
-    target: 'http://localhost:8080', 
-    secure: false,
-    changeOrigin: true,
-    logLevel: 'debug',
-    ws: true
-  },
+  //{
+  //  context: [
+  //    "/guacamole", // This is for Guacamole server API
+  //  ],
+  //  target: 'http://localhost:8080', 
+  //  secure: false,
+  //  changeOrigin: true,
+  //  logLevel: 'debug',
+  //  ws: true
+  //},
   {
     context: [
       "/guacamole/websocket-tunnel", // This is for Websocket

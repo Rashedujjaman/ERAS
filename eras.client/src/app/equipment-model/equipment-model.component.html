@@ -1,14 +1,16 @@
 <div class="container">
-  <div class="equipment-management">
-    <div class="row header d-flex align-content-center mt-2 mb-2">
-      <div class="col-md-4 d-flex align-items-center">
+  <div class="equipment-model-management">
+    <div class="row d-flex align-content-center justify-content-between mt-2">
+      <div class="col-md-3 d-flex align-items-center">
         <h1>Equipment Models</h1>
       </div>
-      <div class="col-md-8 d-flex justify-content-end align-items-center">
-        <mat-form-field class="filter" appearance="outline">
-          <mat-icon matPrefix>filter_list</mat-icon>
-          <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Zone 1" #input />
-        </mat-form-field>
+      <div class="col-md-3 d-flex align-items-center">
+        <div class="input-group">
+          <input (keyup)="applyFilter($event)" class="form-control" placeholder="Ex. Zone 1" #input />
+          <span class="input-group-text">
+            <mat-icon>filter_list</mat-icon>
+          </span>
+        </div>
       </div>
     </div>
 
@@ -58,11 +60,11 @@
         <mat-header-cell *matHeaderCellDef> Actions </mat-header-cell>
         <mat-cell *matCellDef="let equipment" class="action-button-container">
           <!--<button mat-icon-button (click)="editEquipmentModel(equipment)" class="mat-action-button">
-            <mat-icon class="mat-button-icon">edit</mat-icon>
-          </button>
-          <button mat-icon-button color="warn" (click)="deleteEquipmentModel(equipment.id)" class="mat-action-button">
-            <mat-icon class="mat-button-icon">delete</mat-icon>
-          </button>-->
+          <mat-icon class="mat-button-icon">edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="deleteEquipmentModel(equipment.id)" class="mat-action-button">
+          <mat-icon class="mat-button-icon">delete</mat-icon>
+        </button>-->
 
           <button class="edit-button action-button" (click)="editEquipmentModel(equipment)">
             <fa-icon [icon]="faEdit"></fa-icon>

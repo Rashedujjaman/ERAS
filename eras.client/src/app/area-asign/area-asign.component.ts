@@ -10,7 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faEdit, faTrash, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+import { faTrash} from '@fortawesome/free-solid-svg-icons';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Router } from '@angular/router';
 import { SnackBarService } from '../services/snackbar.service';
@@ -29,7 +29,7 @@ import { MatSelectChange } from '@angular/material/select';
   standalone: true,
   selector: 'area-asign',
   templateUrl: './area-asign.component.html',
-  styleUrl: './area-asign.component.css',
+  styleUrls: ['./area-asign.component.css'],
   imports: [CommonModule,
     MatTableModule,
     MatFormFieldModule,
@@ -57,7 +57,7 @@ export class AreaAsignComponent implements OnInit {
 
 
   isLoading = false;
-  displayedColumns = ['user', 'area', 'action'];
+  displayedColumns = ['user', 'area', 'actions'];
   tableData = new MatTableDataSource<any>();
 
   //Guacamole Service
@@ -65,9 +65,7 @@ export class AreaAsignComponent implements OnInit {
   dataSource: string | null = '';
 
   //Icon
-  faEdit = faEdit;
   faTrash = faTrash;
-  faPlus = faPlusCircle;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   constructor(private http: HttpClient,
@@ -100,7 +98,6 @@ export class AreaAsignComponent implements OnInit {
   // Check if a Area is selected
   isAreaSelected(area: Area): boolean {
     return this.selectedAreas.some(selectedArea => selectedArea.id === area.id);
-    //return this.selectedAreas.includes(area);
   }
 
 
@@ -159,14 +156,13 @@ export class AreaAsignComponent implements OnInit {
   }
 
   onUserSelected(event: any) {
-    // Fetch the areas that the selected user has not been assigned to
+    // Fetch the areas that the selected user has been assigned to
     this.http.get<Area[]>(`api/Users/getExistingAreasByUser/${event.value}`).subscribe({
       next: (areas: Area[]) => {
         this.selectedAreas = areas;
       },
       error: (error) => {
         console.log(error);
-
       }
     });
   }
@@ -181,9 +177,7 @@ export class AreaAsignComponent implements OnInit {
       .subscribe({
         next: (response: UserArea[]) => {
           this.userAreas = response;
-          console.log('UserAreas are: ', this.userAreas);
           this.updateTableData();
-
         },
         error: (error: HttpErrorResponse) => {
           console.log(error);
@@ -196,7 +190,6 @@ export class AreaAsignComponent implements OnInit {
       .subscribe({
         next: (response: any) => {
           this.areas = response.areas;
-          console.log('Areas are : ', this.areas);
         },
         error: (error: HttpErrorResponse) => {
           console.log(error);
@@ -209,7 +202,6 @@ export class AreaAsignComponent implements OnInit {
       .subscribe({
         next: (response: User[]) => {
           this.users = response;
-          console.log('Users are: ', this.users);
         },
         error: (error: HttpErrorResponse) => {
           console.log(error);

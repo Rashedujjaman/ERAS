@@ -1,27 +1,28 @@
-import { AfterViewInit, Component, Host, OnInit, ViewChild } from '@angular/core';
+import { CdkColumnDef } from '@angular/cdk/table';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialog, MatDialogConfig, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MatSort, MatSortModule } from '@angular/material/sort';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule, MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { MatIconModule } from '@angular/material/icon';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faEdit, faTrash, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { SnackBarService } from '../services/snackbar.service';
-import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
-import { AddEditEquipmentDialogComponent } from './add-edit-equipment-dialog/add-edit-equipment-dialog.component';
-import { AddEditUrlTokenDialogComponent } from './add-edit-connection-token-dialog/add-edit-url-token-dialog.component';
-import { GuacamoleVncService } from '../services/guacamole-vnc.service';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faEdit, faPlusCircle, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Observable, of } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { Connection, ConnectionResponse } from '../models/guacamole-connection.model';
-import { CdkColumnDef } from '@angular/cdk/table';
+import { GuacamoleVncService } from '../services/guacamole-vnc.service';
+import { SnackBarService } from '../services/snackbar.service';
+import { AddEditUrlTokenDialogComponent } from './add-edit-connection-token-dialog/add-edit-url-token-dialog.component';
+import { AddEditEquipmentDialogComponent } from './add-edit-equipment-dialog/add-edit-equipment-dialog.component';
+import { Equipment } from '../models/equipment';
 
 
 
@@ -29,7 +30,7 @@ import { CdkColumnDef } from '@angular/cdk/table';
   standalone: true,
   selector: 'app-equipment',
   templateUrl: './equipment.component.html',
-  styleUrl: './equipment.component.css',
+  styleUrls: ['./equipment.component.css'],
   imports: [CommonModule,
     MatTableModule,
     MatFormFieldModule,
@@ -44,9 +45,9 @@ import { CdkColumnDef } from '@angular/cdk/table';
   providers: [CdkColumnDef]
 })
 export class EquipmentComponent implements OnInit, AfterViewInit {
-  equipments: any[]= [];
+  equipments: Equipment[] = [];
   isLoading = false;
-  displayedColumns = ['id', 'name', 'alias', 'ipAddress', 'hostName', 'urlToken', 'vncUserName', 'model', 'zone', 'userCreated', 'dateCreated', 'userModified', 'dateModified', 'actions'];
+  displayedColumns = ['id', 'name', 'alias', 'ipAddress', 'hostName', 'urlToken', 'vncUserName', 'model', 'zone', 'actions'];
   tableData = new MatTableDataSource<any>();
 
   //Guacamole Service
@@ -82,11 +83,10 @@ export class EquipmentComponent implements OnInit, AfterViewInit {
   loadEquipments() {
     this.isLoading = true;
 
-    this.http.get('/api/Equipment/getAllEquipments')
+    this.http.get<Equipment[]>('/api/Equipment/getAllEquipments')
       .subscribe({
-        next: (response: any) => {
-          console.log(response.message);
-          this.equipments = response.equipments;
+        next: (equipments: Equipment[]) => {
+          this.equipments = equipments;
           this.updateTableData();
 
           this.isLoading = false;

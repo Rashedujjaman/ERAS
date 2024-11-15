@@ -30,7 +30,7 @@ namespace ERAS.Server.Controllers
                     .Include(e => e.UserModified)
                     .Where(e => e.IsDeleted == null || e.IsDeleted == false).ToListAsync();
 
-                return Ok(new { message = "Equipments fetched successfully !!!", equipments });
+                return Ok(equipments);
             }
             catch (Exception ex)
             {

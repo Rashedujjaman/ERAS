@@ -37,20 +37,26 @@
     </div>
 
     <!-- Right Section -->
-    <div class="col-md-9 pt-2 table-container">
-      <div class="d-flex align-items-center mb-2">
-        <h2 class="flex-grow-1">Assigned Areas</h2>
-        <mat-form-field class="filter" appearance="outline">
-          <mat-icon matPrefix>filter_list</mat-icon>
-          <input matInput (keyup)="applyFilter($event)" placeholder="Filter by User or Area" #filterInput />
-        </mat-form-field>
+    <div class="col-md-9 pt-2">
+      <div class="row d-flex align-content-center justify-content-between mt-2">
+        <div class="col-md-3 d-flex align-items-center">
+          <h1>UserAreas</h1>
+        </div>
+        <div class="col-md-4 d-flex align-items-center">
+          <div class="input-group">
+            <input (keyup)="applyFilter($event)" class="form-control" placeholder="Ex. Admin, Zone5" #input />
+            <span class="input-group-text">
+              <mat-icon>filter_list</mat-icon>
+            </span>
+          </div>
+        </div>
       </div>
 
       <div class="loading-overlay" *ngIf="isLoading">
         <mat-spinner></mat-spinner>
       </div>
 
-      <div class="mat-table-container" tabindex="0">
+      <div class="mat-table-container mat-elevation-z3" tabindex="0">
         <mat-table [dataSource]="tableData" *ngIf="!isLoading">
           <!-- User Name Column -->
           <ng-container matColumnDef="user">
@@ -64,12 +70,12 @@
             <mat-cell *matCellDef="let userArea">{{ userArea.area }}</mat-cell>
           </ng-container>
 
-          <!-- Actions Column -->
-          <ng-container matColumnDef="action">
+          <!--Actions Column-->
+          <ng-container matColumnDef="actions" class="mat-column-actions">
             <mat-header-cell *matHeaderCellDef>Action</mat-header-cell>
-            <mat-cell *matCellDef="let userArea">
-              <button mat-icon-button color="warn" (click)="deleteUserArea(userArea)">
-                <mat-icon>delete</mat-icon>
+            <mat-cell *matCellDef="let userArea" class="action-button-container">
+              <button class="delete-button action-button" (click)="deleteUserArea(userArea)">
+                <fa-icon [icon]="faTrash"></fa-icon>
               </button>
             </mat-cell>
           </ng-container>
@@ -78,7 +84,7 @@
           <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
         </mat-table>
       </div>
-      <mat-paginator [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons></mat-paginator>
+      <mat-paginator class="mat-paginator" [pageSizeOptions]="[10, 15, 30]" aria-label="Select page of users" showFirstLastButtons></mat-paginator>
     </div>
   </div>
 </div>

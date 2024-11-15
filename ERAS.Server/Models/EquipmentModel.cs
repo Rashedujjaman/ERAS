@@ -7,10 +7,8 @@ namespace ERAS.Server.Models
     {
         [Key]
         public int Id { get; set; }
-        [Required]
-        public string Name { get; set; }
-        [Required]
-        public string Alias { get; set; }
+        public string? Name { get; set; }
+        public string? Alias { get; set; }
         public bool? IsDeleted { get; set; }
         public DateTimeOffset? DateCreated { get; set; }
         public DateTimeOffset? DateModified { get; set; }

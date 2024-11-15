@@ -26,7 +26,7 @@ import { AddEditAreaDialogComponent } from './add-edit-area-dialog/add-edit-area
   standalone: true,
   selector: 'app-area',
   templateUrl: './area.component.html',
-  styleUrl: './area.component.css',
+  styleUrls: ['./area.component.css'],
   imports: [CommonModule,
     MatTableModule,
     CdkTableModule,

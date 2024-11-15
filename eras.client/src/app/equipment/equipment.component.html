@@ -1,14 +1,16 @@
 <div class="container">
   <div class="equipment-Management">
-    <div class="row header d-flex align-content-center mt-2 mb-2">
+    <div class="row d-flex align-content-center justify-content-between mt-2">
       <div class="col-md-3 d-flex align-items-center">
         <h1>Equipments</h1>
       </div>
-      <div class="col-md-9 d-flex justify-content-end align-items-center">
-        <mat-form-field class="filter" appearance="outline">
-          <mat-icon matPrefix>filter_list</mat-icon>
-          <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Zone 1" #input />
-        </mat-form-field>
+      <div class="col-md-3 d-flex align-items-center">
+        <div class="input-group">
+          <input (keyup)="applyFilter($event)" class="form-control" placeholder="Ex. Zone 1" #input />
+          <span class="input-group-text">
+            <mat-icon>filter_list</mat-icon>
+          </span>
+        </div>
       </div>
     </div>
 
@@ -19,18 +21,18 @@
     <div class="mat-table-container mat-elevation-z3" tabindex="0">
       <mat-table [dataSource]="tableData" *ngIf="!isLoading">
 
-        <ng-container matColumnDef="id" class="mat-column-id" sticky>
-          <mat-header-cell *matHeaderCellDef >No</mat-header-cell>
+        <ng-container matColumnDef="id" class="mat-column-id">
+          <mat-header-cell *matHeaderCellDef>No</mat-header-cell>
           <mat-cell *matCellDef="let equipment; let i = index">{{i + 1}}</mat-cell>
         </ng-container>
 
-        <ng-container matColumnDef="name" class="mat-column-name" sticky>
-          <mat-header-cell *matHeaderCellDef >Name</mat-header-cell>
+        <ng-container matColumnDef="name" class="mat-column-name">
+          <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
           <mat-cell *matCellDef="let equipment">{{equipment.name}}</mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="alias" class="mat-column-alias">
-          <mat-header-cell *matHeaderCellDef >Alias</mat-header-cell>
+          <mat-header-cell *matHeaderCellDef>Alias</mat-header-cell>
           <mat-cell *matCellDef="let equipment">{{equipment.alias}}</mat-cell>
         </ng-container>
 
@@ -58,12 +60,12 @@
         </ng-container>
 
         <ng-container matColumnDef="model" class="mat-column-model">
-          <mat-header-cell *matHeaderCellDef >Model</mat-header-cell>
+          <mat-header-cell *matHeaderCellDef>Model</mat-header-cell>
           <mat-cell *matCellDef="let equipment">{{equipment.equipmentModel?.name}}</mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="zone" class="mat-column-zone">
-          <mat-header-cell *matHeaderCellDef >Zone</mat-header-cell>
+          <mat-header-cell *matHeaderCellDef>Zone</mat-header-cell>
           <mat-cell *matCellDef="let equipment">{{equipment.area?.name}}</mat-cell>
         </ng-container>
 
@@ -72,22 +74,22 @@
           <mat-cell *matCellDef="let equipment">{{equipment.userCreated?.userName || ''}}</mat-cell>
         </ng-container>
 
-        <ng-container matColumnDef="dateCreated" class="mat-column-date">
-          <mat-header-cell *matHeaderCellDef>Date Created</mat-header-cell>
-          <mat-cell *matCellDef="let equipment">{{equipment.dateCreated ? (equipment.dateCreated | date:'MMM d, yyyy') : ''}}</mat-cell>
-        </ng-container>
+        <!--<ng-container matColumnDef="dateCreated" class="mat-column-date">
+        <mat-header-cell *matHeaderCellDef>Date Created</mat-header-cell>
+        <mat-cell *matCellDef="let equipment">{{equipment.dateCreated ? (equipment.dateCreated | date:'MMM d, yyyy') : ''}}</mat-cell>
+      </ng-container>-->
 
         <ng-container matColumnDef="userModified" class="mat-column-user">
           <mat-header-cell *matHeaderCellDef>User Modified</mat-header-cell>
           <mat-cell *matCellDef="let equipment">{{equipment.userModified?.userName || ''}}</mat-cell>
         </ng-container>
 
-        <ng-container matColumnDef="dateModified" class="mat-column-date">
-          <mat-header-cell *matHeaderCellDef>Last Modified</mat-header-cell>
-          <mat-cell *matCellDef="let equipment">{{equipment.dateModified ? (equipment.dateModified | date: 'MMM d, YYYY') : ''}}</mat-cell>
-        </ng-container>
+        <!--<ng-container matColumnDef="dateModified" class="mat-column-date">
+        <mat-header-cell *matHeaderCellDef>Last Modified</mat-header-cell>
+        <mat-cell *matCellDef="let equipment">{{equipment.dateModified ? (equipment.dateModified | date: 'MMM d, YYYY') : ''}}</mat-cell>
+      </ng-container>-->
 
-        <ng-container matColumnDef="actions" class="mat-column-action" stickyEnd>
+        <ng-container matColumnDef="actions" class="mat-column-action">
           <mat-header-cell *matHeaderCellDef>Actions</mat-header-cell>
           <mat-cell *matCellDef="let equipment" class="action-button-container">
             <button class="edit-button action-button" (click)="editEquipment(equipment)">

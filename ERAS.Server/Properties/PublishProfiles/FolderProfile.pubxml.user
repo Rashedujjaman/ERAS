@@ -5,7 +5,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
 <Project>
   <PropertyGroup>
     <_PublishTargetUrl>C:\inetpub\wwwroot\ERAS</_PublishTargetUrl>
-    <History>True|2024-09-04T07:08:31.0780137Z||;</History>
+    <History>False|2024-11-15T08:55:45.0469481Z||;False|2024-11-15T16:54:34.9032800+08:00||;True|2024-09-04T15:08:31.0780137+08:00||;</History>
     <LastFailureDetails />
   </PropertyGroup>
 </Project>

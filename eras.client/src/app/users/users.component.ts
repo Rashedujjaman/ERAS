@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
@@ -18,6 +18,7 @@ import { ResetPasswordDialogComponent } from '../resetpassworddialog/resetpasswo
 import { UpdateRoleDialogComponent } from './edit-role-dialog/update-role-dialog.component';
 import { User } from '../models/user';
 import { Router } from '@angular/router';
+import { CdkColumnDef } from '@angular/cdk/table';
 
 
 @Component({
@@ -36,11 +37,12 @@ import { Router } from '@angular/router';
     CommonModule,
     MatProgressSpinnerModule],
   templateUrl: './users.component.html',
-  styleUrls: ['./users.component.css']
+  styleUrls: ['./users.component.css'],
+  providers: [CdkColumnDef]
 })
-export class UsersComponent implements OnInit, AfterViewInit {
+export class UsersComponent implements OnInit{
   users: User[] = [];
-  displayedColumns: string[] = ['id', 'name', 'userName', 'email', 'role', 'status', 'actions'];
+  displayedColumns: string[] = ['id', 'name', 'alias', 'userName', 'email', 'role', 'status', 'actions'];
   tableData = new MatTableDataSource<any>();
   isLoading: boolean = false;
 
@@ -58,10 +60,6 @@ export class UsersComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.loadUsers();
-  }
-
-  ngAfterViewInit() {
-    this.tableData.paginator = this.paginator;
   }
 
   loadUsers() {
@@ -86,7 +84,6 @@ export class UsersComponent implements OnInit, AfterViewInit {
           } else {
             this.snackBar.error('An error occurred while fetching user data', 'Close', 3000)
           }
-
           this.isLoading = false;
         }
       });
@@ -100,10 +97,9 @@ export class UsersComponent implements OnInit, AfterViewInit {
     this.tableData.paginator = this.paginator;
   }
 
-
   applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
-    this.tableData.filter = filterValue;
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.tableData.filter = filterValue.trim().toLowerCase();
   }
 
 
