@@ -15,8 +15,9 @@ export class GuacamoleVncService {
   private client: any;
 
   //Server Details
+  private baseUrl: string = `http://localhost:8080/guacamole/api`;
+
   private vncPort: string = '5900';
-  private baseUrl: string = '/guacamole/api';
   private guacUser: string = 'Admin';
   private guacPass: string = 'Admin1234';
 
@@ -34,9 +35,11 @@ export class GuacamoleVncService {
     body.set('username', this.guacUser);
     body.set('password', this.guacPass);
 
-    return this.http.post(`${this.baseUrl}/tokens`, body.toString(), {
-      headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded')
-    }).toPromise().then((authResponse: any) => {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/x-www-form-urlencoded',
+    });
+
+    return this.http.post(`${this.baseUrl}/tokens`, body.toString(), {headers}).toPromise().then((authResponse: any) => {
       return authResponse ? { authToken: authResponse.authToken, dataSource: authResponse.dataSource } : null;
     });
   }
@@ -44,6 +47,7 @@ export class GuacamoleVncService {
   // Existing connection check in Guacamole server
   public getExistingConnections(authToken: string, dataSource: string): Observable<ConnectionResponse> {
     //this.getAuthToken();
+    //const headers = new HttpHeaders().set('Content-Type', 'application/json')
     return this.http.get<ConnectionResponse>(`${this.baseUrl}/session/data/${dataSource}/connections?token=${authToken}`);
   }
 
@@ -100,7 +104,9 @@ export class GuacamoleVncService {
       }
     };
 
-    return this.http.post<Connection>(`${this.baseUrl}/session/data/${dataSource}/connections?token=${authToken}`, connectionData);
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+
+    return this.http.post<Connection>(`${this.baseUrl}/session/data/${dataSource}/connections?token=${authToken}`, connectionData, { headers });
   }
 
   // Update existing connection
@@ -156,60 +162,27 @@ export class GuacamoleVncService {
       }
     }
 
-    return this.http.put<Connection>(`${this.baseUrl}/session/data/${dataSource}/connections/${connectionId}?token=${authToken}`, connectionData);
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`,
+    });
+
+
+    return this.http.put<Connection>(`${this.baseUrl}/session/data/${dataSource}/connections/${connectionId}?token=${authToken}`,
+      connectionData,
+      { headers });
   }
 
   //Delete connection
   public deleteConnection(connectionId: string, authToken: string, dataSource: string) {
-    return this.http.delete(`${this.baseUrl}/session/data/${dataSource}/connections/${connectionId}?token=${authToken}`);
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${authToken}`,
+    });
+    return this.http.delete(
+      `${this.baseUrl}/session/data/${dataSource}/connections/${connectionId}?token=${authToken}`,
+      { headers }
+    );
     console.log(`${this.baseUrl}/session/data/${dataSource}/connections/${connectionId}?token=${authToken}`);
-  }
-
-  // Connect to the Server
-  public connect(urlToken: string, displayElementId: string): void {
-    try {
-      this.authenticate().then(authResponse => {
-        const authToken = authResponse.authToken;
-        const clientUrl = `http://localhost:8080/guacamole/#/client/${urlToken}?token=${authToken}`;
-
-        const displayElement = document.getElementById(displayElementId);
-        if (displayElement) {
-          const iframe = document.createElement('iframe');
-          iframe.src = clientUrl;
-          iframe.width = '100%';
-          iframe.height = '100%';
-          iframe.frameBorder = '0';
-          iframe.setAttribute('tabindex', '-1');
-          displayElement.innerHTML = '';
-          displayElement.appendChild(iframe);
-
-          iframe.onload = () => {
-            iframe.contentWindow?.focus();
-          };
-
-          console.log('Guacamole session embedded successfully.');
-        } else {
-          console.error('Display element not found');
-        }
-      }).catch(error => {
-        console.error('Authentication failed', error);
-      });
-
-    } catch (error) {
-      console.error('Connection error:', error);
-      alert('Connection failed. Please check the URL and try again.');
-    }
-  }
-
-
-  // Disconnect from the server
-  public disconnect(displayElementId: string) {
-    const displayElement = document.getElementById('guac-container');
-    if (displayElement) {
-      displayElement.innerHTML = ''; // Clear the content (remove iframe)
-      console.log('Disconnected from the Guacamole session.');
-    }
-    this.router.navigate(['/dashboard']);
   }
 }
 

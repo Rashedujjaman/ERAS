@@ -1,6 +1,7 @@
 import { User } from '../models/user';
 import { Area } from '../models/area';
 import { EquipmentModel } from './equipment-model';
+
 export interface Equipment {
   id: number,
   name?: string,

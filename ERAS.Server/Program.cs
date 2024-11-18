@@ -21,6 +21,19 @@ builder.Services.AddSession(options =>
 });
 
 
+//Cors Configuration
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(builder =>
+    {
+        builder.AllowAnyOrigin()
+               .AllowAnyHeader()
+               .AllowAnyMethod();
+    });
+});
+
+
+
 
 // Configure Identity with custom user and role models, and EF storage.
 builder.Services.AddIdentity<ApplicationUser, UserRole>()
@@ -87,6 +100,9 @@ app.UseAuthorization();
 
 // Session Service
 app.UseSession();
+
+// Enable CORS
+app.UseCors();
 
 // Map controllers.
 app.MapControllers();

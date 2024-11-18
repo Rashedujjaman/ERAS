@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatDialog, MatDialogRef, MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { SnackBarService } from '../../services/snackbar.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -12,7 +12,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { GuacamoleVncService } from '../../services/guacamole-vnc.service';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
-import { AddEditUrlTokenDialogComponent } from '../add-edit-connection-token-dialog/add-edit-url-token-dialog.component';
 import { Connection, ConnectionResponse } from '../../models/guacamole-connection.model';
 
 
@@ -47,7 +46,6 @@ export class AddEditEquipmentDialogComponent {
     @Inject(MAT_DIALOG_DATA) public data: { equipment: any, isEditMode: boolean },
     private fb: FormBuilder,
     private http: HttpClient,
-    private dialog: MatDialog,
     private snackBar: SnackBarService,
     private guacamoleService: GuacamoleVncService
   ) {
@@ -135,8 +133,12 @@ export class AddEditEquipmentDialogComponent {
       }
 
       try {
+        const headers = new HttpHeaders({
+          'Content-Type': 'application/json',
+          'X-HTTP-Method-Override': 'PUT'
+        });
         const request = this.data.isEditMode
-          ? this.http.put(`/api/Equipment/updateEquipment/${this.data.equipment.id}`, formData)
+          ? this.http.put(`/api/Equipment/updateEquipment/${this.data.equipment.id}`, formData, { headers })
           : this.http.post('/api/Equipment/addEquipment', formData);
 
         request.subscribe({

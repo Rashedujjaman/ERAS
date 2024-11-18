@@ -32,15 +32,57 @@ export class VncClientComponent implements OnInit {
         //this.guacService.generateToken(this.hostName, this.ipAddress, this.vncPassword, this.displayElementId);
 
         //Call the service to connect to vnc using token
-        this.guacService.connect(this.urlToken, this.displayElementId)
+        this.connect(this.urlToken, this.displayElementId)
       } else {
         console.error('Missing IP address or password');
       }
     });
   }
 
+  // Connect to the Server
+  public connect(urlToken: string, displayElementId: string): void {
+    try {
+        const authToken = localStorage.getItem('authToken');
+        const clientUrl = `http://localhost:8080/guacamole/#/client/${urlToken}?token=${authToken}`;
+
+        const displayElement = document.getElementById(displayElementId);
+        if (displayElement) {
+          const iframe = document.createElement('iframe');
+          iframe.src = clientUrl;
+          iframe.width = '100%';
+          iframe.height = '100%';
+          iframe.allowFullscreen = true;
+          iframe.autofocus = true;
+          iframe.frameBorder = '0';
+          iframe.setAttribute('tabindex', '-1');
+          //displayElement.innerHTML = '';
+          //displayElement.append(iframe);
+          displayElement.appendChild(iframe);
+
+          iframe.onload = () => {
+            iframe.contentWindow?.focus();
+          };
+
+          console.log('Guacamole session embedded successfully.');
+        } else {
+          console.error('Display element not found');
+        }
+    } catch (error) {
+      console.error('Connection error:', error);
+      alert('Connection failed. Please check the URL and try again.');
+    }
+  }
+
+  // Disconnect from the server
   onDisconnect(): void {
-    this.guacService.disconnect(this.displayElementId);
+
+    const displayElement = document.getElementById(this.displayElementId);
+    if (displayElement) {
+      displayElement.innerHTML = '';
+      console.log('Disconnected from the Guacamole session.');
+    }
+
+    window.close();
   }
 }
 

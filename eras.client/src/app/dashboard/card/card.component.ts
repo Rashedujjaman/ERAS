@@ -21,7 +21,7 @@ export class CardComponent {
   constructor(private vncService: GuacamoleVncService, private router: Router) { }
 
   get imageUrl(): string {
-      return this.equipment.image? `data:image/png;base64,${this.equipment.image}` : 'assets/images/eq_4.jpeg';
+    return this.equipment.image? `data:image/png;base64,${this.equipment.image}` : 'assets/images/eq_4.jpeg';
   }
   get name(): string{
     return this.equipment.name ?? '';
@@ -34,12 +34,22 @@ export class CardComponent {
   }
 
   onClick() {
+    //const authToken = localStorage.getItem('authToken');
+    //const url = `http://localhost:8080/guacamole/#/client/${this.equipment.urlToken}?token=${authToken}`;
+    //window.open(url, '_blank');
+
     const queryParams = {
       urlToken: this.equipment.urlToken,
       hostName: this.equipment.hostName,
       ip: this.equipment.ipAddress,
       password: this.equipment.vncPassword
     }
-    this.router.navigate(['/vnc-client'], { queryParams });
+    //this.router.navigate(['/vnc-client'], { queryParams });
+
+    // Construct the URL for the vnc-client component
+    const url = this.router.createUrlTree(['/vnc-client'], { queryParams });
+
+    // Open the URL in a new tab with features (optional)
+    window.open(url.toString(), '_blank', 'noopener,noreferrer');
   }
 }

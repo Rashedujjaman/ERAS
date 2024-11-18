@@ -25,34 +25,34 @@ const PROXY_CONFIG = [
   //  logLevel: 'debug',
   //  ws: true
   //},
-  {
-    context: [
-      "/guacamole/websocket-tunnel", // This is for Websocket
-    ],
-    target: 'ws://localhost:8080', 
-    secure: false,
-    changeOrigin: true,
-    logLevel: 'debug',
-    ws: true
-  },
-  {
-    context: [
-      "/tunnel", // This is for HTTPTunnel
-    ],
-    target: 'http://localhost:8080',
-    secure: false,
-    changeOrigin: true,
-    logLevel: 'debug',
-    ws: true
-  },
-  {
-    context: [
-      "/WS",
-    ],
-    target: 'https://ydsws.azurewebsites.net', 
-    secure: false,
-    changeOrigin: true,
-    logLevel: 'debug'
-  }
+  //{
+  //  context: [
+  //    "/guacamole/websocket-tunnel", // This is for Websocket
+  //  ],
+  //  target: 'ws://localhost:8080', 
+  //  secure: false,
+  //  changeOrigin: true,
+  //  logLevel: 'debug',
+  //  ws: true
+  //},
+  //{
+  //  context: [
+  //    "/tunnel", // This is for HTTPTunnel
+  //  ],
+  //  target: 'http://localhost:8080',
+  //  secure: false,
+  //  changeOrigin: true,
+  //  logLevel: 'debug',
+  //  ws: true
+  //},
+  //{
+  //  context: [
+  //    "/WS",
+  //  ],
+  //  target: 'https://ydsws.azurewebsites.net', 
+  //  secure: false,
+  //  changeOrigin: true,
+  //  logLevel: 'debug'
+  //}
 ]
 module.exports = PROXY_CONFIG;
