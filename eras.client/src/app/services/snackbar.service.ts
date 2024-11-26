@@ -8,50 +8,51 @@ import { Injectable } from '@angular/core';
 export class SnackBarService {
   constructor(private snackBar: MatSnackBar) { }
   
-  success(message: string, action: string, duration?: number) {
+  success(message: string, action?: string|null, duration?: number|null) {
     const config = new MatSnackBarConfig();
     config.panelClass = ['success-snackbar'];
     config.horizontalPosition = 'center';
     config.verticalPosition = 'top';
-    if (duration) {
-      config.duration = duration;
-    }
+    config.duration = duration ? duration : undefined;
+
+    action = action ?? undefined;
+    
 
     this.snackBar.open(message, action, config);
   }
 
-  bottomSuccess(message: string, action: string, duration?: number) {
+  bottomSuccess(message: string, action?: string | null, duration?: number | null) {
     const config = new MatSnackBarConfig();
     config.panelClass = ['success-snackbar'];
     config.horizontalPosition = 'center';
     config.verticalPosition = 'bottom';
-    if (duration) {
-      config.duration = duration;
-    }
+    config.duration = duration ? duration : undefined;
+
+    action = action ?? undefined;
 
     this.snackBar.open(message, action, config);
   }
 
-  error(message: string, action: string, duration?: number) {
+  error(message: string, action?: string | null, duration?: number | null) {
     const config = new MatSnackBarConfig();
     config.panelClass = ['error-snackbar'];
     config.horizontalPosition = 'center';
     config.verticalPosition = 'top';
-    if (duration) {
-      config.duration = duration;
-    }
+    config.duration = duration ? duration : undefined;
+
+    action = action ?? undefined;
 
     this.snackBar.open(message, action, config);
   }
 
-  bottomError(message: string, action: string, duration?: number) {
+  bottomError(message: string, action?: string | null, duration?: number | null) {
     const config = new MatSnackBarConfig();
     config.panelClass = ['error-snackbar'];
     config.horizontalPosition = 'center';
     config.verticalPosition = 'bottom';
-    if (duration) {
-      config.duration = duration;
-    }
+    config.duration = duration ? duration : undefined;
+
+    action = action ?? undefined;
 
     this.snackBar.open(message, action, config);
   }

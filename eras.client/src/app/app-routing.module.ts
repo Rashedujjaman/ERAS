@@ -11,6 +11,7 @@ import { AreaComponent } from './area/area.component';
 import { AreaAsignComponent } from './area-asign/area-asign.component';
 import { EquipmentComponent } from './equipment/equipment.component';
 import { VncClientComponent } from './vnc-client/vnc-client.component';
+import { RoleGuard } from './services/guards/role-guard.service';
 
 
 const routes: Routes = [
@@ -22,48 +23,66 @@ const routes: Routes = [
   {
     path: 'dashboard',
     component: DashboardComponent,
-    title: 'Dashboard'
+    title: 'Dashboard',
+    canActivate: [RoleGuard],
+    data: { roles: ['Admin', 'Engineer', 'Viewer'] },
   },
 
   {
     path: 'registration',
     component: RegistrationComponent,
-    title: 'Registration'
+    title: 'Registration',
+    canActivate: [RoleGuard],
+    data: { roles: ['Admin'] },
   },
   {
     path: 'area',
     component: AreaComponent,
-    title: 'Area Management'
+    title: 'Area Management',
+    canActivate: [RoleGuard],
+    data: { roles: ['Admin'] },
   },
   {
     path: 'area-asign',
     component: AreaAsignComponent,
-    title: 'Area Asignment'
+    title: 'Area Asignment',
+    canActivate: [RoleGuard],
+    data: { roles: ['Admin', 'Engineer'] },
   },
   {
     path: 'equipment',
     component: EquipmentComponent,
-    title: 'Equipment Management'
+    title: 'Equipment Management',
+    canActivate: [RoleGuard],
+    data: { roles: ['Admin', 'Engineer'] },
   },
   {
     path: 'equipment-model',
     component: EquipmentModelComponent,
-    title: 'EquipmentModel'
+    title: 'EquipmentModel',
+    canActivate: [RoleGuard],
+    data: { roles: ['Admin'] },
   },
   {
     path: 'users',
     component: UsersComponent,
-    title: 'Manage User'
+    title: 'Manage User',
+    canActivate: [RoleGuard],
+    data: { roles: ['Admin'] },
   },
   {
     path: 'profile',
     component: ProfileComponent,
-    title: 'Profile'
+    title: 'Profile',
+    canActivate: [RoleGuard],
+    data: { roles: ['Admin', 'Engineer', 'Viewer'] },
   },
   {
     path: 'vnc-client',
     component: VncClientComponent,
-    title: 'Vnc Client Component'
+    title: 'Vnc Client Component',
+    canActivate: [RoleGuard],
+    data: { roles: ['Admin', 'Engineer', 'Viewer'] },
   },
 ];
 

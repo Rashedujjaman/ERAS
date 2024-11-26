@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { SnackBarService } from '../services/snackbar.service';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { AuthService } from '../services/auth.service';
 import { GuacamoleVncService } from '../services/guacamole-vnc.service';
 
 @Component({
@@ -21,6 +22,7 @@ export class LoginComponent{
 
   constructor(
     private http: HttpClient,
+    private authService: AuthService,
     private router: Router,
     private snackBar: SnackBarService,
     private guacamoleService: GuacamoleVncService,
@@ -38,19 +40,17 @@ export class LoginComponent{
       .subscribe({
         next: (response: any) => {
 
-          localStorage.setItem('userRole', response.userRole);
-          localStorage.setItem('userId', response.userId);
+          this.authService.setLogin(response.userRole, response.userId);
 
           this.loading = false;
 
           this.authenticate();
           this.router.navigate(['/dashboard']);
-          this.snackBar.success(response.message, 'Close', 3000);
       },
 
        error: (error: HttpErrorResponse) => {
          console.error(error);
-         this.snackBar.success(error.error.message, 'Close', 5000);
+         this.snackBar.error(error.error.message, null, 3000);
          this.loading = false;
         }
         }

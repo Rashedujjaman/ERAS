@@ -8,7 +8,6 @@ namespace ERAS.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Admin, Engineer")]
     public class EquipmentController(ApplicationDbContext dbcontext) : ControllerBase
     {
         private readonly ApplicationDbContext _dbContext = dbcontext;
@@ -50,7 +49,7 @@ namespace ERAS.Server.Controllers
             return equipment;
         }
 
-
+        [Authorize(Roles = "Admin, Engineer")]
         [HttpPost("addEquipment")]
         public async Task<IActionResult> PostEquipment([FromForm] EquipmentAddEditModel model)
         {
@@ -118,11 +117,21 @@ namespace ERAS.Server.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin, Engineer")]
         [HttpPut("updateEquipment/{id}")]
         public async Task<IActionResult> UpdateEquipment(int id, [FromForm] EquipmentAddEditModel updatedEquipment)
         {
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        Console.WriteLine($"Model Error: {error.ErrorMessage}");
+                    }
+                    return BadRequest(ModelState);
+                }
+
                 if (updatedEquipment == null)
                 {
                     return BadRequest(new { message = "Invalid equipment data." });
@@ -187,6 +196,7 @@ namespace ERAS.Server.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin, Engineer")]
         [HttpPut("urlToken/{id}")]
         public async Task<IActionResult> UpdateEquipmentUrlToken(int id, [FromBody] Equipment equipment)
         {
@@ -223,6 +233,7 @@ namespace ERAS.Server.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin, Engineer")]
         [HttpDelete("deleteEquipment/{id}")]
         public async Task<IActionResult> DeleteEquipment(int id)
         {

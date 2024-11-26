@@ -40,6 +40,7 @@ export class DashboardComponent implements OnInit {
     this.isLoading = true;
     this.isError = false;
 
+
     forkJoin({
       equipments: this.http.get<Equipment[]>('/api/Equipment/getAllEquipments'),
       areas: this.http.get<Area[]>(`api/Users/getExistingAreasByUser/${localStorage.getItem('userId')}`)
@@ -51,7 +52,7 @@ export class DashboardComponent implements OnInit {
         this.isLoading = false;
       },
       error: (error: HttpErrorResponse) => {
-        console.error('Error loading data:', error);
+        console.error(error);
         this.isError = true;
         this.isLoading = false;
       }

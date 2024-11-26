@@ -60,7 +60,7 @@ export class EquipmentComponent implements OnInit, AfterViewInit {
   faPlus = faPlusCircle;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
+  //@ViewChild(MatSort) sort!: MatSort;
   constructor(private http: HttpClient,
     private dialog: MatDialog,
     private router: Router,
@@ -77,7 +77,7 @@ export class EquipmentComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.tableData.paginator = this.paginator;
-    this.tableData.sort = this.sort;
+    //this.tableData.sort = this.sort;
   }
 
   loadEquipments() {
@@ -93,15 +93,15 @@ export class EquipmentComponent implements OnInit, AfterViewInit {
         },
         error: (error: HttpErrorResponse) => {
           if (error.status === 200) {
-            this.snackBar.error('You are not authorized to perform this action.', 'Close', 6000);
+            this.snackBar.error('You are not authorized to perform this action.', null, 6000);
             this.router.navigate(['']);
 
           } else if (error.error.sessionOut === true) {
-            this.snackBar.error(error.error.message, 'Close', 4000);
+            this.snackBar.error(error.error.message, null, 4000);
             this.router.navigate(['']);
           }
           else {
-            this.snackBar.error(error.error.message, 'Close', 4000);
+            this.snackBar.error(error.error.message, null, 4000);
           }
           this.isLoading = false;
         }
@@ -114,7 +114,6 @@ export class EquipmentComponent implements OnInit, AfterViewInit {
     }
     this.tableData.data = this.equipments.length ? this.equipments : [];
     this.tableData.paginator = this.paginator;
-    this.tableData.sort = this.sort;
   }
 
   applyFilter(event: Event) {
@@ -170,10 +169,10 @@ export class EquipmentComponent implements OnInit, AfterViewInit {
               this.equipments.splice(index,1);
               this.updateTableData();
               this.deleteConnection(hostName);
-              this.snackBar.bottomSuccess(response.message, 'Close', 3000);
+              this.snackBar.success(response.message, null, 2000);
             },
             error: (error: HttpErrorResponse) => {
-              this.snackBar.bottomError(error.error.message, 'Close', 3000);
+              this.snackBar.error(error.error.message, null, 3000);
             }
           });
       }
@@ -210,17 +209,6 @@ export class EquipmentComponent implements OnInit, AfterViewInit {
           console.log('Failed to delete connection.', error);
           throw error;
         });
-
-
-      //this.guacamoleService.deleteConnection(existingConnection.connectionId, this.authToken, this.dataSource)
-      //  .subscribe({
-      //    next: (response: any) => {
-      //      console.log('Connection deleted successfully', response);
-      //    }, error(error) {
-      //      console.log('Failed to delete connection', error);
-      //    }
-      //  });
-
     }
   }
 

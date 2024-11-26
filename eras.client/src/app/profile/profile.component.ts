@@ -13,6 +13,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule, FormControl, FormBuilder, FormGroup, Validators, FormsModule } from '@angular/forms';
 import { Profile } from '../models/profile';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-profile',
@@ -61,7 +62,8 @@ export class ProfileComponent implements OnInit {
     private http: HttpClient,
     private router: Router,
     private snackBar: SnackBarService,
-    private dialogBox: MatDialog
+    private dialogBox: MatDialog,
+    private authService: AuthService
   ) { }
 
 
@@ -173,16 +175,6 @@ export class ProfileComponent implements OnInit {
   }
 
   logout() {
-    this.http.post('/api/authentication/logout', {})
-      .subscribe({
-        next: (response: any) => {
-          localStorage.removeItem('userRole');
-          this.router.navigate(['']);
-          this.snackBar.success(response.message, 'Close', 3000);
-        },
-        error: (error: any) => {
-          console.error('Error logging out:', error);
-        }
-      });
+    this.authService.logout();
   }
 }

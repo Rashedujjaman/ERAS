@@ -164,7 +164,6 @@ export class GuacamoleVncService {
 
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${authToken}`,
     });
 
 
@@ -175,13 +174,9 @@ export class GuacamoleVncService {
 
   //Delete connection
   public deleteConnection(connectionId: string, authToken: string, dataSource: string) {
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${authToken}`,
-    });
+
     return this.http.delete(
-      `${this.baseUrl}/session/data/${dataSource}/connections/${connectionId}?token=${authToken}`,
-      { headers }
-    );
+      `${this.baseUrl}/session/data/${dataSource}/connections/${connectionId}?token=${authToken}`);
     console.log(`${this.baseUrl}/session/data/${dataSource}/connections/${connectionId}?token=${authToken}`);
   }
 }

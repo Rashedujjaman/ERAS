@@ -73,7 +73,7 @@ export class AddEditEquipmentDialogComponent {
 
   loadDropdownData() {
     this.http.get<any[]>('/api/Area/getAllArea').subscribe((response: any) => this.areaList = response.areas);
-    this.http.get<any[]>('/api/EquipmentModel').subscribe((response: any) => this.equipmentModelList = response.equipmentModels);
+    this.http.get<any[]>('/api/EquipmentModel/GetEquipmentModels').subscribe((response: any) => this.equipmentModelList = response);
   }
 
   populateForm(equipment: any): void {
@@ -133,18 +133,14 @@ export class AddEditEquipmentDialogComponent {
       }
 
       try {
-        const headers = new HttpHeaders({
-          'Content-Type': 'application/json',
-          'X-HTTP-Method-Override': 'PUT'
-        });
         const request = this.data.isEditMode
-          ? this.http.put(`/api/Equipment/updateEquipment/${this.data.equipment.id}`, formData, { headers })
+          ? this.http.put(`/api/Equipment/updateEquipment/${this.data.equipment.id}`, formData)
           : this.http.post('/api/Equipment/addEquipment', formData);
 
         request.subscribe({
           next: async (response: any) => {
             const newEquipment = response.equipment;
-            this.snackBar.success(response.message, "Close", 3000);
+            this.snackBar.success(response.message, null, 2000);
 
             //If equipment is being edited and any of the connection data changed.
             if (this.data.isEditMode && this.connectionDataChangeCheck()) {
@@ -166,7 +162,7 @@ export class AddEditEquipmentDialogComponent {
           },
           error: (error: HttpErrorResponse) => {
             console.log(error);
-            this.snackBar.error(error.error.message, "Close", 5000);
+            this.snackBar.error(error.error.message, null, 3000);
           }
 
         });

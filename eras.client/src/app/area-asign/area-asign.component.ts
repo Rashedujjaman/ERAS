@@ -121,7 +121,7 @@ export class AreaAsignComponent implements OnInit {
     }
     this.http.post(`/api/Users/assignArea`, params).subscribe({
       next: () => {
-        this.snackBar.success('Area updated successfully!', 'Close', 2000);
+        this.snackBar.success('Area updated successfully!', null, 1000);
         this.fetchAllUserAreas();
         this.resetForm();
       },
@@ -145,10 +145,10 @@ export class AreaAsignComponent implements OnInit {
               const index = this.userAreas.findIndex(ua => ua.id === userArea.id);
               this.userAreas.splice(index, 1);
               this.updateTableData();
-              this.snackBar.bottomSuccess(response.message, 'Close', 2000);
+              this.snackBar.success(response.message, null, 1000);
             },
             error: (error: HttpErrorResponse) => {
-              this.snackBar.bottomError(error.error.message, 'Close', 2000);
+              this.snackBar.bottomError(error.error.message, 'Close', 3000);
             }
           });
       }
@@ -166,10 +166,6 @@ export class AreaAsignComponent implements OnInit {
       }
     });
   }
-
-  //onAreaSelectionChange(event: MatSelectChange): void {
-  //  this.selectedAreas = event.value;
-  //}
 
 
   fetchAllUserAreas() {

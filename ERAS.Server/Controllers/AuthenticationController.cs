@@ -29,14 +29,11 @@ namespace ERAS.Server.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    _logger.LogError("Model state is invalid");
                     return BadRequest(new { message = "Invalid login attempt." });
                 }
 
-                var user = await _userManager.FindByNameAsync(model.UserName);
-
-
-                ////Uncomment to create first user in the system-----------------------------------
+                //---------------------------------------------------------------------------------*
+                ////Uncomment to create first user in the system
                 //var newUser = new ApplicationUser
                 //{
                 //    UserName = "Admin",
@@ -52,19 +49,19 @@ namespace ERAS.Server.Controllers
                 //    IsActive = true
                 //};
                 //var registerResult = await _userManager.CreateAsync(newUser, "Admin1234#");
-                ////--------------------------------------------------------------------------------
+                //--------------------------------------------------------------------------------*
 
+                var user = await _userManager.FindByNameAsync(model.UserName);
 
                 if (user != null)
                 {
-                    _logger.LogInformation("User found: {UserName}. Verifying password...", model.UserName);
                     if (user.IsActive == false)
                     {
-                        _logger.LogWarning("Account is Disabled by Admin");
                         return Unauthorized(new { message = "Your account is restricted. Please contact the admin panel !!!" });
                     }
 
-                    var result = await _signInManager.PasswordSignInAsync(user, model.Password, false, lockoutOnFailure: false);
+                    var result = await _signInManager.PasswordSignInAsync(user, model.Password, false, user.LockoutEnabled);
+
                     if (result.Succeeded)
                     {
                         var roles = await _userManager.GetRolesAsync(user);
@@ -87,33 +84,28 @@ namespace ERAS.Server.Controllers
 
                         HttpContext.Session.SetString("UserRole", roles.FirstOrDefault());
                         HttpContext.Session.SetInt32("UserId", user.Id);
-                        _logger.LogInformation("User {UserName} successfully logged in", model.UserName);
                         return Ok(new { message = "Login successful", userRole = roles.FirstOrDefault(), userId = user.Id });
                     }
 
                     if (result.IsLockedOut)
                     {
-                        _logger.LogWarning("User account locked out: {UserName}", model.UserName);
                         return BadRequest(new { message = "User account locked out." });
                     }
 
                     else
                     {
-                        _logger.LogWarning("Incorrect Password for user: {UserName}", model.UserName);
                         return BadRequest(new { message = "Incorrect Password" });
                     }
                 }
                 else
                 {
-                    _logger.LogWarning("User not found: {UserName}", model.UserName);
                     return Unauthorized(new { message = "User Not Found with this UserName" });
                 }
 
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while attempting to log in user: {UserName}", model.UserName);
-                return StatusCode(500, new { message = "Internal server error" });
+                return BadRequest(ex.Message);
             }
         }
 
@@ -124,7 +116,7 @@ namespace ERAS.Server.Controllers
             await _signInManager.SignOutAsync();
             HttpContext.Session.Remove("UserId");
             HttpContext.Session.Remove("UserRole");
-            return Ok(new { message = "Logout successful" });
+            return Ok("Logout successful");
         }
     }
 }

@@ -3,6 +3,7 @@ import { MatDialog, MatDialogModule, MatDialogConfig } from '@angular/material/d
 import { MatTableDataSource } from '@angular/material/table';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { AddEditEquipmentModelDialogComponent } from './add-edit-equipment-model-dialog/add-edit-equipment-model-dialog.component';
+import { EquipmentModel } from '../models/equipment-model';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
@@ -38,9 +39,11 @@ import { Router } from '@angular/router';
     MatProgressSpinnerModule]
 })
 export class EquipmentModelComponent implements OnInit, AfterViewInit {
-  displayedColumns: string[] = ['id', 'name', 'alias', 'userCreated', 'dateCreated', 'userModified', 'dateModified', 'actions'];
-  dataSource = new MatTableDataSource<any>();
-  isLoading: boolean = false;
+  equipmentModels: EquipmentModel[] = [];
+  isLoading = false;
+  displayedColumns = ['id', 'name', 'alias', 'userCreated', 'dateCreated', 'userModified', 'dateModified', 'actions'];
+  tableData = new MatTableDataSource<any>();
+
 
   //Icon
   faEdit = faEdit;
@@ -48,7 +51,7 @@ export class EquipmentModelComponent implements OnInit, AfterViewInit {
   faPlus = faPlusCircle;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
+  //@ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private http: HttpClient,
@@ -59,55 +62,52 @@ export class EquipmentModelComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.loadEquipmentModels();
-    this.dataSource.sortingDataAccessor = (item, property) => {
-      switch (property) {
-        case 'dateCreated':
-        case 'dateModified':
-          return new Date(item[property]) || 0;
-        case 'userModified':
-          return item.userModified ? item.userModified.toLowerCase() : '';
-        default:
-          return item[property];
-      }
-    };
   }
 
   ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+    this.tableData.paginator = this.paginator;
   }
 
   loadEquipmentModels() {
     this.isLoading = true;
-    this.http.get<any[]>('/api/EquipmentModel')
+
+    this.http.get<EquipmentModel[]>('/api/EquipmentModel/GetEquipmentModels')
       .subscribe({
-        next: (response: any) => {
-          this.dataSource = new MatTableDataSource(response.equipmentModels);
-          this.dataSource.paginator = this.paginator;
-          this.dataSource.sort = this.sort;
+        next: (equipmentModels: EquipmentModel[]) => {
+          this.equipmentModels = equipmentModels;
+          console.log(equipmentModels);
+          this.updateTableData();
           this.isLoading = false;
         },
         error: (error: HttpErrorResponse) => {
 
           if (error.status === 200) {
-            this.snackBar.error('You are not authorized to perform this action.', 'Close', 8000);
+            this.snackBar.error('You are not authorized to perform this action.', null, 4000);
             this.router.navigate(['']);
 
           } else if (error.error.sessionOut === true) {
-            this.snackBar.error(error.error.message, 'Close', 4000);
+            this.snackBar.error(error.error.message, null, 4000);
             this.router.navigate(['']);
 
           } else {
-            this.snackBar.error('An error occurred while fetching user Equipment Model data', 'Close', 3000);
+            this.snackBar.error('An error occurred while fetching user Equipment Model data', null, 3000);
           }
           this.isLoading = false;
         }
       });
   }
 
+  updateTableData() {
+    if (!this.tableData) {
+      this.tableData = new MatTableDataSource();
+    }
+    this.tableData.data = this.equipmentModels.length ? this.equipmentModels : [];
+    this.tableData.paginator = this.paginator;
+  }
+
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+    this.tableData.filter = filterValue.trim().toLowerCase();
   }
 
   openAddEquipmentModelDialog() {
@@ -121,22 +121,27 @@ export class EquipmentModelComponent implements OnInit, AfterViewInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.loadEquipmentModels();
+        //this.loadEquipmentModels();
+        this.equipmentModels.push(result);
+        this.updateTableData();
       }
     });
   }
 
-  editEquipmentModel(equipment: any) {
+  editEquipmentModel(equipmentModel: any) {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.width = '400px';
-    dialogConfig.data = { equipment: equipment, isEditMode: true }
+    dialogConfig.data = { equipmentModel: equipmentModel, isEditMode: true }
     const dialogRef = this.dialog.open(AddEditEquipmentModelDialogComponent, dialogConfig);
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.loadEquipmentModels();
+        const index = this.equipmentModels.findIndex(eq => eq.id === equipmentModel.id);
+        this.equipmentModels[index] = result;
+        this.updateTableData();
+        //this.loadEquipmentModels();
       }
     });
   }
@@ -148,14 +153,17 @@ export class EquipmentModelComponent implements OnInit, AfterViewInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.http.delete(`/api/equipmentmodel/${id}`)
-          .subscribe( {
+        this.http.delete(`/api/equipmentmodel/DeleteEquipmentModel/${id}`)
+          .subscribe({
             next: (response: any) => {
-              this.snackBar.bottomSuccess(response.message, 'Close', 3000);
-              this.loadEquipmentModels();
+              const index = this.equipmentModels.findIndex(eq => eq.id === id);
+              this.equipmentModels.splice(index, 1);
+              this.updateTableData();
+              this.snackBar.success(response.message, null, 1000);
+              //this.loadEquipmentModels();
             },
             error: (error: HttpErrorResponse) => {
-              this.snackBar.bottomError(error.error.message, 'Close', 3000);
+              this.snackBar.error(error.error.message, null, 3000);
             }
           });
       }

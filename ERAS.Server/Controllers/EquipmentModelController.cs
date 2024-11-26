@@ -14,7 +14,7 @@ namespace ERAS.Server.Controllers
         private readonly ApplicationDbContext _dbContext = dbContext;
 
         // GET: api/EquipmentModel
-        [HttpGet]
+        [HttpGet("GetEquipmentModels")]
         public async Task<IActionResult> GetAllEquipmentModels()
         {
             var userId = HttpContext.Session.GetInt32("UserId");
@@ -40,7 +40,7 @@ namespace ERAS.Server.Controllers
                         UserModified = e.UserModified.UserName,
                     }).ToListAsync();
 
-                return Ok(new { message = "Equipment Models are loaded", equipmentModels });
+                return Ok(equipmentModels);
             }
             catch (Exception ex)
             {
@@ -49,7 +49,7 @@ namespace ERAS.Server.Controllers
         }
 
         // POST: api/EquipmentModel
-        [HttpPost]
+        [HttpPost("AddEquipmentModel")]
         public async Task<IActionResult> CreateEquipmentModel([FromBody] EquipmentModel equipmentModel)
         {
             if (!ModelState.IsValid)
@@ -67,11 +67,11 @@ namespace ERAS.Server.Controllers
             {
                 return BadRequest(new {message = "An error occured while adding the Equipment Model"});
             }
-            return Ok(new {message = "Equipment Model added successfully !!!", equipmentModel});
+            return Ok(equipmentModel);
         }
 
         // PUT: api/EquipmentModel/{id}
-        [HttpPut("{id}")]
+        [HttpPut("UpdateEquipmentModel/{id}")]
         public async Task<IActionResult> UpdateEquipmentModel(int id, [FromBody] EquipmentModel equipmentModel)
         {
             if (!ModelState.IsValid)
@@ -91,13 +91,13 @@ namespace ERAS.Server.Controllers
 
             if (result == 0)
             { 
-                return Ok(new { message = "An error occured while saving the changes to database" }); 
+                return BadRequest("An error occured while saving the changes to database"); 
             }
-            return Ok(new { message = "Equipment model is edited successfully !!!", existingModel });
+            return Ok(existingModel);
         }
 
         // DELETE: api/EquipmentModel/{id}
-        [HttpDelete("{id}")]
+        [HttpDelete("DeleteEquipmentModel{id}")]
         public async Task<IActionResult> DeleteEquipmentModel(int id)
         {
             var existingModel = await _dbContext.EquipmentModel.FindAsync(id);

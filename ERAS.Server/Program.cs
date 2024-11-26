@@ -2,7 +2,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ERAS.Server.Models;
 using ERAS.Server.Data;
-using Microsoft.Extensions.Options;
+//using Microsoft.Extensions.Options;
+//using Microsoft.IdentityModel.Tokens;
+//using Microsoft.AspNetCore.Authentication.JwtBearer;
+//using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,7 +35,24 @@ builder.Services.AddCors(options =>
     });
 });
 
-
+////Jwt
+//builder.Services.AddAuthentication(options =>
+//{
+//    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+//    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+//}).AddJwtBearer(options =>
+//{
+//    options.TokenValidationParameters = new TokenValidationParameters
+//    {
+//        ValidateIssuer = true,
+//        ValidateAudience = true,
+//        ValidateLifetime = true,
+//        ValidateIssuerSigningKey = true,
+//        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+//        ValidAudience = builder.Configuration["Jwt:Audience"],
+//        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+//    };
+//});
 
 
 // Configure Identity with custom user and role models, and EF storage.

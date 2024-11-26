@@ -9,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 namespace ERAS.Server.Controllers
 {
     [Route("api/[controller]")]
-    //[Authorize (Roles="Admin")]
     [ApiController]
     public class UsersController(
         UserManager<ApplicationUser> userManager, 
@@ -20,6 +19,7 @@ namespace ERAS.Server.Controllers
         private readonly RoleManager<UserRole> _roleManager = roleManager;
         private readonly ApplicationDbContext _dbContext = dbContext;
 
+        [Authorize (Roles="Admin")]
         [HttpGet("getAllUsers")]
         public async Task<IActionResult> GetUsers()
         {
@@ -53,6 +53,7 @@ namespace ERAS.Server.Controllers
             return Ok(userViewModel);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet("getAllUserArea")]
         public async Task<IActionResult> GetAllUserArea()
         {
@@ -102,7 +103,7 @@ namespace ERAS.Server.Controllers
             }
         }
 
-
+        [Authorize(Roles = "Admin")]
         [HttpPost("assignArea")]
         public async Task<IActionResult> AssignArea([FromBody] AssignAreaRequest model)
         {
@@ -130,7 +131,7 @@ namespace ERAS.Server.Controllers
             }
         }
 
-
+        [Authorize(Roles = "Admin")]
         [HttpDelete("deleteUserArea/{userAreaId}")]
         public async Task<IActionResult> DeleteUserArea(int userAreaId)
         {
@@ -154,7 +155,7 @@ namespace ERAS.Server.Controllers
         }
 
 
-
+        [Authorize(Roles = "Admin")]
         [HttpPut("accountStatus/{id}")]
         public async Task<IActionResult> ToggleUserStatus(int id)
         {
@@ -202,7 +203,7 @@ namespace ERAS.Server.Controllers
             return BadRequest(new { message = "Failed to reset password.", errors = result.Errors });
         }
 
-
+        [Authorize(Roles = "Admin")]
         [HttpPut("updateUserRole/{id}")]
         public async Task<IActionResult> EditUserRole(int id, [FromBody] EditRoleModel model)
         {

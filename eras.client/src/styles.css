@@ -737,19 +737,21 @@ mat-cell, mat-header-cell {
 
 /*Snackbar style*/
 :root {
-  --mdc-snackbar-container-color: #2196F3;
+  --mdc-snackbar-supporting-text-color: #fff;
+  --mdc-snackbar-supporting-text-size: 16px;
   --mat-mdc-snack-bar-button-color: #fff;
-
-}
-
-.error-snackbar {
-  background-color: red !important;
-  background: red !important;
 }
 
 .success-snackbar {
-  background-color: green !important;
-  background: green !important;
+  --mdc-snackbar-container-color: #00ba54;
+  text-align: center;
+  padding: 8px 16px;
+}
+
+.error-snackbar {
+  --mdc-snackbar-container-color: red;
+  text-align: center;
+  padding: 8px 16px;
 }
 
 

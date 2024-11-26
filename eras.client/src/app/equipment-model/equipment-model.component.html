@@ -19,59 +19,54 @@
     </div>
 
     <!--Equipment Table-->
-    <mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8" *ngIf="!isLoading">
+    <mat-table [dataSource]="tableData" matSort class="mat-elevation-z8" *ngIf="!isLoading">
 
       <ng-container matColumnDef="id" class="mat-column-id">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> No </mat-header-cell>
-        <mat-cell *matCellDef="let equipment; let i = index"> {{i+1}} </mat-cell>
+        <mat-header-cell *matHeaderCellDef> No </mat-header-cell>
+        <mat-cell *matCellDef="let equipmentModel; let i = index"> {{i+1}} </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="name" class="mat-column-name">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
-        <mat-cell *matCellDef="let equipment"> {{equipment.name}} </mat-cell>
+        <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+        <mat-cell *matCellDef="let equipmentModel"> {{equipmentModel.name}} </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="alias" class="mat-column-alias">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> Alias </mat-header-cell>
-        <mat-cell *matCellDef="let equipment"> {{equipment.alias}} </mat-cell>
+        <mat-header-cell *matHeaderCellDef> Alias </mat-header-cell>
+        <mat-cell *matCellDef="let equipmentModel"> {{equipmentModel.alias}} </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="userCreated" class="mat-column-user">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> Created By </mat-header-cell>
-        <mat-cell *matCellDef="let equipment"> {{equipment.userCreated}} </mat-cell>
+        <mat-header-cell *matHeaderCellDef> Created By </mat-header-cell>
+        <mat-cell *matCellDef="let equipmentModel"> {{equipmentModel.userCreated}} </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="dateCreated" class="mat-column-date">
         <mat-header-cell *matHeaderCellDef> Created On </mat-header-cell>
-        <mat-cell *matCellDef="let equipment"> {{equipment.dateCreated | date:'MMM d, YYYY'}} </mat-cell>
+        <mat-cell *matCellDef="let equipmentModel"> {{equipmentModel.dateCreated | date:'MMM d, YYYY'}} </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="userModified" class="mat-column-user">
         <mat-header-cell *matHeaderCellDef> Modified By </mat-header-cell>
-        <mat-cell *matCellDef="let equipment"> {{equipment.userModified ? (equipment.userModified) : 'NA'}} </mat-cell>
+        <mat-cell *matCellDef="let equipmentModel"> {{equipmentModel.userModified ? (equipmentModel.userModified) : 'NA'}} </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="dateModified" class="mat-column-date">
         <mat-header-cell *matHeaderCellDef> Last Modified </mat-header-cell>
-        <mat-cell *matCellDef="let equipment"> {{equipment.dateModified ? (equipment.dateModified | date:'MMM d, YYYY') : 'NA'}} </mat-cell>
+        <mat-cell *matCellDef="let equipmentModel"> {{equipmentModel.dateModified ? (equipmentModel.dateModified | date:'MMM d, YYYY') : 'NA'}} </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="actions" class="mat-column-action">
         <mat-header-cell *matHeaderCellDef> Actions </mat-header-cell>
-        <mat-cell *matCellDef="let equipment" class="action-button-container">
-          <!--<button mat-icon-button (click)="editEquipmentModel(equipment)" class="mat-action-button">
-          <mat-icon class="mat-button-icon">edit</mat-icon>
-        </button>
-        <button mat-icon-button color="warn" (click)="deleteEquipmentModel(equipment.id)" class="mat-action-button">
-          <mat-icon class="mat-button-icon">delete</mat-icon>
-        </button>-->
+        <mat-cell *matCellDef="let equipmentModel" class="action-button-container">
 
-          <button class="edit-button action-button" (click)="editEquipmentModel(equipment)">
+          <button class="edit-button action-button" (click)="editEquipmentModel(equipmentModel)">
             <fa-icon [icon]="faEdit"></fa-icon>
           </button>
-          <button class="delete-button action-button" (click)="deleteEquipmentModel(equipment.id)">
+          <button class="delete-button action-button" (click)="deleteEquipmentModel(equipmentModel.id)">
             <fa-icon [icon]="faTrash" class="icon-button"></fa-icon>
           </button>
+
         </mat-cell>
       </ng-container>
 
