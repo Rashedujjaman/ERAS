@@ -41,10 +41,11 @@ export class LoginComponent{
         next: (response: any) => {
 
           this.authService.setLogin(response.userRole, response.userId);
+          this.authService.setImageUrl(response.imageUrl);
 
           this.loading = false;
 
-          this.authenticate();
+          this.authenticateGuacamole();
           this.router.navigate(['/dashboard']);
       },
 
@@ -57,7 +58,7 @@ export class LoginComponent{
       );
   }
 
-  async authenticate() {
+  async authenticateGuacamole() {
     try {
       const response = await this.guacamoleService.authenticate();
       localStorage.setItem('authToken', response.authToken);

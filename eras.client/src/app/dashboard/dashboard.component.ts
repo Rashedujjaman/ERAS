@@ -3,11 +3,13 @@ import { Component, OnInit } from '@angular/core';
 import { CardComponent } from './card/card.component';
 import { CardSkeletonComponent } from './card-skeleton/card-skeleton';
 import { HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';
+import { SnackBarService } from '../services/snackbar.service';
 import { CommonModule } from '@angular/common';
 import { FilterComponent } from '../filter/filter.component';
 import { Area } from '../models/area';
 import { Equipment } from '../models/equipment';
 import { forkJoin } from 'rxjs';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -22,6 +24,8 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private http: HttpClient,
+    private snackBar: SnackBarService,
+    private router: Router
   ) { }
 
   equipmentList: Equipment[] = [];
@@ -53,6 +57,10 @@ export class DashboardComponent implements OnInit {
       },
       error: (error: HttpErrorResponse) => {
         console.error(error);
+        if (error.error.sessionOut === true) {
+          this.router.navigate(['']);
+          this.snackBar.error(error.error.message, null, 3000);
+        }
         this.isError = true;
         this.isLoading = false;
       }
@@ -81,6 +89,10 @@ export class DashboardComponent implements OnInit {
   // Check if a Area is selected
   isAreaSelected(area: Area): boolean {
     return this.selectedAreas.some(selectedArea => selectedArea.id === area.id);
+  }
+
+  noAreaFound() {
+    return this.areas.length === 0;
   }
 }
 

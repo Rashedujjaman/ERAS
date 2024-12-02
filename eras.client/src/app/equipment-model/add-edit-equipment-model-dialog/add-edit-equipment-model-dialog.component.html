@@ -17,7 +17,10 @@
 
     <mat-dialog-actions class="action-buttons" align="end">
       <button mat-button (click)="onCancel()">Cancel</button>
-      <button mat-raised-button color="primary" [disabled]="equipmentModelForm.invalid" (click)="onSave()">Save</button>
+      <button mat-raised-button color="primary" [disabled]="equipmentModelForm.invalid" (click)="onSave()">
+        <span *ngIf="!loading">Submit</span>
+        <span *ngIf="loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+      </button>
     </mat-dialog-actions>
   </form>
 </div>

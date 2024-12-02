@@ -77,12 +77,13 @@ export class UsersComponent implements OnInit{
           console.log(error);
 
           if (error.status === 200) {
-            this.snackBar.success('You are not authorized to perform this action.', 'Close', 8000)
+            this.snackBar.success('You are not authorized to perform this action.', null, 400)
           } else if (error.error.sessionOut === true) {
-            this.snackBar.error(error.error.message, 'Close', 5000);
             this.router.navigate(['']);
+            this.snackBar.error(error.error.message, null, 4000);
+ 
           } else {
-            this.snackBar.error('An error occurred while fetching user data', 'Close', 3000)
+            this.snackBar.error('An error occurred while fetching user data', null, 4000)
           }
           this.isLoading = false;
         }

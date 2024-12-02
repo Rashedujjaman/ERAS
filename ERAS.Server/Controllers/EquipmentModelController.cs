@@ -97,7 +97,7 @@ namespace ERAS.Server.Controllers
         }
 
         // DELETE: api/EquipmentModel/{id}
-        [HttpDelete("DeleteEquipmentModel{id}")]
+        [HttpDelete("DeleteEquipmentModel/{id}")]
         public async Task<IActionResult> DeleteEquipmentModel(int id)
         {
             var existingModel = await _dbContext.EquipmentModel.FindAsync(id);

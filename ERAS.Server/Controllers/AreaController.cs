@@ -95,6 +95,7 @@ namespace ERAS.Server.Controllers
             return Ok(new { message = "Area updated successfully !!!", area });
         }
 
+
         [HttpDelete("deleteArea/{id}")]
         public async Task<IActionResult> DeleteArea(int id)
         {

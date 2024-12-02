@@ -41,12 +41,12 @@ export class AddEditUrlTokenDialogComponent {
     this.http.put(`/api/Equipment/urlToken/${this.data.id}`, { urlToken })
       .subscribe({
         next: (response: any) => {
-          this.snackBar.success(response.message, "Close", 3000);
+          this.snackBar.success(response.message, null, 2000);
           this.dialogRef.close(urlToken);
         },
         error: (error: HttpErrorResponse) => {
           const errorMessage = error.error?.message || "An unexpected error occurred";
-          this.snackBar.error(errorMessage, "Close", 3000);
+          this.snackBar.error(errorMessage, null, 3000);
           this.dialogRef.close(false);
         }
       });

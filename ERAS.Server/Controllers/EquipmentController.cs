@@ -20,7 +20,7 @@ namespace ERAS.Server.Controllers
                 var userId = HttpContext.Session.GetInt32("UserId");
                 if (userId == null)
                 {
-                    return Unauthorized(new { message = "Your session is out !!! Login to continue." });
+                    return Unauthorized(new { message = "Your session is out !!! Login to continue.", sessionOut = true });
                 }
                 var equipments = await _dbContext.Equipment
                     .Include(e => e.Area)

@@ -44,7 +44,10 @@
                 <input type="text" id="Role" class="form-control" [placeholder]="profile.userRole" readonly>
               </div>
             </div>
-            <button mat-flat-button color="primary" class="update-button" (click)="updateProfile()" [disabled]="profileForm.pristine && !isImageSelected">Update</button>
+            <button mat-flat-button color="primary" class="update-button" (click)="updateProfile()" [disabled]="profileForm.pristine && !isImageSelected">
+              <span *ngIf="!isLoading">Update</span>
+              <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            </button>
           </form>
         </div>
       </mat-card-content>

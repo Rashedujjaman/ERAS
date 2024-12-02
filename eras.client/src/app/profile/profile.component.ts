@@ -43,17 +43,11 @@ export class ProfileComponent implements OnInit {
   faCamera = faCamera;
   faSignOut = faSignOut;
 
-  profile: Profile = {
-    userId: '',
-    userName: '',
-    name: '',
-    alias: '',
-    email: '',
-    userRole: '',
-    imageUrl: 'assets/images/profile.jpg'
-  };
+  profile!: Profile ;
 
   loading: boolean = false;
+  isLoading: boolean = false;
+
   errorMessage: string = '';
   userId: string | null = localStorage.getItem('userId');
 
@@ -63,19 +57,20 @@ export class ProfileComponent implements OnInit {
     private router: Router,
     private snackBar: SnackBarService,
     private dialogBox: MatDialog,
-    private authService: AuthService
-  ) { }
+    protected authService: AuthService
+  ) {
+      this.profileForm = this.formBuilder.group({
+        userName: new FormControl<string | null>(null, [Validators.required]),
+        name: new FormControl<string | null>(null, [Validators.required]),
+        alias: new FormControl<string | null>(null, [Validators.required]),
+        email: new FormControl<string | null>(null, [Validators.required, Validators.email]),
+    });
+}
 
 
   ngOnInit(): void {
     this.profileDataFetch();
-
-    this.profileForm = this.formBuilder.group({
-      userName: new FormControl<string | null>(null, [Validators.required]),
-      name: new FormControl<string | null>(null, [Validators.required]),
-      alias: new FormControl<string | null>(null, [Validators.required]),
-      email: new FormControl<string | null>(null, [Validators.required, Validators.email]),
-    });
+    this.profile.imageUrl = this.authService.getImageUrl();
   }
 
   profileDataFetch(): void {
@@ -94,9 +89,9 @@ export class ProfileComponent implements OnInit {
           this.loading = false;
           if (error.error.sessionOut === true) {
             this.router.navigate(['']);
-            this.snackBar.error(error.error.message, 'Close')
+            this.snackBar.error(error.error.message, null, 4000);
           } else {
-            this.snackBar.error(error.error.message, 'Close')
+            this.snackBar.error(error.error.message, null, 3000);
           }
         }
       });
@@ -115,6 +110,7 @@ export class ProfileComponent implements OnInit {
   }
 
   updateProfile() {
+    this.isLoading = true;
     if (this.profileForm.valid) {
       const formData = new FormData();
       formData.append('userName', this.profileForm.get('userName')?.value);
@@ -130,19 +126,25 @@ export class ProfileComponent implements OnInit {
       this.http.put(`/api/profile/updateProfile/${this.userId}`, formData).subscribe({
         next: (response: any) => {
           this.profile = response;
-          this.snackBar.success("Profile Updated Successfully", 'Close', 3000);
+          this.snackBar.success("Profile Updated Successfully", null, 3000);
           this.profileDataFetch();
 
+          if (response.imageUrl) {
+            this.authService.setImageUrl(response.imageUrl);
+          }
+
           this.profileForm.markAsPristine();
+          this.isLoading = false;
         },
         error: (error: HttpErrorResponse) => {
           console.error('Error updating profile:', error);
           if (error.error.sessionOut === true) {
             this.router.navigate(['']);
-            this.snackBar.error(error.error.message, 'Close')
+            this.snackBar.error(error.error.message, null, 4000);
           } else {
-            this.snackBar.error(error.error.message, 'Close')
+            this.snackBar.error(error.error.message, null, 3000);
           }
+          this.isLoading = false;
         }
       });
     }

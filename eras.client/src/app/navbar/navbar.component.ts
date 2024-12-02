@@ -2,6 +2,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -12,13 +13,18 @@ import { Router, RouterModule } from '@angular/router';
 })
 export class NavbarComponent implements OnInit {
   userRole: string | null = '';
+  imageUrl: string = '';
   isDashboardRoute: boolean = false;
   isVNCRoute: boolean = false;
 
-  constructor(private router: Router) { }
+  constructor(
+    private router: Router,
+    private authService: AuthService
+  ) { }
 
   ngOnInit() {
     this.userRole = localStorage.getItem('userRole');
+    this.imageUrl = localStorage.getItem('imageUrl') ?? 'assets/images/profile.jpg';
 
     this.router.events.subscribe(() => {
       this.isDashboardRoute = this.router.url === '/dashboard';

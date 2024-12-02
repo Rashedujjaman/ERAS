@@ -139,11 +139,11 @@ export class AreaComponent implements OnInit, AfterViewInit {
         this.http.delete(`/api/Area/deleteArea/${id}`)
           .subscribe({
             next: (response: any) => {
-              this.snackBar.bottomSuccess(response.message, 'Close', 3000);
+              this.snackBar.success(response.message, null, 2000);
               this.loadAreas();
             },
             error: (error: HttpErrorResponse) => {
-              this.snackBar.bottomError(error.error.message, 'Close', 3000);
+              this.snackBar.error(error.error.message, null, 3000);
             }
           });
       }

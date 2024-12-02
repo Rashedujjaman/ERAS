@@ -18,6 +18,9 @@
       <equipment-card-skeleton></equipment-card-skeleton>
     </div>
   </div>
+  <div *ngIf="!isLoading && noAreaFound()" class="d-flex justify-content-center align-items-center pt-5 mt-5">
+    <h2> No equipment found under your area.</h2>
+  </div>
 </div>
 
 

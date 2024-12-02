@@ -27,6 +27,7 @@ import { MatInputModule } from '@angular/material/input';
 
 export class AddEditEquipmentModelDialogComponent {
   equipmentModelForm: FormGroup;
+  loading = false;
 
   constructor(
     public dialogRef: MatDialogRef<AddEditEquipmentModelDialogComponent>,
@@ -53,6 +54,7 @@ export class AddEditEquipmentModelDialogComponent {
   }
 
   onSave() {
+    this.loading = true;
     const request = this.data.isEditMode
       ? this.http.put(`/api/EquipmentModel/UpdateEquipmentModel/${this.data.equipmentModel.id}`, this.equipmentModelForm.value)
       : this.http.post('/api/EquipmentModel/AddEquipmentModel', this.equipmentModelForm.value);
@@ -62,6 +64,7 @@ export class AddEditEquipmentModelDialogComponent {
         const message = this.data.isEditMode
           ? 'Equipment model updated successfully!'
           : 'Equipment model added successfully!';
+        this.loading = false;
 
         this.snackBar.success(message, null, 1000);
         this.dialogRef.close(response);
@@ -70,7 +73,7 @@ export class AddEditEquipmentModelDialogComponent {
         const errorMessage = this.data.isEditMode
           ? 'An error occurred while updating the equipment model.'
           : 'An error occurred while adding the equipment model.';
-
+        this.loading = false;
         this.snackBar.error(errorMessage, null, 3000);
         console.log(error);
       }

@@ -31,4 +31,12 @@ export class AuthService {
     this.router.navigate(['']);
     this.http.post('/api/authentication/logout', {}).subscribe();
   }
+
+  setImageUrl(imageUrl: string) {
+    localStorage.setItem('imageUrl', imageUrl);
+  }
+
+  getImageUrl(): string {
+    return localStorage.getItem('imageUrl') ?? 'assets/images/profile.jpg';
+  }
 }

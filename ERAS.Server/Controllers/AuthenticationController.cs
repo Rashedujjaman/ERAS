@@ -84,7 +84,12 @@ namespace ERAS.Server.Controllers
 
                         HttpContext.Session.SetString("UserRole", roles.FirstOrDefault());
                         HttpContext.Session.SetInt32("UserId", user.Id);
-                        return Ok(new { message = "Login successful", userRole = roles.FirstOrDefault(), userId = user.Id });
+                        return Ok(new { 
+                            message = "Login successful", 
+                            userRole = roles.FirstOrDefault(), 
+                            userId = user.Id, 
+                            imageUrl = $"data:image/jpeg;base64,{Convert.ToBase64String(user.Image)}"
+                        });
                     }
 
                     if (result.IsLockedOut)

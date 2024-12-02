@@ -52,11 +52,11 @@ export class ResetPasswordDialogComponent {
     this.http.post(`/api/Users/resetPassword/${this.data.userId}`, resetData)
       .subscribe({
         next: (response: any) => {
-          this.snackBar.bottomSuccess(response.message, "Close", 3000);
+          this.snackBar.success(response.message, null, 2000);
           this.dialogRef.close(true);
         },
         error: (error: HttpErrorResponse) => {
-          this.snackBar.bottomError(error.error.message, "Close", 3000);
+          this.snackBar.error(error.error.message, null, 3000);
           this.dialogRef.close(false);
         }
       });

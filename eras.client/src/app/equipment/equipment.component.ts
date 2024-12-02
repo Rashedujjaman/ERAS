@@ -190,7 +190,7 @@ export class EquipmentComponent implements OnInit, AfterViewInit {
         // Refresh the displayed token
         equipment.urlToken = result;
         console.log('Url token updated successfully');
-      } else {
+      } else if(result = false){
         console.log('URL token update failed');
       }
     });

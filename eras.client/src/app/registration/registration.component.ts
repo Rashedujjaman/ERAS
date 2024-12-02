@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRadioModule } from '@angular/material/radio';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { SnackBarService } from '../services/snackbar.service';
 import { ReactiveFormsModule, FormControl, FormBuilder, FormGroup, Validators, FormsModule } from '@angular/forms';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http'; 
 
@@ -21,7 +21,7 @@ export class RegistrationComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private http: HttpClient,
-    private snackBar: MatSnackBar
+    private snackBar: SnackBarService
   ) { }
 
   ngOnInit(): void {
@@ -65,46 +65,25 @@ export class RegistrationComponent implements OnInit {
     this.http.post('/api/registration/register', registrationData)
       .subscribe({
         next: (response: any) => {
-        this.snackBar.open(response.message, 'Close', {
-          duration: 4000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top',
-          panelClass: ['success-snackbar']
-        })
+          this.snackBar.success(response.message, null, 2000)
           this.registrationForm.reset();
         this.loading = false;
       },
         error: (error: HttpErrorResponse) => {
           console.error(error);
           if (error.status === 200) {
-            this.snackBar.open('You are not authorized to perform this action.', 'Close', {
-              duration: 5000,
-              horizontalPosition: 'center',
-              verticalPosition: 'top',
-              panelClass: ['error-snackbar']
-            })
+            this.snackBar.error('You are not authorized to perform this action.', null, 3000);
             this.loading = false;
           } else if (error.status === 400) {
-            this.snackBar.open(error.error.message, 'Close', {
-              duration: 6000,
-              horizontalPosition: 'center',
-              verticalPosition: 'top',
-              panelClass: ['error-snackbar']
-            })
+            this.snackBar.error(error.error.message, null, 4000);
             this.loading = false;
           }
           else {
-            this.snackBar.open(error.error.message, 'Close', {
-              duration: 8000,
-              horizontalPosition: 'center',
-              verticalPosition: 'top',
-              panelClass: ['error-snackbar']
-            })
+            this.snackBar.error(error.error.message, null, 4000);
             this.loading = false;
           }
         }
         }
       );
-
   }
 }
