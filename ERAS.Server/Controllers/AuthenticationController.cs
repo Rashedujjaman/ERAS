@@ -86,9 +86,11 @@ namespace ERAS.Server.Controllers
                         HttpContext.Session.SetInt32("UserId", user.Id);
                         return Ok(new { 
                             message = "Login successful", 
-                            userRole = roles.FirstOrDefault(), 
-                            userId = user.Id, 
-                            imageUrl = $"data:image/jpeg;base64,{Convert.ToBase64String(user.Image)}"
+                            userRole = roles.FirstOrDefault() ?? "", 
+                            userId = user.Id,
+                            imageUrl = user.Image != null
+                                            ? $"data:image/jpeg;base64,{Convert.ToBase64String(user.Image)}"
+                                            : ""
                         });
                     }
 
