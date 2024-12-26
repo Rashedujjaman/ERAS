@@ -13,7 +13,7 @@ import { AuthService } from '../services/auth.service';
 })
 export class NavbarComponent implements OnInit {
   userRole: string | null = '';
-  imageUrl: string = '';
+  imageUrl: string = 'assets/images/profile.jpg';
   isDashboardRoute: boolean = false;
   isVNCRoute: boolean = false;
 
@@ -24,7 +24,8 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit() {
     this.userRole = localStorage.getItem('userRole');
-    this.imageUrl = localStorage.getItem('imageUrl') ?? 'assets/images/profile.jpg';
+    const storedImageUrl = localStorage.getItem('imageUrl')
+    this.imageUrl = storedImageUrl ? storedImageUrl :  'assets/images/profile.jpg';
 
     this.router.events.subscribe(() => {
       this.isDashboardRoute = this.router.url === '/dashboard';

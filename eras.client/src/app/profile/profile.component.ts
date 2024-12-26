@@ -43,7 +43,9 @@ export class ProfileComponent implements OnInit {
   faCamera = faCamera;
   faSignOut = faSignOut;
 
-  profile!: Profile ;
+  profile!: Profile;
+  imageUrl: string = 'assets/images/profile.jpg';
+  userRole: string = '';
 
   loading: boolean = false;
   isLoading: boolean = false;
@@ -64,23 +66,25 @@ export class ProfileComponent implements OnInit {
         name: new FormControl<string | null>(null, [Validators.required]),
         alias: new FormControl<string | null>(null, [Validators.required]),
         email: new FormControl<string | null>(null, [Validators.required, Validators.email]),
-    });
-}
+      });
+    }
 
 
   ngOnInit(): void {
     this.profileDataFetch();
-    this.profile.imageUrl = this.authService.getImageUrl();
+    //this.profile.imageUrl = this.authService.getImageUrl();
   }
 
   profileDataFetch(): void {
     this.loading = true;
     this.errorMessage = '';
 
-    this.http.get(`/api/profile/getProfile/${this.userId}`)
+    this.http.get<Profile>(`/api/profile/getProfile/${this.userId}`)
       .subscribe({
-        next: (response: any) => {
+        next: (response: Profile) => {
           this.profile = response;
+          this.userRole = this.profile.userRole;
+          this.imageUrl = this.profile.imageUrl;
           this.patchFormValue();
           this.loading = false;
         },

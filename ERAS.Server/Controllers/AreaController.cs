@@ -10,7 +10,7 @@ namespace ERAS.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin, Engineer")]
     public class AreaController(ApplicationDbContext dbContext) : ControllerBase
     {
         private readonly ApplicationDbContext _dbContext = dbContext;
@@ -51,7 +51,7 @@ namespace ERAS.Server.Controllers
 
         }
 
-
+        [Authorize(Roles = "Admin")]
         [HttpPost("addArea")]
         public async Task<IActionResult> CreateArea([FromBody] Area area)
         {
@@ -95,7 +95,7 @@ namespace ERAS.Server.Controllers
             return Ok(new { message = "Area updated successfully !!!", area });
         }
 
-
+        [Authorize(Roles = "Admin")]
         [HttpDelete("deleteArea/{id}")]
         public async Task<IActionResult> DeleteArea(int id)
         {

@@ -8,7 +8,7 @@ namespace ERAS.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin, Engineer")]
     public class EquipmentModelController(ApplicationDbContext dbContext) : ControllerBase
     {
         private readonly ApplicationDbContext _dbContext = dbContext;
@@ -49,13 +49,12 @@ namespace ERAS.Server.Controllers
         }
 
         // POST: api/EquipmentModel
+        [Authorize(Roles = "Admin")]
         [HttpPost("AddEquipmentModel")]
         public async Task<IActionResult> CreateEquipmentModel([FromBody] EquipmentModel equipmentModel)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-
-            
 
             equipmentModel.DateCreated = DateTimeOffset.UtcNow;
             equipmentModel.UserCreatedId = HttpContext.Session.GetInt32("UserId");
@@ -71,6 +70,7 @@ namespace ERAS.Server.Controllers
         }
 
         // PUT: api/EquipmentModel/{id}
+        [Authorize(Roles = "Admin")]
         [HttpPut("UpdateEquipmentModel/{id}")]
         public async Task<IActionResult> UpdateEquipmentModel(int id, [FromBody] EquipmentModel equipmentModel)
         {
@@ -97,6 +97,7 @@ namespace ERAS.Server.Controllers
         }
 
         // DELETE: api/EquipmentModel/{id}
+        [Authorize(Roles = "Admin")]
         [HttpDelete("DeleteEquipmentModel/{id}")]
         public async Task<IActionResult> DeleteEquipmentModel(int id)
         {

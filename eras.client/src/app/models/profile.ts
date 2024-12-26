@@ -4,6 +4,6 @@ export interface Profile {
   name: string ;
   alias?: string;
   email?: string;
-  imageUrl?: string;
-  userRole?: string;
+  imageUrl: string;
+  userRole: string;
 }

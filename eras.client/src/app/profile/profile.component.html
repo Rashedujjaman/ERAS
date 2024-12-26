@@ -6,11 +6,12 @@
         <span>Profile</span>
       </div>
       <mat-card-content class="user-info">
+
         <!--Left-->
         <div class="col-lg-5 col-md-4 col-sm-12 d-flex justify-content-center x">
           <div class="image-frame">
             <div class="position-relative">
-              <img [src]="profile.imageUrl" alt="User Photo" class="user-photo">
+              <img [src]="imageUrl" alt="User Photo" class="user-photo">
               <div class="image-change-button" (click)="imageInput.click()">
                 <mat-icon>photo_camera</mat-icon>
               </div>
@@ -41,7 +42,7 @@
               </div>
               <div class="col-12 input-group">
                 <span class="input-group-text">Role</span>
-                <input type="text" id="Role" class="form-control" [placeholder]="profile.userRole" readonly>
+                <input type="text" id="Role" class="form-control" [placeholder]="userRole" readonly>
               </div>
             </div>
             <button mat-flat-button color="primary" class="update-button" (click)="updateProfile()" [disabled]="profileForm.pristine && !isImageSelected">
