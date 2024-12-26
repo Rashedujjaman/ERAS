@@ -72,7 +72,8 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.profileDataFetch();
-    //this.profile.imageUrl = this.authService.getImageUrl();
+    //this.profile.imageUrl = 'assets/images/profile.jpg';
+    //this.profile.userRole = '';
   }
 
   profileDataFetch(): void {
@@ -83,8 +84,8 @@ export class ProfileComponent implements OnInit {
       .subscribe({
         next: (response: Profile) => {
           this.profile = response;
-          this.userRole = this.profile.userRole;
           this.imageUrl = this.profile.imageUrl;
+          this.userRole = this.profile.userRole;
           this.patchFormValue();
           this.loading = false;
         },
@@ -163,7 +164,7 @@ export class ProfileComponent implements OnInit {
 
       const reader = new FileReader();
       reader.onload = (e: ProgressEvent<FileReader>) => {
-        this.profile.imageUrl = e.target?.result as string;
+        this.imageUrl = e.target?.result as string;
       };
       reader.readAsDataURL(file);
 

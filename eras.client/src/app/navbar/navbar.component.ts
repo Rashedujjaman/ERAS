@@ -32,7 +32,6 @@ export class NavbarComponent implements OnInit {
     });
   }
   onProfileIconClick() {
-    console.log('Profile Icon is Clicked');
     this.router.navigate(['/profile']);
   }
 }

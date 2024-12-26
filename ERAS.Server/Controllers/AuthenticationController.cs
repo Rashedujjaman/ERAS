@@ -123,7 +123,7 @@ namespace ERAS.Server.Controllers
             await _signInManager.SignOutAsync();
             HttpContext.Session.Remove("UserId");
             HttpContext.Session.Remove("UserRole");
-            return Ok("Logout successful");
+            return Ok();
         }
     }
 }

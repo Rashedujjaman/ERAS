@@ -75,7 +75,6 @@ export class EquipmentModelComponent implements OnInit, AfterViewInit {
       .subscribe({
         next: (equipmentModels: EquipmentModel[]) => {
           this.equipmentModels = equipmentModels;
-          console.log(equipmentModels);
           this.updateTableData();
           this.isLoading = false;
         },
